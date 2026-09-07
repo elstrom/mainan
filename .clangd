@@ -1,0 +1,18 @@
+CompileFlags:
+  Compiler: C:/Users/danra/scoop/apps/gcc/current/bin/g++.exe
+  Add:
+    - -std=c++17
+    - -Wno-typedef-redefinition
+    - -I
+    - C:/Program Files/NVIDIA GPU Computing Toolkit/CUDA/v13.3/include
+    - -nocudainc
+    - -nocudalib
+  Remove:
+    - -rdc=true
+
+Diagnostics:
+  Suppress:
+    - cuda_cannot_find_libdevice
+    - undeclared_var_use
+    - pp_file_not_found
+    - nvcc_unknown_arg

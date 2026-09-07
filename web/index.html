@@ -1,0 +1,789 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GPU Mind Mission Control - Earth to Moon ASI</title>
+    <style>
+        :root {
+            --bg-base: #0a0d14;
+            --bg-card: rgba(18, 24, 38, 0.85);
+            --bg-header: rgba(13, 17, 28, 0.95);
+            --border: rgba(45, 55, 75, 0.6);
+            --text-main: #e2e8f0;
+            --text-sub: #94a3b8;
+            --text-dim: #64748b;
+            --blue: #38bdf8;
+            --cyan: #2dd4bf;
+            --green: #4ade80;
+            --red: #f87171;
+            --yellow: #facc15;
+            --purple: #c084fc;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            user-select: none;
+        }
+
+        /* 100vh Full Viewport - Strict Zero Scroll */
+        html, body {
+            height: 100vh;
+            max-height: 100vh;
+            overflow: hidden;
+            background-color: var(--bg-base);
+            color: var(--text-main);
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Top Header */
+        header {
+            background: var(--bg-header);
+            backdrop-filter: blur(16px);
+            border-bottom: 1px solid var(--border);
+            padding: 8px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 48px;
+            flex-shrink: 0;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .pulse-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--green);
+            box-shadow: 0 0 12px var(--green);
+            animation: pulse 1.5s infinite;
+        }
+
+        .pulse-dot.stopped {
+            background: var(--yellow);
+            box-shadow: 0 0 12px var(--yellow);
+            animation: none;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.3; transform: scale(0.85); }
+        }
+
+        .title {
+            font-size: 1rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+
+        .badge {
+            background: rgba(56, 189, 248, 0.15);
+            color: var(--blue);
+            border: 1px solid rgba(56, 189, 248, 0.3);
+            border-radius: 5px;
+            font-size: 0.72rem;
+            padding: 2px 7px;
+            font-weight: 600;
+        }
+
+        /* Status Execution Indicator Banner */
+        .status-pill {
+            background: rgba(74, 222, 128, 0.15);
+            border: 1px solid var(--green);
+            color: var(--green);
+            padding: 4px 14px;
+            border-radius: 20px;
+            font-size: 0.76rem;
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+
+        .status-pill.stopped {
+            background: rgba(250, 204, 21, 0.15);
+            border-color: var(--yellow);
+            color: var(--yellow);
+        }
+
+        .status-pill.complete {
+            background: rgba(56, 189, 248, 0.15);
+            border-color: var(--blue);
+            color: var(--blue);
+        }
+
+        /* Formula Bar */
+        .formula-bar {
+            background: rgba(15, 23, 42, 0.9);
+            border-bottom: 1px solid var(--border);
+            padding: 6px 20px;
+            font-family: "Cascadia Code", "Fira Code", monospace;
+            font-size: 0.8rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            color: var(--yellow);
+            height: 34px;
+            flex-shrink: 0;
+        }
+
+        /* Compact Grid Layout */
+        .grid-container {
+            display: grid;
+            grid-template-columns: 320px 1fr 340px;
+            gap: 12px;
+            padding: 12px 20px;
+            flex: 1;
+            min-height: 0; /* Prevents overflow */
+        }
+
+        .card {
+            background: var(--bg-card);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            min-height: 0;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+        }
+
+        .card-title {
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-sub);
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 6px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-shrink: 0;
+        }
+
+        /* Compact Stats Blocks */
+        .stats-2col {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 6px;
+        }
+
+        .stat-box {
+            background: rgba(10, 15, 26, 0.6);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 6px 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .stat-box.full {
+            grid-column: span 2;
+        }
+
+        .stat-label {
+            font-size: 0.68rem;
+            color: var(--text-dim);
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .stat-val {
+            font-size: 1rem;
+            font-weight: 700;
+            font-family: "Cascadia Code", monospace;
+            color: var(--text-main);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .stat-val.green { color: var(--green); }
+        .stat-val.red { color: var(--red); }
+        .stat-val.blue { color: var(--blue); }
+        .stat-val.yellow { color: var(--yellow); }
+        .stat-val.purple { color: var(--purple); }
+        .stat-val.cyan { color: var(--cyan); }
+
+        /* Viewport Canvas */
+        .viewport-card {
+            padding: 0;
+            overflow: hidden;
+            position: relative;
+        }
+
+        #orbitCanvas {
+            width: 100%;
+            height: 100%;
+            display: block;
+            border-radius: 10px;
+            background: radial-gradient(circle at 50% 50%, #131c31 0%, #080c16 100%);
+        }
+
+        .canvas-hud {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            right: 10px;
+            display: flex;
+            justify-content: space-between;
+            pointer-events: none;
+        }
+
+        .hud-pill {
+            background: rgba(10, 15, 26, 0.85);
+            border: 1px solid var(--border);
+            backdrop-filter: blur(8px);
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.72rem;
+            font-weight: 600;
+        }
+
+        /* Register Matrix */
+        .reg-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 5px;
+            flex-shrink: 0;
+        }
+
+        .reg-box {
+            background: rgba(10, 15, 26, 0.7);
+            border: 1px solid var(--border);
+            border-radius: 5px;
+            padding: 4px 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-family: monospace;
+            font-size: 0.76rem;
+        }
+
+        .reg-name {
+            color: var(--purple);
+            font-weight: 600;
+        }
+
+        /* DNA Disassembly Feed (Auto-Fit, No manual scroll needed) */
+        .dna-feed {
+            flex: 1;
+            background: rgba(10, 15, 26, 0.85);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 6px 8px;
+            font-family: "Cascadia Code", "Fira Code", monospace;
+            font-size: 0.72rem;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            min-height: 0;
+        }
+
+        .dna-row {
+            display: flex;
+            gap: 6px;
+            color: var(--text-sub);
+            padding: 1px 4px;
+            border-radius: 3px;
+            line-height: 1.25;
+        }
+
+        .dna-row.active {
+            background: rgba(56, 189, 248, 0.15);
+            color: var(--text-main);
+            border-left: 2px solid var(--blue);
+        }
+
+        .dna-pc { width: 22px; color: var(--text-dim); }
+        .dna-op { width: 90px; color: var(--cyan); font-weight: 600; }
+        .dna-arg { color: var(--yellow); }
+
+        .btn {
+            background: rgba(56, 189, 248, 0.15);
+            border: 1px solid var(--blue);
+            color: var(--blue);
+            padding: 6px;
+            border-radius: 5px;
+            font-size: 0.76rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            flex-shrink: 0;
+        }
+
+        .btn:hover {
+            background: var(--blue);
+            color: #0a0d14;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="brand">
+            <div class="pulse-dot" id="headerDot"></div>
+            <div class="title">GPU MIND MISSION CONTROL</div>
+            <span class="badge" id="headerBadge">10,240 CUDA AGENTS</span>
+        </div>
+        
+        <!-- Live Sim Status Banner & Elapsed Timer -->
+        <div class="status-pill" id="simStatusPill">
+            <span id="simStatusDot">●</span>
+            <span id="simStatusText">SIMULASI BERJALAN</span>
+            <span style="opacity:0.4;">|</span>
+            <span style="font-family:monospace; color:var(--text-main);" id="missionTimer">00:00:00</span>
+        </div>
+
+        <div style="font-size:0.78rem; color:var(--text-sub); display:flex; gap:14px; align-items:center;">
+            <span>Started: <strong style="color:var(--text-main);" id="startTimeLabel">--:--:--</strong></span>
+            <span>Cycles: <strong style="color:var(--cyan);" id="cycleCount">0</strong></span>
+            <span>FPS: <strong style="color:var(--green);" id="fpsLabel">60</strong></span>
+        </div>
+    </header>
+
+    <div class="formula-bar">
+        <span>RUMUS FINAL DNA: <strong id="formulaText" style="color:var(--text-main);">Thrust(t) = sigmoid(R0 + R2(h,v,fear))</strong></span>
+        <span style="color:var(--text-dim); font-size:0.72rem;">Epigenetic Sealed</span>
+    </div>
+
+    <div class="grid-container">
+        <!-- Left: Flight Telemetry -->
+        <div class="card">
+            <div class="card-title">
+                <span>Flight Telemetry</span>
+                <span style="color:var(--blue);">● REALTIME</span>
+            </div>
+
+            <div class="stats-2col">
+                <div class="stat-box">
+                    <span class="stat-label">Total Flights</span>
+                    <span class="stat-val blue" id="statFlights">0</span>
+                </div>
+                <div class="stat-box">
+                    <span class="stat-label">Max Altitude</span>
+                    <span class="stat-val" id="statMaxAlt">0.0 km</span>
+                </div>
+                <div class="stat-box">
+                    <span class="stat-label">Mendarat Sukses</span>
+                    <span class="stat-val green" id="statSuccess">0</span>
+                </div>
+                <div class="stat-box">
+                    <span class="stat-label">Gagal (Crashed)</span>
+                    <span class="stat-val red" id="statCrashed">0</span>
+                </div>
+                <div class="stat-box full">
+                    <span class="stat-label">Sisa Jarak ke Bulan</span>
+                    <span class="stat-val yellow" id="statDistMoon">384,400.0 km</span>
+                </div>
+                <div class="stat-box">
+                    <span class="stat-label">Kecepatan</span>
+                    <span class="stat-val" id="statVel">0.00 km/s</span>
+                </div>
+                <div class="stat-box">
+                    <span class="stat-label">Bahan Bakar</span>
+                    <span class="stat-val" id="statFuel">100.0%</span>
+                </div>
+            </div>
+
+            <div class="card-title" style="margin-top: 2px;">
+                <span>Kognisi & Psikologi Agen</span>
+            </div>
+
+            <div class="stats-2col">
+                <div class="stat-box">
+                    <span class="stat-label">Fear Level</span>
+                    <span class="stat-val red" id="statFear">0.0%</span>
+                </div>
+                <div class="stat-box">
+                    <span class="stat-label">Crash Trauma</span>
+                    <span class="stat-val purple" id="statTrauma">0.0%</span>
+                </div>
+                <div class="stat-box full">
+                    <span class="stat-label">Rata-Rata Waktu Berpikir (Cognitive Cycles)</span>
+                    <span class="stat-val yellow" id="statAvgThink">0 ticks / gen</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Center: Trajectory Canvas -->
+        <div class="card viewport-card">
+            <div class="canvas-hud">
+                <div class="hud-pill">🌍 Bumi (0 km)</div>
+                <div class="hud-pill" style="color:var(--yellow);" id="orbitProgress">Orbit Progress: 0%</div>
+                <div class="hud-pill">🌕 Bulan (384,400 km)</div>
+            </div>
+            <canvas id="orbitCanvas"></canvas>
+        </div>
+
+        <!-- Right: Registers & DNA Disassembly -->
+        <div class="card">
+            <div class="card-title">
+                <span id="regTitle">VM Registers (Active Memory)</span>
+                <span class="badge" style="font-size:0.62rem;" id="regBadge">Elastic GPU Memory</span>
+            </div>
+
+            <div class="reg-grid" id="regGrid">
+                <div class="reg-box"><span class="reg-name">R0 (Thrust)</span><span class="reg-val" id="reg0">0.00</span></div>
+                <div class="reg-box"><span class="reg-name">R1 (Alt)</span><span class="reg-val" id="reg1">0.00</span></div>
+                <div class="reg-box"><span class="reg-name">R2 (Vel)</span><span class="reg-val" id="reg2">0.00</span></div>
+                <div class="reg-box"><span class="reg-name">R3 (Dist)</span><span class="reg-val" id="reg3">0.00</span></div>
+                <div class="reg-box"><span class="reg-name">R4</span><span class="reg-val" id="reg4">0.00</span></div>
+                <div class="reg-box"><span class="reg-name">R5</span><span class="reg-val" id="reg5">0.00</span></div>
+                <div class="reg-box"><span class="reg-name">R6</span><span class="reg-val" id="reg6">0.00</span></div>
+                <div class="reg-box"><span class="reg-name">R7</span><span class="reg-val" id="reg7">0.00</span></div>
+            </div>
+
+            <div class="card-title" style="margin-top: 2px;">
+                <span id="dnaTitle">Active DNA Bytecode Disassembly</span>
+            </div>
+
+            <div class="dna-feed" id="dnaFeed"></div>
+
+            <button class="btn" id="btnPause">PAUSE / RESUME SIM</button>
+        </div>
+    </div>
+
+    <script>
+        const state = {
+            generation: 1,
+            totalFlights: 0,
+            successCount: 0,
+            crashedCount: 0,
+            bestAltitude: 0,
+            currentDistMoon: 384400,
+            velocity: 0,
+            fuel: 100,
+            fearLevel: 0,
+            crashTrauma: 0,
+            thoughtTicks: 0,
+            isLaunched: false,
+            formula: "Thrust(t) = sigmoid(R0 + R2(h,v,fear))",
+            registers: [0, 0, 0, 0, 0, 0, 0, 0],
+            dna: [],
+            isPaused: false
+        };
+
+        const canvas = document.getElementById('orbitCanvas');
+        const ctx = canvas.getContext('2d');
+
+        function resizeCanvas() {
+            const rect = canvas.getBoundingClientRect();
+            const w = Math.floor(rect.width || canvas.clientWidth || 600);
+            const h = Math.floor(rect.height || canvas.clientHeight || 400);
+            if (canvas.width !== w || canvas.height !== h) {
+                canvas.width = w;
+                canvas.height = h;
+            }
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        let flightAnimProgress = 0;
+        let swarmPhase = 0;
+        const trail = [];
+
+        function renderCanvas() {
+            resizeCanvas();
+            const w = canvas.width;
+            const h = canvas.height;
+
+            // Clear full canvas
+            ctx.clearRect(0, 0, w, h);
+
+            swarmPhase += 0.05;
+
+            // Background Star Dust
+            ctx.fillStyle = "rgba(255, 255, 255, 0.18)";
+            for (let i = 0; i < 40; i++) {
+                const sx = (Math.sin(i * 99 + Date.now() * 0.0001) * 0.5 + 0.5) * w;
+                const sy = (Math.cos(i * 33 + Date.now() * 0.0001) * 0.5 + 0.5) * h;
+                ctx.fillRect(sx, sy, 1.5, 1.5);
+            }
+
+            const startX = 80;
+            const startY = h / 2; // Dead Center Y
+            const endX = w - 80;
+            const endY = h / 2;   // Dead Center Y
+
+            // Trajectory Line (Glow)
+            ctx.beginPath();
+            ctx.setLineDash([5, 8]);
+            ctx.strokeStyle = "rgba(56, 189, 248, 0.35)";
+            ctx.lineWidth = 1.5;
+            ctx.moveTo(startX, startY);
+            ctx.lineTo(endX, endY);
+            ctx.stroke();
+            ctx.setLineDash([]);
+
+            // Earth Planet (Center Left)
+            ctx.beginPath();
+            ctx.arc(startX, startY, 26, 0, Math.PI * 2);
+            ctx.fillStyle = "#0284c7";
+            ctx.shadowColor = "#38bdf8";
+            ctx.shadowBlur = 20;
+            ctx.fill();
+            ctx.shadowBlur = 0;
+
+            // Earth Label
+            ctx.fillStyle = "#bae6fd";
+            ctx.font = "bold 11px sans-serif";
+            ctx.textAlign = "center";
+            ctx.fillText("BUMI", startX, startY + 42);
+
+            // Moon Planet (Center Right)
+            ctx.beginPath();
+            ctx.arc(endX, endY, 18, 0, Math.PI * 2);
+            ctx.fillStyle = "#cbd5e1";
+            ctx.shadowColor = "#f8fafc";
+            ctx.shadowBlur = 16;
+            ctx.fill();
+            ctx.shadowBlur = 0;
+
+            // Moon Label
+            ctx.fillStyle = "#e2e8f0";
+            ctx.font = "bold 11px sans-serif";
+            ctx.textAlign = "center";
+            ctx.fillText("BULAN", endX, endY + 34);
+
+            // Flight Reach Target Progress (Pencapaian Jarak Nyata Penerbangan Sesi Saat Ini)
+            const activeAlt = (state.currentBatchAltitude !== undefined) ? state.currentBatchAltitude : state.bestAltitude;
+            const targetProgress = Math.min(1.0, Math.max(0.0, activeAlt / 384400.0));
+            document.getElementById('orbitProgress').textContent = `Jangkauan Terbang: ${(targetProgress * 100).toFixed(1)}% (${Math.round(activeAlt).toLocaleString()} km)`;
+
+            // Real Replay of Winning Alpha Agent Flight (Lengkap dari awal hingga akhir)
+            flightAnimProgress += 0.008;
+            if (flightAnimProgress >= 1.0) {
+                flightAnimProgress = 0.0;
+                // Hanya update ke data penerbangan terbaik terbaru saat animasi penerbangan saat ini selesai 100%
+                if (pendingData) {
+                    Object.assign(state, pendingData);
+                    pendingData = null;
+                }
+            }
+
+            const traj = (state.trajectory && state.trajectory.length > 1) ? state.trajectory : null;
+            let leadX = startX;
+            let leadY = startY;
+            let curThrust = 0.5;
+
+            if (traj) {
+                // Gambar Garis Lintasan Fisik Nyata Rekor Terakhir
+                ctx.beginPath();
+                ctx.strokeStyle = "rgba(45, 212, 191, 0.45)";
+                ctx.lineWidth = 2.5;
+                for (let i = 0; i < traj.length; i++) {
+                    const normAlt = Math.min(1.0, Math.max(0.0, traj[i].alt / 384400.0));
+                    const px = startX + normAlt * (endX - startX);
+                    const py = startY; // Lurus sejajar sumbu Bumi - Bulan
+                    if (i === 0) ctx.moveTo(px, py);
+                    else ctx.lineTo(px, py);
+                }
+                ctx.stroke();
+
+                // Hitung posisi roket sesuai interpolasi lintasan nyata
+                const sampleFloatIdx = flightAnimProgress * (traj.length - 1);
+                const sIdx = Math.floor(sampleFloatIdx);
+                const alphaLerp = sampleFloatIdx - sIdx;
+                const nextIdx = Math.min(traj.length - 1, sIdx + 1);
+
+                const altLerp = traj[sIdx].alt + alphaLerp * (traj[nextIdx].alt - traj[sIdx].alt);
+                const velLerp = (traj[sIdx].vel !== undefined && traj[nextIdx].vel !== undefined) ? 
+                                (traj[sIdx].vel + alphaLerp * (traj[nextIdx].vel - traj[sIdx].vel)) : state.velocity;
+                const fuelLerp = (traj[sIdx].fuel !== undefined && traj[nextIdx].fuel !== undefined) ? 
+                                 (traj[sIdx].fuel + alphaLerp * (traj[nextIdx].fuel - traj[sIdx].fuel)) : state.fuel;
+
+                curThrust = traj[sIdx].thrust;
+                const normCurrentAlt = Math.min(1.0, Math.max(0.0, altLerp / 384400.0));
+
+                leadX = startX + normCurrentAlt * (endX - startX);
+                leadY = startY;
+
+                // Update real-time flight gauges based on current replay flight point
+                document.getElementById('statVel').textContent = `${velLerp.toFixed(2)} km/s`;
+                document.getElementById('statFuel').textContent = `${fuelLerp.toFixed(1)}%`;
+                const currentDist = Math.max(0, 384400.0 - altLerp);
+                document.getElementById('statDistMoon').textContent = `${Math.floor(currentDist).toLocaleString()} km`;
+            } else {
+                // Fallback interpolasi linear ke rekor terbaik
+                const currentFlightProgress = flightAnimProgress * targetProgress;
+                leadX = startX + currentFlightProgress * (endX - startX);
+                leadY = startY;
+            }
+
+            // Swarm Ghost Particles (Armada 10.240 Roket Paralel di sekitar Alpha)
+            for (let i = 0; i < 16; i++) {
+                const subProgress = Math.max(0.0, (leadX - startX) / (endX - startX) - (i * 0.012));
+                const gx = startX + subProgress * (endX - startX);
+                const gy = startY + Math.sin(subProgress * 12 + i + swarmPhase) * (4 + (i % 3) * 3);
+                
+                ctx.beginPath();
+                ctx.arc(gx, gy, 2.0, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(56, 189, 248, ${0.35 - (i * 0.02)})`;
+                ctx.fill();
+            }
+
+            // Ekor Jejak Partikel (Trail)
+            trail.push({ x: leadX, y: leadY });
+            if (trail.length > 25) trail.shift();
+
+            if (trail.length > 1) {
+                ctx.beginPath();
+                ctx.strokeStyle = "rgba(45, 212, 191, 0.85)";
+                ctx.lineWidth = 3;
+                ctx.moveTo(trail[0].x, trail[0].y);
+                for (let i = 1; i < trail.length; i++) ctx.lineTo(trail[i].x, trail[i].y);
+                ctx.stroke();
+            }
+
+            // Api Pendorong Mesin (Thrust Fire dinamis mengikuti intensitas pembakaran GPU)
+            if (curThrust > 0.05) {
+                ctx.beginPath();
+                ctx.arc(leadX - 10, leadY, 3 + curThrust * 6 + Math.random() * 3, 0, Math.PI * 2);
+                ctx.fillStyle = "#fb923c";
+                ctx.shadowColor = "#f97316";
+                ctx.shadowBlur = 14;
+                ctx.fill();
+                ctx.shadowBlur = 0;
+            }
+
+            // Inti Roket Pemenang (Alpha Rocket)
+            ctx.beginPath();
+            ctx.arc(leadX, leadY, 6.5, 0, Math.PI * 2);
+            ctx.fillStyle = "#2dd4bf";
+            ctx.shadowColor = "#2dd4bf";
+            ctx.shadowBlur = 16;
+            ctx.fill();
+            ctx.shadowBlur = 0;
+            ctx.fill();
+            ctx.shadowBlur = 0;
+        }
+
+        function renderDisassembly() {
+            const feed = document.getElementById('dnaFeed');
+            feed.innerHTML = '';
+            // Display only first 10 instructions to perfectly fit container
+            const displayList = state.dna.slice(0, 10);
+            displayList.forEach((inst, idx) => {
+                const row = document.createElement('div');
+                row.className = `dna-row ${idx === 0 ? 'active' : ''}`;
+                row.innerHTML = `
+                    <span class="dna-pc">[${idx.toString().padStart(2, '0')}]</span>
+                    <span class="dna-op">${inst.op}</span>
+                    <span class="dna-arg">imm=${inst.arg}</span>
+                `;
+                feed.appendChild(row);
+            });
+        }
+
+        const systemLaunchTime = new Date();
+        document.getElementById('startTimeLabel').textContent = systemLaunchTime.toLocaleTimeString();
+
+        function formatElapsed(ms) {
+            const totalSec = Math.floor(ms / 1000);
+            const hrs = String(Math.floor(totalSec / 3600)).padStart(2, '0');
+            const mins = String(Math.floor((totalSec % 3600) / 60)).padStart(2, '0');
+            const secs = String(totalSec % 60).padStart(2, '0');
+            return `${hrs}:${mins}:${secs}`;
+        }
+
+        let pendingData = null;
+
+        async function fetchTelemetry() {
+            try {
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 300);
+                const res = await fetch('http://127.0.0.1:8088/telemetry', { signal: controller.signal });
+                clearTimeout(timeoutId);
+                if (res.ok) {
+                    pendingData = await res.json();
+                }
+            } catch (e) {
+                // Ignore fetch errors/aborts
+            }
+        }
+
+        function updateUI() {
+            // Elapsed Mission Clock (Detik / Jam Aktif)
+            const elapsed = Date.now() - systemLaunchTime.getTime();
+            document.getElementById('missionTimer').textContent = formatElapsed(elapsed);
+
+            // Status execution detection
+            const statusPill = document.getElementById('simStatusPill');
+            const statusDot = document.getElementById('headerDot');
+            const statusText = document.getElementById('simStatusText');
+
+            if (state.successCount > 0) {
+                statusPill.className = "status-pill complete";
+                statusText.textContent = "MISI SUKSES MENDARAT DI BULAN!";
+                statusDot.className = "pulse-dot";
+            } else if (state.isPaused) {
+                statusPill.className = "status-pill stopped";
+                statusText.textContent = "SIMULASI DIHENTIKAN SEMENTARA (PAUSED)";
+                statusDot.className = "pulse-dot stopped";
+            } else {
+                statusPill.className = "status-pill";
+                statusText.textContent = `SIMULASI SEDANG BERJALAN (${(state.populationSize || 10240).toLocaleString()} FLIGHTS/CYCLE)`;
+                statusDot.className = "pulse-dot";
+            }
+
+            document.getElementById('headerBadge').textContent = `${(state.populationSize || 10240).toLocaleString()} CUDA AGENTS`;
+            document.getElementById('cycleCount').textContent = Math.floor(state.totalFlights / (state.populationSize || 10240)).toLocaleString();
+            document.getElementById('statFlights').textContent = state.totalFlights.toLocaleString();
+            document.getElementById('statMaxAlt').textContent = `${state.bestAltitude.toLocaleString()} km`;
+            document.getElementById('statSuccess').textContent = state.successCount;
+            document.getElementById('statCrashed').textContent = state.crashedCount.toLocaleString();
+            if (!state.trajectory || state.trajectory.length === 0) {
+                document.getElementById('statDistMoon').textContent = `${Math.floor(state.currentDistMoon).toLocaleString()} km`;
+                document.getElementById('statVel').textContent = `${state.velocity} km/s`;
+                document.getElementById('statFuel').textContent = `${state.fuel}%`;
+            }
+            document.getElementById('statFear').textContent = `${state.fearLevel}%`;
+            document.getElementById('statTrauma').textContent = `${state.crashTrauma}%`;
+            const avgTicks = state.avgThoughtTicks !== undefined ? state.avgThoughtTicks : state.thoughtTicks;
+            document.getElementById('statAvgThink').textContent = `${Math.round(avgTicks).toLocaleString()} cycles / flight`;
+            document.getElementById('formulaText').textContent = state.formula;
+
+            const activeRegs = state.activeRegisters || 8;
+            const activeProg = state.activeProgramSize || 16;
+            document.getElementById('regTitle').textContent = `VM Registers (R0 - R${activeRegs - 1})`;
+            document.getElementById('regBadge').textContent = `${activeRegs} Active Regs / ${activeProg} DNA Lines`;
+
+            for (let r = 0; r < 8; r++) {
+                document.getElementById(`reg${r}`).textContent = state.registers[r] !== undefined ? state.registers[r] : "0.00";
+            }
+
+            renderDisassembly();
+            renderCanvas();
+            requestAnimationFrame(updateUI);
+        }
+
+        document.getElementById('btnPause').addEventListener('click', () => {
+            state.isPaused = !state.isPaused;
+            document.getElementById('btnPause').textContent = state.isPaused ? "RESUME SIMULATION" : "PAUSE SIMULATION";
+        });
+
+        // Fast Polling Telemetry (20 times per second)
+        setInterval(fetchTelemetry, 50);
+
+        // Continuous 60 FPS Render Loop
+        requestAnimationFrame(updateUI);
+    </script>
+</body>
+</html>
