@@ -1,36 +1,53 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GPU Mind Mission Control - Earth to Moon ASI</title>
+    <title>GPU Mind - Ecosystem War & Living Intelligence</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap"
+        rel="stylesheet">
     <style>
         :root {
-            --bg-base: #0a0d14;
-            --bg-card: rgba(18, 24, 38, 0.85);
-            --bg-header: rgba(13, 17, 28, 0.95);
-            --border: rgba(45, 55, 75, 0.6);
-            --text-main: #e2e8f0;
+            --bg-base: #06090e;
+            --bg-surface: rgba(13, 19, 32, 0.78);
+            --bg-surface-elevated: rgba(19, 27, 46, 0.9);
+            --border-subtle: rgba(255, 255, 255, 0.08);
+            --border-glow: rgba(56, 189, 248, 0.25);
+
+            --text-main: #f8fafc;
             --text-sub: #94a3b8;
             --text-dim: #64748b;
+
+            --kubu-a: #22c55e;
+            --kubu-a-glow: rgba(34, 197, 94, 0.35);
+            --kubu-a-bg: rgba(34, 197, 94, 0.12);
+
+            --kubu-b: #ef4444;
+            --kubu-b-glow: rgba(239, 68, 68, 0.35);
+            --kubu-b-bg: rgba(239, 68, 68, 0.12);
+
+            --cyan: #06b6d4;
             --blue: #38bdf8;
-            --cyan: #2dd4bf;
-            --green: #4ade80;
-            --red: #f87171;
             --yellow: #facc15;
             --purple: #c084fc;
+            --orange: #fb923c;
+            --pink: #f472b6;
         }
 
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
             user-select: none;
         }
 
-        /* 100vh Full Viewport - Strict Zero Scroll */
-        html, body {
+        html,
+        body {
             height: 100vh;
             max-height: 100vh;
             overflow: hidden;
@@ -38,455 +55,1006 @@
             color: var(--text-main);
             display: flex;
             flex-direction: column;
+            background-image: radial-gradient(circle at 50% -20%, rgba(56, 189, 248, 0.08), transparent 50%),
+                radial-gradient(circle at 10% 100%, rgba(34, 197, 94, 0.05), transparent 40%),
+                radial-gradient(circle at 90% 100%, rgba(239, 68, 68, 0.05), transparent 40%);
         }
 
-        /* Top Header */
+        /* Top Navigation Header */
         header {
-            background: var(--bg-header);
-            backdrop-filter: blur(16px);
-            border-bottom: 1px solid var(--border);
-            padding: 8px 20px;
+            background: rgba(10, 14, 24, 0.85);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border-subtle);
+            padding: 8px 24px;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            height: 48px;
+            height: 52px;
             flex-shrink: 0;
+            z-index: 20;
         }
 
-        .brand {
+        .brand-section {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
+        }
+
+        .pulse-indicator {
+            position: relative;
+            width: 10px;
+            height: 10px;
         }
 
         .pulse-dot {
             width: 10px;
             height: 10px;
             border-radius: 50%;
-            background: var(--green);
-            box-shadow: 0 0 12px var(--green);
-            animation: pulse 1.5s infinite;
+            background: var(--kubu-a);
+            box-shadow: 0 0 10px var(--kubu-a);
         }
 
-        .pulse-dot.stopped {
-            background: var(--yellow);
-            box-shadow: 0 0 12px var(--yellow);
-            animation: none;
+        .pulse-ring {
+            position: absolute;
+            top: -4px;
+            left: -4px;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            border: 2px solid var(--kubu-a);
+            opacity: 0.6;
+            animation: pulseWave 2s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
         }
 
-        @keyframes pulse {
-            0%, 100% { opacity: 1; transform: scale(1); }
-            50% { opacity: 0.3; transform: scale(0.85); }
+        @keyframes pulseWave {
+            0% {
+                transform: scale(0.5);
+                opacity: 1;
+            }
+
+            100% {
+                transform: scale(1.6);
+                opacity: 0;
+            }
         }
 
-        .title {
-            font-size: 1rem;
-            font-weight: 700;
-            letter-spacing: 0.5px;
+        .brand-title {
+            font-size: 0.92rem;
+            font-weight: 800;
+            letter-spacing: 0.8px;
+            background: linear-gradient(135deg, #ffffff 40%, #94a3b8);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
-        .badge {
-            background: rgba(56, 189, 248, 0.15);
-            color: var(--blue);
-            border: 1px solid rgba(56, 189, 248, 0.3);
-            border-radius: 5px;
-            font-size: 0.72rem;
-            padding: 2px 7px;
-            font-weight: 600;
-        }
-
-        /* Status Execution Indicator Banner */
-        .status-pill {
-            background: rgba(74, 222, 128, 0.15);
-            border: 1px solid var(--green);
-            color: var(--green);
-            padding: 4px 14px;
-            border-radius: 20px;
-            font-size: 0.76rem;
-            font-weight: 700;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            white-space: nowrap;
-            flex-shrink: 0;
-        }
-
-        .status-pill.stopped {
-            background: rgba(250, 204, 21, 0.15);
-            border-color: var(--yellow);
-            color: var(--yellow);
-        }
-
-        .status-pill.complete {
-            background: rgba(56, 189, 248, 0.15);
-            border-color: var(--blue);
-            color: var(--blue);
-        }
-
-        /* Formula Bar */
-        .formula-bar {
-            background: rgba(15, 23, 42, 0.9);
-            border-bottom: 1px solid var(--border);
-            padding: 6px 20px;
-            font-family: "Cascadia Code", "Fira Code", monospace;
-            font-size: 0.8rem;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            color: var(--yellow);
-            height: 34px;
-            flex-shrink: 0;
-        }
-
-        /* Compact Grid Layout */
-        .grid-container {
-            display: grid;
-            grid-template-columns: 320px 1fr 340px;
-            gap: 12px;
-            padding: 12px 20px;
-            flex: 1;
-            min-height: 0; /* Prevents overflow */
-        }
-
-        .card {
-            background: var(--bg-card);
-            backdrop-filter: blur(12px);
-            border: 1px solid var(--border);
-            border-radius: 10px;
-            padding: 12px;
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-            min-height: 0;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
-        }
-
-        .card-title {
-            font-size: 0.75rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
+        .tag-pill {
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid var(--border-subtle);
             color: var(--text-sub);
-            border-bottom: 1px solid var(--border);
-            padding-bottom: 6px;
+            padding: 3px 10px;
+            border-radius: 999px;
+            font-size: 0.72rem;
+            font-weight: 600;
             display: flex;
-            justify-content: space-between;
             align-items: center;
-            flex-shrink: 0;
-        }
-
-        /* Compact Stats Blocks */
-        .stats-2col {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
             gap: 6px;
         }
 
-        .stat-box {
-            background: rgba(10, 15, 26, 0.6);
-            border: 1px solid var(--border);
-            border-radius: 6px;
-            padding: 6px 10px;
+        .tag-pill.live {
+            background: rgba(34, 197, 94, 0.12);
+            border-color: rgba(34, 197, 94, 0.35);
+            color: var(--kubu-a);
+        }
+
+        .header-controls {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .control-widget {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid var(--border-subtle);
+            padding: 4px 12px;
+            border-radius: 8px;
+            font-size: 0.75rem;
+        }
+
+        /* Formula & Sub-Header Ticker */
+        .sub-bar {
+            background: rgba(8, 12, 20, 0.7);
+            border-bottom: 1px solid var(--border-subtle);
+            padding: 4px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 0.76rem;
+            height: 32px;
+            flex-shrink: 0;
+        }
+
+        .formula-tag {
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--yellow);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .formula-tag strong {
+            color: #e2e8f0;
+            font-weight: 600;
+        }
+
+        /* Main 3-Column Layout */
+        .main-workspace {
+            display: grid;
+            grid-template-columns: 290px 1fr 310px;
+            gap: 14px;
+            padding: 12px 20px;
+            flex: 1;
+            min-height: 0;
+        }
+
+        /* Glass Panel Styling */
+        .glass-panel {
+            background: var(--bg-surface);
+            backdrop-filter: blur(16px);
+            border: 1px solid var(--border-subtle);
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            min-height: 0;
+            overflow: hidden;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.45);
+        }
+
+        .panel-header {
+            padding: 10px 14px;
+            background: rgba(255, 255, 255, 0.02);
+            border-bottom: 1px solid var(--border-subtle);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-shrink: 0;
+        }
+
+        .panel-title {
+            font-size: 0.74rem;
+            font-weight: 800;
+            letter-spacing: 0.6px;
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .panel-body {
+            padding: 12px 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            overflow-y: auto;
+            flex: 1;
+        }
+
+        .panel-body::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .panel-body::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+        }
+
+        /* Dynamic HUD Cards & Stat Units */
+        .hero-metric-card {
+            background: var(--bg-surface-elevated);
+            border: 1px solid var(--border-subtle);
+            border-radius: 10px;
+            padding: 10px 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-metric-card::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+        }
+
+        .hero-metric-card.kubu-a::before {
+            background: var(--kubu-a);
+            box-shadow: 0 0 8px var(--kubu-a);
+        }
+
+        .hero-metric-card.kubu-b::before {
+            background: var(--kubu-b);
+            box-shadow: 0 0 8px var(--kubu-b);
+        }
+
+        .metric-label {
+            font-size: 0.66rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-dim);
+        }
+
+        .metric-value-row {
+            display: flex;
+            align-items: baseline;
+            justify-content: space-between;
+        }
+
+        .metric-big-num {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.25rem;
+            font-weight: 800;
+        }
+
+        .metric-sub-num {
+            font-size: 0.72rem;
+            font-weight: 600;
+            color: var(--text-sub);
+        }
+
+        /* 2-Column Clean Stat Grid */
+        .stat-grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+        }
+
+        .stat-mini-box {
+            background: rgba(255, 255, 255, 0.025);
+            border: 1px solid var(--border-subtle);
+            border-radius: 8px;
+            padding: 8px 10px;
             display: flex;
             flex-direction: column;
             gap: 2px;
+            transition: border-color 0.2s;
         }
 
-        .stat-box.full {
+        .stat-mini-box:hover {
+            border-color: rgba(255, 255, 255, 0.15);
+        }
+
+        .stat-mini-box.span-2 {
             grid-column: span 2;
         }
 
-        .stat-label {
-            font-size: 0.68rem;
-            color: var(--text-dim);
+        .stat-mini-label {
+            font-size: 0.64rem;
             font-weight: 600;
+            color: var(--text-dim);
             text-transform: uppercase;
         }
 
-        .stat-val {
-            font-size: 1rem;
+        .stat-mini-val {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.92rem;
             font-weight: 700;
-            font-family: "Cascadia Code", monospace;
             color: var(--text-main);
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
         }
 
-        .stat-val.green { color: var(--green); }
-        .stat-val.red { color: var(--red); }
-        .stat-val.blue { color: var(--blue); }
-        .stat-val.yellow { color: var(--yellow); }
-        .stat-val.purple { color: var(--purple); }
-        .stat-val.cyan { color: var(--cyan); }
-
-        /* Viewport Canvas */
-        .viewport-card {
-            padding: 0;
-            overflow: hidden;
-            position: relative;
+        /* Visual Ratio Bar */
+        .ratio-bar-container {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            margin-top: 2px;
         }
 
-        #orbitCanvas {
-            width: 100%;
+        .ratio-bar-track {
+            height: 6px;
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 4px;
+            overflow: hidden;
+            display: flex;
+        }
+
+        .ratio-bar-fill-male {
+            background: var(--blue);
             height: 100%;
-            display: block;
-            border-radius: 10px;
-            background: radial-gradient(circle at 50% 50%, #131c31 0%, #080c16 100%);
+            transition: width 0.3s ease;
         }
 
-        .canvas-hud {
-            position: absolute;
-            top: 10px;
-            left: 10px;
-            right: 10px;
-            display: flex;
-            justify-content: space-between;
-            pointer-events: none;
+        .ratio-bar-fill-female {
+            background: var(--pink);
+            height: 100%;
+            transition: width 0.3s ease;
         }
 
-        .hud-pill {
-            background: rgba(10, 15, 26, 0.85);
-            border: 1px solid var(--border);
-            backdrop-filter: blur(8px);
-            padding: 4px 10px;
-            border-radius: 20px;
-            font-size: 0.72rem;
-            font-weight: 600;
-        }
-
-        /* Register Matrix */
-        .reg-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 5px;
-            flex-shrink: 0;
-        }
-
-        .reg-box {
-            background: rgba(10, 15, 26, 0.7);
-            border: 1px solid var(--border);
-            border-radius: 5px;
-            padding: 4px 8px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-family: monospace;
-            font-size: 0.76rem;
-        }
-
-        .reg-name {
-            color: var(--purple);
-            font-weight: 600;
-        }
-
-        /* DNA Disassembly Feed (Auto-Fit, No manual scroll needed) */
-        .dna-feed {
-            flex: 1;
-            background: rgba(10, 15, 26, 0.85);
-            border: 1px solid var(--border);
-            border-radius: 6px;
-            padding: 6px 8px;
-            font-family: "Cascadia Code", "Fira Code", monospace;
-            font-size: 0.72rem;
+        /* Center Canvas Viewport */
+        .viewport-panel {
+            position: relative;
+            background: #04060a;
+            border: 1px solid var(--border-subtle);
+            border-radius: 12px;
             overflow: hidden;
             display: flex;
             flex-direction: column;
-            gap: 2px;
-            min-height: 0;
+            box-shadow: inset 0 0 40px rgba(0, 0, 0, 0.8), 0 8px 32px rgba(0, 0, 0, 0.5);
         }
 
-        .dna-row {
+        .viewport-header {
+            position: absolute;
+            top: 10px;
+            left: 12px;
+            right: 12px;
             display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 10;
+            pointer-events: none;
+        }
+
+        .hud-chip-group {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            pointer-events: auto;
+        }
+
+        .hud-chip {
+            background: rgba(10, 15, 26, 0.82);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.72rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
             gap: 6px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+        }
+
+        .tab-switch {
+            background: rgba(10, 15, 26, 0.82);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 3px;
+            display: flex;
+            gap: 2px;
+            pointer-events: auto;
+        }
+
+        .tab-switch-btn {
+            background: transparent;
+            border: none;
             color: var(--text-sub);
-            padding: 1px 4px;
-            border-radius: 3px;
-            line-height: 1.25;
-        }
-
-        .dna-row.active {
-            background: rgba(56, 189, 248, 0.15);
-            color: var(--text-main);
-            border-left: 2px solid var(--blue);
-        }
-
-        .dna-pc { width: 22px; color: var(--text-dim); }
-        .dna-op { width: 90px; color: var(--cyan); font-weight: 600; }
-        .dna-arg { color: var(--yellow); }
-
-        .btn {
-            background: rgba(56, 189, 248, 0.15);
-            border: 1px solid var(--blue);
-            color: var(--blue);
-            padding: 6px;
-            border-radius: 5px;
-            font-size: 0.76rem;
-            font-weight: 600;
+            padding: 4px 12px;
+            border-radius: 16px;
+            font-size: 0.72rem;
+            font-weight: 700;
             cursor: pointer;
             transition: all 0.2s;
-            flex-shrink: 0;
         }
 
-        .btn:hover {
-            background: var(--blue);
-            color: #0a0d14;
+        .tab-switch-btn.active {
+            background: rgba(56, 189, 248, 0.2);
+            color: var(--blue);
+            box-shadow: 0 0 10px rgba(56, 189, 248, 0.2);
+        }
+
+        #worldCanvas {
+            width: 100%;
+            height: 100%;
+            display: block;
+            background: radial-gradient(circle at 50% 50%, #0c1424 0%, #03060a 100%);
+        }
+
+        /* Matrix Container */
+        .matrix-overlay {
+            position: absolute;
+            inset: 48px 12px 12px 12px;
+            background: rgba(10, 14, 24, 0.95);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--border-subtle);
+            border-radius: 10px;
+            padding: 16px;
+            display: none;
+            flex-direction: column;
+            gap: 12px;
+            overflow-y: auto;
+            z-index: 5;
+        }
+
+        .matrix-overlay.active {
+            display: flex;
+        }
+
+        /* Leaderboard & DNA Card List */
+        .rank-item {
+            background: rgba(255, 255, 255, 0.025);
+            border: 1px solid var(--border-subtle);
+            border-radius: 8px;
+            padding: 7px 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .rank-item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.74rem;
+        }
+
+        .rank-badge-chip {
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 0.65rem;
+            font-weight: 800;
+        }
+
+        .rank-item-stats {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.68rem;
+            color: var(--text-sub);
+        }
+
+        .dna-terminal {
+            background: rgba(5, 8, 14, 0.85);
+            border: 1px solid var(--border-subtle);
+            border-radius: 8px;
+            padding: 6px 10px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            max-height: 90px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .dna-line {
+            display: flex;
+            gap: 8px;
+            color: var(--text-dim);
+        }
+
+        .dna-line.highlight {
+            color: var(--cyan);
+            background: rgba(6, 182, 212, 0.1);
+            border-radius: 3px;
+        }
+
+        /* Legend Minimal Pill Bar */
+        .legend-bar {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border-subtle);
+            border-radius: 8px;
+            padding: 6px 8px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4px;
+            font-size: 0.66rem;
+            color: var(--text-sub);
+        }
+
+        /* Bottom Control Panel Slider */
+        footer {
+            background: rgba(10, 14, 24, 0.95);
+            backdrop-filter: blur(20px);
+            border-top: 1px solid var(--border-subtle);
+            padding: 8px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 24px;
+            height: 52px;
+            flex-shrink: 0;
+            z-index: 20;
+        }
+
+        .footer-faction {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.78rem;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+        }
+
+        .slider-center-wrap {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 3px;
+            flex: 1;
+            max-width: 580px;
+        }
+
+        .slider-hint-row {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            font-size: 0.68rem;
+            font-weight: 600;
+            color: var(--text-dim);
+        }
+
+        .custom-slider {
+            width: 100%;
+            height: 5px;
+            border-radius: 3px;
+            background: linear-gradient(to right, var(--kubu-a), var(--yellow) 50%, var(--kubu-b));
+            outline: none;
+            cursor: pointer;
+            -webkit-appearance: none;
+            appearance: none;
+        }
+
+        .custom-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: #ffffff;
+            border: 2px solid var(--yellow);
+            box-shadow: 0 0 10px rgba(250, 204, 21, 0.8);
+            cursor: pointer;
+            transition: transform 0.1s;
+        }
+
+        .custom-slider::-webkit-slider-thumb:hover {
+            transform: scale(1.2);
         }
     </style>
 </head>
+
 <body>
 
+    <!-- 1. Header Bar -->
     <header>
-        <div class="brand">
-            <div class="pulse-dot" id="headerDot"></div>
-            <div class="title">GPU MIND MISSION CONTROL</div>
-            <span class="badge" id="headerBadge">10,240 CUDA AGENTS</span>
-        </div>
-        
-        <!-- Live Sim Status Banner & Elapsed Timer -->
-        <div class="status-pill" id="simStatusPill">
-            <span id="simStatusDot">●</span>
-            <span id="simStatusText">SIMULASI BERJALAN</span>
-            <span style="opacity:0.4;">|</span>
-            <span style="font-family:monospace; color:var(--text-main);" id="missionTimer">00:00:00</span>
+        <div class="brand-section">
+            <div class="pulse-indicator">
+                <div class="pulse-dot"></div>
+                <div class="pulse-ring"></div>
+            </div>
+            <div class="brand-title">GPU MIND ECOSYSTEM</div>
+            <div class="tag-pill live" id="headerPopBadge">
+                <span>⚔️</span>
+                <span id="popTotalText">400 LIVING AGENTS</span>
+            </div>
         </div>
 
-        <div style="font-size:0.78rem; color:var(--text-sub); display:flex; gap:14px; align-items:center;">
-            <span>Started: <strong style="color:var(--text-main);" id="startTimeLabel">--:--:--</strong></span>
-            <span>Cycles: <strong style="color:var(--cyan);" id="cycleCount">0</strong></span>
-            <span>FPS: <strong style="color:var(--green);" id="fpsLabel">60</strong></span>
+        <div class="header-controls">
+            <div class="control-widget">
+                <span style="color:var(--text-dim);">⚡ Speed:</span>
+                <strong id="speedLabel" style="color:var(--yellow); width:36px;">2x</strong>
+                <input type="range" id="speedSlider" min="1" max="500" step="1" value="2"
+                    style="cursor:pointer; width:85px; accent-color:var(--yellow);" oninput="onSpeedChange(this.value)">
+            </div>
+            <div class="control-widget" style="cursor:pointer;" onclick="toggleRendering()">
+                <span style="color:var(--text-dim);">🖥️ Visual:</span>
+                <strong id="renderToggleLabel" style="color:var(--kubu-a); font-size:0.75rem;">ON</strong>
+            </div>
+            <div class="control-widget">
+                <span style="color:var(--text-dim);">📅 Calendar:</span>
+                <strong id="headerDay" style="color:var(--text-main);">Day 1</strong>
+            </div>
+            <div class="control-widget">
+                <span style="color:var(--text-dim);">🌿 Season:</span>
+                <strong id="headerSeason" style="color:var(--cyan);">Spring</strong>
+            </div>
+            <div class="tag-pill" id="fpsBadge" style="color:var(--kubu-a); border-color:rgba(34,197,94,0.3);">
+                <span>60 FPS</span>
+            </div>
         </div>
     </header>
 
-    <div class="formula-bar">
-        <span>RUMUS FINAL DNA: <strong id="formulaText" style="color:var(--text-main);">Thrust(t) = sigmoid(R0 + R2(h,v,fear))</strong></span>
-        <span style="color:var(--text-dim); font-size:0.72rem;">Epigenetic Sealed</span>
-    </div>
-
-    <div class="grid-container">
-        <!-- Left: Flight Telemetry -->
-        <div class="card">
-            <div class="card-title">
-                <span>Flight Telemetry</span>
-                <span style="color:var(--blue);">● REALTIME</span>
-            </div>
-
-            <div class="stats-2col">
-                <div class="stat-box">
-                    <span class="stat-label">Total Flights</span>
-                    <span class="stat-val blue" id="statFlights">0</span>
-                </div>
-                <div class="stat-box">
-                    <span class="stat-label">Max Altitude</span>
-                    <span class="stat-val" id="statMaxAlt">0.0 km</span>
-                </div>
-                <div class="stat-box">
-                    <span class="stat-label">Mendarat Sukses</span>
-                    <span class="stat-val green" id="statSuccess">0</span>
-                </div>
-                <div class="stat-box">
-                    <span class="stat-label">Gagal (Crashed)</span>
-                    <span class="stat-val red" id="statCrashed">0</span>
-                </div>
-                <div class="stat-box full">
-                    <span class="stat-label">Sisa Jarak ke Bulan</span>
-                    <span class="stat-val yellow" id="statDistMoon">384,400.0 km</span>
-                </div>
-                <div class="stat-box">
-                    <span class="stat-label">Kecepatan</span>
-                    <span class="stat-val" id="statVel">0.00 km/s</span>
-                </div>
-                <div class="stat-box">
-                    <span class="stat-label">Bahan Bakar</span>
-                    <span class="stat-val" id="statFuel">100.0%</span>
-                </div>
-            </div>
-
-            <div class="card-title" style="margin-top: 2px;">
-                <span>Kognisi & Psikologi Agen</span>
-            </div>
-
-            <div class="stats-2col">
-                <div class="stat-box">
-                    <span class="stat-label">Fear Level</span>
-                    <span class="stat-val red" id="statFear">0.0%</span>
-                </div>
-                <div class="stat-box">
-                    <span class="stat-label">Crash Trauma</span>
-                    <span class="stat-val purple" id="statTrauma">0.0%</span>
-                </div>
-                <div class="stat-box full">
-                    <span class="stat-label">Rata-Rata Waktu Berpikir (Cognitive Cycles)</span>
-                    <span class="stat-val yellow" id="statAvgThink">0 ticks / gen</span>
-                </div>
-            </div>
+    <!-- 2. Formula & Sub-Header Bar -->
+    <div class="sub-bar">
+        <div class="formula-tag">
+            <span>🧬 Tree-Growth Cognition (Alpha):</span>
+            <strong id="formulaText">Growth = tanh(TreeDist·MagX + FruitQty - Temp)</strong>
         </div>
-
-        <!-- Center: Trajectory Canvas -->
-        <div class="card viewport-card">
-            <div class="canvas-hud">
-                <div class="hud-pill">🌍 Bumi (0 km)</div>
-                <div class="hud-pill" style="color:var(--yellow);" id="orbitProgress">Orbit Progress: 0%</div>
-                <div class="hud-pill">🌕 Bulan (384,400 km)</div>
-            </div>
-            <canvas id="orbitCanvas"></canvas>
-        </div>
-
-        <!-- Right: Registers & DNA Disassembly -->
-        <div class="card">
-            <div class="card-title">
-                <span id="regTitle">VM Registers (Active Memory)</span>
-                <span class="badge" style="font-size:0.62rem;" id="regBadge">Elastic GPU Memory</span>
-            </div>
-
-            <div class="reg-grid" id="regGrid">
-                <div class="reg-box"><span class="reg-name">R0 (Thrust)</span><span class="reg-val" id="reg0">0.00</span></div>
-                <div class="reg-box"><span class="reg-name">R1 (Alt)</span><span class="reg-val" id="reg1">0.00</span></div>
-                <div class="reg-box"><span class="reg-name">R2 (Vel)</span><span class="reg-val" id="reg2">0.00</span></div>
-                <div class="reg-box"><span class="reg-name">R3 (Dist)</span><span class="reg-val" id="reg3">0.00</span></div>
-                <div class="reg-box"><span class="reg-name">R4</span><span class="reg-val" id="reg4">0.00</span></div>
-                <div class="reg-box"><span class="reg-name">R5</span><span class="reg-val" id="reg5">0.00</span></div>
-                <div class="reg-box"><span class="reg-name">R6</span><span class="reg-val" id="reg6">0.00</span></div>
-                <div class="reg-box"><span class="reg-name">R7</span><span class="reg-val" id="reg7">0.00</span></div>
-            </div>
-
-            <div class="card-title" style="margin-top: 2px;">
-                <span id="dnaTitle">Active DNA Bytecode Disassembly</span>
-            </div>
-
-            <div class="dna-feed" id="dnaFeed"></div>
-
-            <button class="btn" id="btnPause">PAUSE / RESUME SIM</button>
+        <div style="color:var(--text-dim); font-size:0.7rem;">
+            Realtime CUDA Multi-Agent Physics Core (v2.4)
         </div>
     </div>
 
+    <!-- 3. Main Workspace Grid -->
+    <div class="main-workspace">
+
+        <!-- Left Panel: Kubu A (Herbivore Colony) -->
+        <div class="glass-panel">
+            <div class="panel-header">
+                <div class="panel-title" style="color:var(--kubu-a);">
+                    <span>🌿</span> KUBU A: HERBIVORA
+                </div>
+                <span class="tag-pill"
+                    style="background:var(--kubu-a-bg); color:var(--kubu-a); border-color:rgba(34,197,94,0.3);">
+                    PANGAN BUAH
+                </span>
+            </div>
+
+            <div class="panel-body">
+                <!-- Hero Population Card -->
+                <div class="hero-metric-card kubu-a">
+                    <span class="metric-label">Populasi Hidup Kubu A</span>
+                    <div class="metric-value-row">
+                        <span class="metric-big-num" style="color:var(--kubu-a);" id="statLivingPop">200</span>
+                        <span class="metric-sub-num" id="statGenderRatioA">50% ♂ : 50% ♀</span>
+                    </div>
+                    <div class="ratio-bar-container">
+                        <div class="ratio-bar-track">
+                            <div class="ratio-bar-fill-male" id="ratioBarA_M" style="width: 50%;"></div>
+                            <div class="ratio-bar-fill-female" id="ratioBarA_F" style="width: 50%;"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Vital Demographic Grid -->
+                <div class="stat-grid-2">
+                    <div class="stat-mini-box">
+                        <span class="stat-mini-label">Total Lahir</span>
+                        <span class="stat-mini-val" style="color:var(--kubu-a);" id="statBirths">200</span>
+                    </div>
+                    <div class="stat-mini-box">
+                        <span class="stat-mini-label">Total Mati</span>
+                        <span class="stat-mini-val" style="color:var(--kubu-b);" id="statDeaths">0</span>
+                    </div>
+                    <div class="stat-mini-box span-2">
+                        <span class="stat-mini-label">Total Panen Buah Pohon</span>
+                        <span class="stat-mini-val" style="color:var(--yellow);" id="statHarvest">0 Buah</span>
+                    </div>
+                    <div class="stat-mini-box span-2">
+                        <span class="stat-mini-label">Rumus Kognisi Dicetuskan</span>
+                        <span class="stat-mini-val" style="color:var(--orange);" id="statFormulas">0 Rumus</span>
+                    </div>
+                </div>
+
+                <!-- Top 5 Champion Kubu A -->
+                <div
+                    style="font-size:0.68rem; font-weight:800; color:var(--text-dim); text-transform:uppercase; margin-top:6px; display:flex; justify-content:space-between; align-items:center;">
+                    <span>🏆 Top 5 Individu Kubu A</span>
+                    <span style="font-size:0.65rem; color:var(--kubu-a);">Herbivora</span>
+                </div>
+                <div id="leaderboardListA"
+                    style="display:flex; flex-direction:column; gap:5px; flex:1; overflow-y:auto; max-height:190px;">
+                </div>
+
+                <!-- Swarm Communication & Language Decoder Card -->
+                <div style="background:rgba(6, 182, 212, 0.04); border:1px solid rgba(6, 182, 212, 0.25); border-radius:8px; padding:8px 10px; margin-top:auto;">
+                    <div style="font-size:0.68rem; font-weight:800; color:var(--cyan); text-transform:uppercase; display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+                        <span>📡 Dekoder Bahasa Gelombang</span>
+                        <span id="commActivityBadge" style="font-size:0.62rem; color:var(--kubu-a);">AKTIF</span>
+                    </div>
+                    <div style="font-size:0.65rem; color:var(--text-sub); display:flex; flex-direction:column; gap:3px;">
+                        <div style="display:flex; justify-content:space-between;">
+                            <span>Dialek Utama:</span>
+                            <strong style="color:#e2e8f0;" id="commDialectName">Resonansi Feromon</strong>
+                        </div>
+                        <div style="display:flex; justify-content:space-between;">
+                            <span>Intensitas Sinyal:</span>
+                            <strong style="color:var(--yellow);" id="commSignalIntensity">+0.82 (Panggilan Pangan)</strong>
+                        </div>
+                        <div style="display:flex; justify-content:space-between;">
+                            <span>Status Kawanan:</span>
+                            <strong style="color:var(--cyan);" id="commSwarmStatus">Kohesif (Saling Resonansi)</strong>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Center Viewport: 2D Canvas & Matrix View -->
+        <div class="viewport-panel">
+            <div class="viewport-header">
+                <div class="hud-chip-group">
+                    <div class="hud-chip" id="hudSeasonPill">
+                        <span>🌸</span> Musim Semi (Hari 1)
+                    </div>
+                    <div class="hud-chip" style="color:var(--kubu-a); border-color:rgba(34,197,94,0.3);"
+                        id="hudKubuAPill">
+                        🌿 Kubu A: 200
+                    </div>
+                    <div class="hud-chip" style="color:var(--kubu-b); border-color:rgba(239,68,68,0.3);"
+                        id="hudKubuBPill">
+                        🐺 Kubu B: 200
+                    </div>
+                    <div class="hud-chip" id="hudWindPill">
+                        💨 1.5 m/s
+                    </div>
+                </div>
+
+                <div class="tab-switch">
+                    <button class="tab-switch-btn active" id="tabBtnVisual" onclick="switchCenterTab('visual')">🌍
+                        Visual 2D</button>
+                    <button class="tab-switch-btn" id="tabBtnMatrix" onclick="switchCenterTab('matrix')">📊
+                        Matriks</button>
+                </div>
+            </div>
+
+            <!-- Canvas View -->
+            <canvas id="worldCanvas"></canvas>
+
+            <!-- Matrix Tab Overlay -->
+            <div class="matrix-overlay" id="tabMatrix">
+                <div style="font-size:0.85rem; font-weight:800; color:var(--text-main); margin-bottom:4px;">
+                    📊 Matriks Demografi & Perbandingan Dua Koloni
+                </div>
+
+                <div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:10px;">
+                    <div class="hero-metric-card">
+                        <span class="metric-label">Perbandingan Populasi</span>
+                        <span class="metric-big-num" style="color:var(--kubu-a);" id="mPopComparison">200 : 200</span>
+                    </div>
+                    <div class="hero-metric-card">
+                        <span class="metric-label">Perbandingan Kelahiran</span>
+                        <span class="metric-big-num" style="color:var(--cyan);" id="mBirthComparison">200 : 200</span>
+                    </div>
+                    <div class="hero-metric-card">
+                        <span class="metric-label">Perbandingan Kematian</span>
+                        <span class="metric-big-num" style="color:var(--kubu-b);" id="mDeathComparison">0 : 0</span>
+                    </div>
+                    <div class="hero-metric-card">
+                        <span class="metric-label">Instruksi VM DNA</span>
+                        <span class="metric-big-num" style="color:var(--purple);" id="mDnaSize">8 / 64 Baris</span>
+                    </div>
+                    <div class="hero-metric-card">
+                        <span class="metric-label">Rata-rata Usia</span>
+                        <span class="metric-big-num" style="color:var(--blue);" id="mAvgAge">0.0 Thn</span>
+                    </div>
+                    <div class="hero-metric-card">
+                        <span class="metric-label">Siklus Reproduksi</span>
+                        <span class="metric-big-num" style="color:var(--pink);" id="mMatingStatus">♂ + ♀ Aktif</span>
+                    </div>
+                </div>
+
+                <div
+                    style="background:rgba(255,255,255,0.025); border:1px solid var(--border-subtle); border-radius:8px; padding:12px; margin-top:8px;">
+                    <div style="font-size:0.75rem; font-weight:700; color:var(--text-sub); margin-bottom:8px;">
+                        🌲 Ekosistem Hutan, Atmosfer & Material Periodik
+                    </div>
+                    <div style="display:grid; grid-template-columns: repeat(4, 1fr); gap:8px;">
+                        <div class="stat-mini-box">
+                            <span class="stat-mini-label">Suhu Alam (Rumah Kaca)</span>
+                            <span class="stat-mini-val" style="color:var(--yellow);" id="statTemp">22.0 °C</span>
+                        </div>
+                        <div class="stat-mini-box">
+                            <span class="stat-mini-label">Kecepatan Angin</span>
+                            <span class="stat-mini-val" style="color:var(--cyan);" id="statWind">1.5 m/s</span>
+                        </div>
+                        <div class="stat-mini-box">
+                            <span class="stat-mini-label">Oksigen (O2)</span>
+                            <span class="stat-mini-val" style="color:var(--cyan);" id="statO2">21.0%</span>
+                        </div>
+                        <div class="stat-mini-box">
+                            <span class="stat-mini-label">Karbon Dioksida (CO2)</span>
+                            <span class="stat-mini-val" style="color:var(--orange);" id="statCO2">0.04%</span>
+                        </div>
+                        <div class="stat-mini-box">
+                            <span class="stat-mini-label">Kelembaban (H2O)</span>
+                            <span class="stat-mini-val" style="color:var(--blue);" id="statH2O">60.0%</span>
+                        </div>
+                        <div class="stat-mini-box">
+                            <span class="stat-mini-label">Nitrogen (N2)</span>
+                            <span class="stat-mini-val" style="color:var(--purple);" id="statN2">78.0%</span>
+                        </div>
+                        <div class="stat-mini-box">
+                            <span class="stat-mini-label">Pohon Hidup</span>
+                            <span class="stat-mini-val" style="color:var(--kubu-a);" id="statLivingTrees">32 / 32</span>
+                        </div>
+                        <div class="stat-mini-box">
+                            <span class="stat-mini-label">Pohon Mati</span>
+                            <span class="stat-mini-val" style="color:var(--kubu-b);" id="statDeadTrees">0 Mati</span>
+                        </div>
+                        <div class="stat-mini-box span-2">
+                            <span class="stat-mini-label">Buah Matang Tersedia</span>
+                            <span class="stat-mini-val" style="color:var(--yellow);" id="statFruitsAvailable">0
+                                Buah</span>
+                        </div>
+                        <div class="stat-mini-box span-2">
+                            <span class="stat-mini-label">Bangkai Mayat Tersedia</span>
+                            <span class="stat-mini-val" style="color:var(--pink);" id="statCorpsesCount">0 Mayat</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div
+                    style="background:rgba(255,255,255,0.025); border:1px solid var(--border-subtle); border-radius:8px; padding:12px; margin-top:8px;">
+                    <div style="font-size:0.75rem; font-weight:700; color:var(--cyan); margin-bottom:8px; display:flex; justify-content:space-between; align-items:center;">
+                        <span>🧬 Status Kesiapan Evolusi Kognitif: FASE 2 (Swarm & Role Specialization)</span>
+                        <span id="phase2Badge" style="font-size:0.68rem; padding:2px 8px; border-radius:12px; background:rgba(234,179,8,0.15); color:var(--yellow); border:1px solid rgba(234,179,8,0.3);">EVALUASI KOGNISI</span>
+                    </div>
+                    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:8px;">
+                        <div class="stat-mini-box" style="flex-direction:row; justify-content:space-between; align-items:center;">
+                            <span class="stat-mini-label">1. Homeostasis Stability (Hari ≥ 30)</span>
+                            <span class="stat-mini-val" id="p2ReqHomeostasis" style="color:var(--yellow);">0 / 30 Hari ⏳</span>
+                        </div>
+                        <div class="stat-mini-box" style="flex-direction:row; justify-content:space-between; align-items:center;">
+                            <span class="stat-mini-label">2. Swarm Comm Signal (Sinyal ≥ 15%)</span>
+                            <span class="stat-mini-val" id="p2ReqSwarm" style="color:var(--yellow);">0.0% ⏳</span>
+                        </div>
+                        <div class="stat-mini-box" style="flex-direction:row; justify-content:space-between; align-items:center;">
+                            <span class="stat-mini-label">3. Role Specialization (Divergensi ≥ 20%)</span>
+                            <span class="stat-mini-val" id="p2ReqSpecialization" style="color:var(--yellow);">0.0% ⏳</span>
+                        </div>
+                        <div class="stat-mini-box" style="flex-direction:row; justify-content:space-between; align-items:center;">
+                            <span class="stat-mini-label">4. Material Extraction (Panen & Mayat)</span>
+                            <span class="stat-mini-val" id="p2ReqTerraform" style="color:var(--yellow);">0 Aksi ⏳</span>
+                        </div>
+                    </div>
+                    <div class="stat-mini-box" style="flex-direction:row; justify-content:space-between; align-items:center; margin-top:8px;">
+                        <span class="stat-mini-label">5. Co-Evolution Arms Race (Opcode DNA ≥ 12 Baris & Efisiensi Berburu)</span>
+                        <span class="stat-mini-val" id="p2ReqArmsRace" style="color:var(--yellow);">0 / 12 Opcode ⏳</span>
+                    </div>
+                </div>
+
+                <div
+                    style="background:rgba(255,255,255,0.025); border:1px solid var(--border-subtle); border-radius:8px; padding:12px; margin-top:8px;">
+                    <div style="font-size:0.75rem; font-weight:700; color:var(--text-sub); margin-bottom:8px;">
+                        Keseimbangan Ekosistem & Mekanisme Pertarungan
+                    </div>
+                    <table style="width:100%; border-collapse:collapse; font-size:0.74rem;">
+                        <thead>
+                            <tr
+                                style="text-align:left; color:var(--text-dim); border-bottom:1px solid var(--border-subtle);">
+                                <th style="padding:6px;">Aspek Sistem</th>
+                                <th style="padding:6px;">Kubu A (Herbivora)</th>
+                                <th style="padding:6px;">Kubu B (Karnivora/Predator)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr style="border-bottom:1px solid rgba(255,255,255,0.04);">
+                                <td style="padding:6px; color:var(--text-sub);">Sumber Energi</td>
+                                <td style="padding:6px; color:var(--kubu-a);">Buah & Pohon (Fotosintesis)</td>
+                                <td style="padding:6px; color:var(--kubu-b);">Memangsa Semut Kubu A</td>
+                            </tr>
+                            <tr style="border-bottom:1px solid rgba(255,255,255,0.04);">
+                                <td style="padding:6px; color:var(--text-sub);">Reproduksi</td>
+                                <td style="padding:6px; color:var(--pink);">Perkawinan Seksual Jantan ♂ + Betina ♀</td>
+                                <td style="padding:6px; color:var(--pink);">Perkawinan Seksual Jantan ♂ + Betina ♀</td>
+                            </tr>
+                            <tr>
+                                <td style="padding:6px; color:var(--text-sub);">Pertahanan / Serangan</td>
+                                <td style="padding:6px; color:var(--yellow);">Menembus Shield dengan Rumus Kognisi</td>
+                                <td style="padding:6px; color:var(--orange);">Serangan Fisik Jarak Dekat & Perisai</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Panel: Kubu B (Carnivore Colony & Leaders) -->
+        <div class="glass-panel">
+            <div class="panel-header">
+                <div class="panel-title" style="color:var(--kubu-b);">
+                    <span>🐺</span> KUBU B: KARNIVORA
+                </div>
+                <span class="tag-pill"
+                    style="background:var(--kubu-b-bg); color:var(--kubu-b); border-color:rgba(239,68,68,0.3);">
+                    MEMANGSA SEMUT
+                </span>
+            </div>
+
+            <div class="panel-body">
+                <!-- Hero Population Card -->
+                <div class="hero-metric-card kubu-b">
+                    <span class="metric-label">Populasi Hidup Kubu B</span>
+                    <div class="metric-value-row">
+                        <span class="metric-big-num" style="color:var(--kubu-b);" id="statLivingPredators">200</span>
+                        <span class="metric-sub-num" id="statGenderRatioB">50% ♂ : 50% ♀</span>
+                    </div>
+                    <div class="ratio-bar-container">
+                        <div class="ratio-bar-track">
+                            <div class="ratio-bar-fill-male" id="ratioBarB_M" style="width: 50%;"></div>
+                            <div class="ratio-bar-fill-female" id="ratioBarB_F" style="width: 50%;"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Vital Demographic Grid -->
+                <div class="stat-grid-2">
+                    <div class="stat-mini-box">
+                        <span class="stat-mini-label">Total Lahir</span>
+                        <span class="stat-mini-val" style="color:var(--kubu-a);" id="statPredBirths">200</span>
+                    </div>
+                    <div class="stat-mini-box">
+                        <span class="stat-mini-label">Total Mati</span>
+                        <span class="stat-mini-val" style="color:var(--kubu-b);" id="statPredDeaths">0</span>
+                    </div>
+                    <div class="stat-mini-box span-2">
+                        <span class="stat-mini-label">Mangsa Berhasil Dimangsa</span>
+                        <span class="stat-mini-val" style="color:var(--orange);" id="statPreyDevoured">0 Semut</span>
+                    </div>
+                    <div class="stat-mini-box span-2">
+                        <span class="stat-mini-label">Predator Terbunuh Rumus A</span>
+                        <span class="stat-mini-val" style="color:var(--purple);" id="statPredKills">0 Semut</span>
+                    </div>
+                </div>
+
+                <!-- Top 5 Champions Kubu B -->
+                <div
+                    style="font-size:0.68rem; font-weight:800; color:var(--text-dim); text-transform:uppercase; margin-top:6px; display:flex; justify-content:space-between; align-items:center;">
+                    <span>🏆 Top 5 Individu Kubu B</span>
+                    <span style="font-size:0.65rem; color:var(--kubu-b);">Karnivora</span>
+                </div>
+                <div id="leaderboardListB"
+                    style="display:flex; flex-direction:column; gap:5px; flex:1; overflow-y:auto; max-height:280px;">
+                </div>
+
+                <!-- Legend Bar -->
+                <div class="legend-bar" style="margin-top:auto;">
+                    <div>🟢 <strong>Pohon</strong>: Buah Pangan</div>
+                    <div>🔵/🌸 <strong>Kubu A</strong>: ♂ / ♀</div>
+                    <div>🔴/🟣 <strong>Kubu B</strong>: ♂ / ♀</div>
+                    <div>⭐ <strong>Emas</strong>: Alpha Leader</div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    </div>
+
+    <!-- Logic Script -->
     <script>
         const state = {
-            generation: 1,
-            totalFlights: 0,
-            successCount: 0,
-            crashedCount: 0,
-            bestAltitude: 0,
-            currentDistMoon: 384400,
-            velocity: 0,
-            fuel: 100,
-            fearLevel: 0,
-            crashTrauma: 0,
-            thoughtTicks: 0,
-            isLaunched: false,
-            formula: "Thrust(t) = sigmoid(R0 + R2(h,v,fear))",
-            registers: [0, 0, 0, 0, 0, 0, 0, 0],
-            dna: [],
-            isPaused: false
+            day: 1,
+            season: 0,
+            seasonName: "Semi (Spring)",
+            temperature: 22.0,
+            windX: 1.5,
+            windY: 0.5,
+            magneticAngle: 0.78,
+            totalFruitsHarvested: 0,
+            totalFormulasSynthesized: 0,
+            totalBirths: 200,
+            totalDeaths: 0,
+            formula: "Growth = tanh(TreeDist·MagX + FruitQty - Temp)",
+            alphaId: 1,
+            alphaGen: 1,
+            alphaGender: 0,
+            alphaAge: 0,
+            alphaEnergy: 100,
+            alphaFruits: 0,
+            alphaFormulas: 0,
+            activeProgramSize: 8,
+            topRankings: [],
+            agents: [],
+            trees: [],
+            dna: []
         };
 
-        const canvas = document.getElementById('orbitCanvas');
+        let activeCenterTab = 'visual';
+
+        function switchCenterTab(tab) {
+            activeCenterTab = tab;
+            document.getElementById('tabBtnVisual').classList.toggle('active', tab === 'visual');
+            document.getElementById('tabBtnMatrix').classList.toggle('active', tab === 'matrix');
+            document.getElementById('tabMatrix').classList.toggle('active', tab === 'matrix');
+            if (tab === 'visual') resizeCanvas();
+        }
+
+        const canvas = document.getElementById('worldCanvas');
         const ctx = canvas.getContext('2d');
 
         function resizeCanvas() {
             const rect = canvas.getBoundingClientRect();
-            const w = Math.floor(rect.width || canvas.clientWidth || 600);
-            const h = Math.floor(rect.height || canvas.clientHeight || 400);
+            const w = Math.floor(rect.width || 600);
+            const h = Math.floor(rect.height || 400);
             if (canvas.width !== w || canvas.height !== h) {
                 canvas.width = w;
                 canvas.height = h;
@@ -495,295 +1063,680 @@
         window.addEventListener('resize', resizeCanvas);
         resizeCanvas();
 
-        let flightAnimProgress = 0;
-        let swarmPhase = 0;
-        const trail = [];
-
-        function renderCanvas() {
+        function renderWorldCanvas() {
             resizeCanvas();
             const w = canvas.width;
             const h = canvas.height;
+            const scaleX = w / 1000.0;
+            const scaleY = h / 1000.0;
+            const daylight = (typeof state.daylightFactor !== 'undefined') ? state.daylightFactor : 1.0;
 
-            // Clear full canvas
-            ctx.clearRect(0, 0, w, h);
-
-            swarmPhase += 0.05;
-
-            // Background Star Dust
-            ctx.fillStyle = "rgba(255, 255, 255, 0.18)";
-            for (let i = 0; i < 40; i++) {
-                const sx = (Math.sin(i * 99 + Date.now() * 0.0001) * 0.5 + 0.5) * w;
-                const sy = (Math.cos(i * 33 + Date.now() * 0.0001) * 0.5 + 0.5) * h;
-                ctx.fillRect(sx, sy, 1.5, 1.5);
-            }
-
-            const startX = 80;
-            const startY = h / 2; // Dead Center Y
-            const endX = w - 80;
-            const endY = h / 2;   // Dead Center Y
-
-            // Trajectory Line (Glow)
-            ctx.beginPath();
-            ctx.setLineDash([5, 8]);
-            ctx.strokeStyle = "rgba(56, 189, 248, 0.35)";
-            ctx.lineWidth = 1.5;
-            ctx.moveTo(startX, startY);
-            ctx.lineTo(endX, endY);
-            ctx.stroke();
-            ctx.setLineDash([]);
-
-            // Earth Planet (Center Left)
-            ctx.beginPath();
-            ctx.arc(startX, startY, 26, 0, Math.PI * 2);
-            ctx.fillStyle = "#0284c7";
-            ctx.shadowColor = "#38bdf8";
-            ctx.shadowBlur = 20;
-            ctx.fill();
-            ctx.shadowBlur = 0;
-
-            // Earth Label
-            ctx.fillStyle = "#bae6fd";
-            ctx.font = "bold 11px sans-serif";
-            ctx.textAlign = "center";
-            ctx.fillText("BUMI", startX, startY + 42);
-
-            // Moon Planet (Center Right)
-            ctx.beginPath();
-            ctx.arc(endX, endY, 18, 0, Math.PI * 2);
-            ctx.fillStyle = "#cbd5e1";
-            ctx.shadowColor = "#f8fafc";
-            ctx.shadowBlur = 16;
-            ctx.fill();
-            ctx.shadowBlur = 0;
-
-            // Moon Label
-            ctx.fillStyle = "#e2e8f0";
-            ctx.font = "bold 11px sans-serif";
-            ctx.textAlign = "center";
-            ctx.fillText("BULAN", endX, endY + 34);
-
-            // Flight Reach Target Progress (Pencapaian Jarak Nyata Penerbangan Sesi Saat Ini)
-            const activeAlt = (state.currentBatchAltitude !== undefined) ? state.currentBatchAltitude : state.bestAltitude;
-            const targetProgress = Math.min(1.0, Math.max(0.0, activeAlt / 384400.0));
-            document.getElementById('orbitProgress').textContent = `Jangkauan Terbang: ${(targetProgress * 100).toFixed(1)}% (${Math.round(activeAlt).toLocaleString()} km)`;
-
-            // Real Replay of Winning Alpha Agent Flight (Lengkap dari awal hingga akhir)
-            flightAnimProgress += 0.008;
-            if (flightAnimProgress >= 1.0) {
-                flightAnimProgress = 0.0;
-                // Hanya update ke data penerbangan terbaik terbaru saat animasi penerbangan saat ini selesai 100%
-                if (pendingData) {
-                    Object.assign(state, pendingData);
-                    pendingData = null;
-                }
-            }
-
-            const traj = (state.trajectory && state.trajectory.length > 1) ? state.trajectory : null;
-            let leadX = startX;
-            let leadY = startY;
-            let curThrust = 0.5;
-
-            if (traj) {
-                // Gambar Garis Lintasan Fisik Nyata Rekor Terakhir
-                ctx.beginPath();
-                ctx.strokeStyle = "rgba(45, 212, 191, 0.45)";
-                ctx.lineWidth = 2.5;
-                for (let i = 0; i < traj.length; i++) {
-                    const normAlt = Math.min(1.0, Math.max(0.0, traj[i].alt / 384400.0));
-                    const px = startX + normAlt * (endX - startX);
-                    const py = startY; // Lurus sejajar sumbu Bumi - Bulan
-                    if (i === 0) ctx.moveTo(px, py);
-                    else ctx.lineTo(px, py);
-                }
-                ctx.stroke();
-
-                // Hitung posisi roket sesuai interpolasi lintasan nyata
-                const sampleFloatIdx = flightAnimProgress * (traj.length - 1);
-                const sIdx = Math.floor(sampleFloatIdx);
-                const alphaLerp = sampleFloatIdx - sIdx;
-                const nextIdx = Math.min(traj.length - 1, sIdx + 1);
-
-                const altLerp = traj[sIdx].alt + alphaLerp * (traj[nextIdx].alt - traj[sIdx].alt);
-                const velLerp = (traj[sIdx].vel !== undefined && traj[nextIdx].vel !== undefined) ? 
-                                (traj[sIdx].vel + alphaLerp * (traj[nextIdx].vel - traj[sIdx].vel)) : state.velocity;
-                const fuelLerp = (traj[sIdx].fuel !== undefined && traj[nextIdx].fuel !== undefined) ? 
-                                 (traj[sIdx].fuel + alphaLerp * (traj[nextIdx].fuel - traj[sIdx].fuel)) : state.fuel;
-
-                curThrust = traj[sIdx].thrust;
-                const normCurrentAlt = Math.min(1.0, Math.max(0.0, altLerp / 384400.0));
-
-                leadX = startX + normCurrentAlt * (endX - startX);
-                leadY = startY;
-
-                // Update real-time flight gauges based on current replay flight point
-                document.getElementById('statVel').textContent = `${velLerp.toFixed(2)} km/s`;
-                document.getElementById('statFuel').textContent = `${fuelLerp.toFixed(1)}%`;
-                const currentDist = Math.max(0, 384400.0 - altLerp);
-                document.getElementById('statDistMoon').textContent = `${Math.floor(currentDist).toLocaleString()} km`;
+            // 0. Dynamic Sky Background (Day / Night cycle)
+            if (daylight > 0.5) {
+                const sunGrad = ctx.createRadialGradient(w * 0.5, h * 0.3, 10, w * 0.5, h * 0.5, Math.max(w, h));
+                sunGrad.addColorStop(0, `rgba(26, 44, 76, ${0.45 + daylight * 0.35})`);
+                sunGrad.addColorStop(1, "#070c18");
+                ctx.fillStyle = sunGrad;
             } else {
-                // Fallback interpolasi linear ke rekor terbaik
-                const currentFlightProgress = flightAnimProgress * targetProgress;
-                leadX = startX + currentFlightProgress * (endX - startX);
-                leadY = startY;
+                const moonGrad = ctx.createRadialGradient(w * 0.5, h * 0.3, 10, w * 0.5, h * 0.5, Math.max(w, h));
+                moonGrad.addColorStop(0, `rgba(13, 20, 36, ${0.7 - daylight * 0.3})`);
+                moonGrad.addColorStop(1, "#030508");
+                ctx.fillStyle = moonGrad;
             }
+            ctx.fillRect(0, 0, w, h);
 
-            // Swarm Ghost Particles (Armada 10.240 Roket Paralel di sekitar Alpha)
-            for (let i = 0; i < 16; i++) {
-                const subProgress = Math.max(0.0, (leadX - startX) / (endX - startX) - (i * 0.012));
-                const gx = startX + subProgress * (endX - startX);
-                const gy = startY + Math.sin(subProgress * 12 + i + swarmPhase) * (4 + (i % 3) * 3);
-                
+            // 1. Grid Lines
+            const magAngle = state.magneticAngle || 0;
+            ctx.strokeStyle = `rgba(192, 132, 252, ${0.04 + daylight * 0.03})`;
+            ctx.lineWidth = 1;
+            for (let i = 0; i < w; i += 60) {
                 ctx.beginPath();
-                ctx.arc(gx, gy, 2.0, 0, Math.PI * 2);
-                ctx.fillStyle = `rgba(56, 189, 248, ${0.35 - (i * 0.02)})`;
-                ctx.fill();
-            }
-
-            // Ekor Jejak Partikel (Trail)
-            trail.push({ x: leadX, y: leadY });
-            if (trail.length > 25) trail.shift();
-
-            if (trail.length > 1) {
-                ctx.beginPath();
-                ctx.strokeStyle = "rgba(45, 212, 191, 0.85)";
-                ctx.lineWidth = 3;
-                ctx.moveTo(trail[0].x, trail[0].y);
-                for (let i = 1; i < trail.length; i++) ctx.lineTo(trail[i].x, trail[i].y);
+                ctx.moveTo(i, 0);
+                ctx.lineTo(i + Math.cos(magAngle) * 80, h);
                 ctx.stroke();
             }
 
-            // Api Pendorong Mesin (Thrust Fire dinamis mengikuti intensitas pembakaran GPU)
-            if (curThrust > 0.05) {
+            // 2. Wind Particles
+            ctx.strokeStyle = `rgba(56, 189, 248, ${0.12 + daylight * 0.08})`;
+            ctx.lineWidth = 1.5;
+            for (let i = 0; i < 8; i++) {
+                const wx = ((Date.now() * 0.05 * state.windX + i * 130) % w + w) % w;
+                const wy = (i * 70 + (Date.now() * 0.05 * state.windY) % h + h) % h;
                 ctx.beginPath();
-                ctx.arc(leadX - 10, leadY, 3 + curThrust * 6 + Math.random() * 3, 0, Math.PI * 2);
-                ctx.fillStyle = "#fb923c";
-                ctx.shadowColor = "#f97316";
-                ctx.shadowBlur = 14;
-                ctx.fill();
-                ctx.shadowBlur = 0;
+                ctx.moveTo(wx, wy);
+                ctx.lineTo(wx + state.windX * 6, wy + state.windY * 6);
+                ctx.stroke();
             }
 
-            // Inti Roket Pemenang (Alpha Rocket)
-            ctx.beginPath();
-            ctx.arc(leadX, leadY, 6.5, 0, Math.PI * 2);
-            ctx.fillStyle = "#2dd4bf";
-            ctx.shadowColor = "#2dd4bf";
-            ctx.shadowBlur = 16;
-            ctx.fill();
-            ctx.shadowBlur = 0;
-            ctx.fill();
-            ctx.shadowBlur = 0;
+            // 2.5 Render Periodic Material Deposits (Silikon, Logam Konduktif, Kristal Resonansi)
+            if (state.minerals && state.minerals.length > 0) {
+                state.minerals.forEach(min => {
+                    if (min.m <= 0.05) return;
+                    const mx = min.x * scaleX;
+                    const my = min.y * scaleY;
+                    const type = min.t || 0;
+                    const mass = min.m || 100.0;
+                    const maxM = min.mm || 100.0;
+                    const massRatio = Math.max(0.1, mass / Math.max(1.0, maxM));
+                    const baseRadius = (type === 2) ? 6.0 : (type === 1 ? 7.5 : 8.5);
+                    const radius = baseRadius * (0.4 + 0.6 * massRatio);
+
+                    ctx.save();
+                    ctx.beginPath();
+                    if (type === 0) {
+                        // Silikon / Batu - Hexagonal gray shield rock
+                        ctx.fillStyle = `rgba(148, 163, 184, ${0.4 + 0.5 * massRatio})`;
+                        ctx.strokeStyle = `rgba(203, 213, 225, 0.8)`;
+                        ctx.lineWidth = 1.5;
+                        ctx.arc(mx, my, radius, 0, Math.PI * 2);
+                        ctx.fill();
+                        ctx.stroke();
+                    } else if (type === 1) {
+                        // Logam Konduktif - Golden amber conductive node with aura
+                        ctx.fillStyle = `rgba(245, 158, 11, ${0.5 + 0.4 * massRatio})`;
+                        ctx.shadowColor = "#fbbf24";
+                        ctx.shadowBlur = 10 * massRatio;
+                        ctx.arc(mx, my, radius, 0, Math.PI * 2);
+                        ctx.fill();
+                        ctx.shadowBlur = 0;
+                        ctx.strokeStyle = "#fef08a";
+                        ctx.lineWidth = 1.2;
+                        ctx.stroke();
+                    } else {
+                        // Kristal Resonansi - Glowing cyan/magenta energy crystal
+                        const pulse = 1.0 + Math.sin(Date.now() * 0.005 + mx) * 0.15;
+                        ctx.fillStyle = `rgba(6, 182, 212, ${0.6 + 0.35 * massRatio})`;
+                        ctx.shadowColor = "#38bdf8";
+                        ctx.shadowBlur = 16 * pulse * massRatio;
+                        ctx.arc(mx, my, radius * pulse, 0, Math.PI * 2);
+                        ctx.fill();
+                        ctx.shadowBlur = 0;
+                        ctx.strokeStyle = "#a5f3fc";
+                        ctx.lineWidth = 1.8;
+                        ctx.stroke();
+                    }
+                    ctx.restore();
+                });
+            }
+
+            // 2.8 Render Bangkai / Mayat (Corpses) yang Tersedia Dimakan Karnivora
+            if (state.corpses && state.corpses.length > 0) {
+                state.corpses.forEach(c => {
+                    if (c.ce <= 0.2) return;
+                    const cx = c.x * scaleX;
+                    const cy = c.y * scaleY;
+                    const isPredCorpse = (c.t === 1);
+                    const corpseRadius = Math.max(1.8, Math.min(3.6, (c.ce / 30.0) * 3.6));
+
+                    ctx.beginPath();
+                    ctx.arc(cx, cy, corpseRadius, 0, Math.PI * 2);
+                    ctx.fillStyle = isPredCorpse ? "rgba(220, 38, 38, 0.45)" : "rgba(100, 116, 139, 0.5)";
+                    ctx.strokeStyle = isPredCorpse ? "rgba(239, 68, 68, 0.7)" : "rgba(148, 163, 184, 0.7)";
+                    ctx.lineWidth = 1;
+                    ctx.fill();
+                    ctx.stroke();
+
+                    // Simbol Tulang / Silang Kecil
+                    ctx.beginPath();
+                    ctx.moveTo(cx - 2, cy - 2);
+                    ctx.lineTo(cx + 2, cy + 2);
+                    ctx.moveTo(cx + 2, cy - 2);
+                    ctx.lineTo(cx - 2, cy + 2);
+                    ctx.strokeStyle = "#ffffff";
+                    ctx.lineWidth = 0.8;
+                    ctx.stroke();
+                });
+            }
+
+            // 3. Render Trees & Fruits
+            if (state.trees && state.trees.length > 0) {
+                state.trees.forEach(tree => {
+                    const tx = tree.x * scaleX;
+                    const ty = tree.y * scaleY;
+                    const fruits = tree.f || 0;
+                    const growth = tree.g || 0;
+                    const health = tree.h || 0;
+
+                    const treeRadius = Math.max(3.2, 4.2 + growth * 0.12);
+
+                    ctx.beginPath();
+                    ctx.arc(tx, ty, treeRadius, 0, Math.PI * 2);
+
+                    if (growth < 20.0 || health <= 0) {
+                        ctx.fillStyle = "rgba(163, 230, 53, 0.4)";
+                    } else if (fruits >= 1.0) {
+                        ctx.fillStyle = "rgba(34, 197, 94, 0.9)";
+                        ctx.shadowColor = "rgba(34, 197, 94, 0.5)";
+                        ctx.shadowBlur = 8;
+                    } else {
+                        ctx.fillStyle = "rgba(22, 163, 74, 0.6)";
+                    }
+                    ctx.fill();
+                    ctx.shadowBlur = 0;
+
+                    if (fruits >= 1.0) {
+                        ctx.beginPath();
+                        ctx.arc(tx + 4, ty - 4, 3.5, 0, Math.PI * 2);
+                        ctx.fillStyle = "#fb923c";
+                        ctx.fill();
+                    }
+                });
+            }
+
+            // 4. Render Kubu B (Carnivores / Predators)
+            if (state.predators && state.predators.length > 0) {
+                state.predators.forEach(pred => {
+                    if (pred.e <= 0) return;
+                    const px = pred.x * scaleX;
+                    const py = pred.y * scaleY;
+                    const isMale = (pred.g === 0);
+                    const age = pred.age || 0;
+                    const radius = Math.max(2.8, Math.min(5.2, 2.8 + (age / 100) * 2.4));
+
+                    // Glowing Aura
+                    ctx.beginPath();
+                    ctx.arc(px, py, radius + 3.5, 0, Math.PI * 2);
+                    ctx.fillStyle = isMale ? "rgba(239, 68, 68, 0.22)" : "rgba(192, 132, 252, 0.22)";
+                    ctx.fill();
+
+                    // Core Body
+                    ctx.beginPath();
+                    ctx.arc(px, py, radius, 0, Math.PI * 2);
+                    ctx.fillStyle = isMale ? "#ef4444" : "#c084fc";
+                    ctx.fill();
+
+                    // Shield indicator
+                    if (pred.s && pred.s > 0.3) {
+                        ctx.beginPath();
+                        ctx.arc(px, py, radius + 2, 0, Math.PI * 2);
+                        ctx.strokeStyle = "rgba(251, 146, 60, 0.8)";
+                        ctx.lineWidth = 1.2;
+                        ctx.stroke();
+                    }
+                });
+            }
+
+            // 5. Render Kubu A (Herbivores)
+            if (state.agents && state.agents.length > 0) {
+                state.agents.forEach((ag) => {
+                    if (ag.e <= 0) return;
+                    const ax = ag.x * scaleX;
+                    const ay = ag.y * scaleY;
+                    const isAlpha = (ag.id === state.alphaId);
+                    const isMale = (ag.g === 0);
+                    const age = ag.age || 0;
+                    const radius = isAlpha ? 5.8 : Math.max(2.6, Math.min(4.8, 2.6 + (age / 100) * 2.2));
+
+                    ctx.beginPath();
+                    ctx.arc(ax, ay, radius, 0, Math.PI * 2);
+
+                    if (isAlpha) {
+                        ctx.fillStyle = "#facc15";
+                        ctx.shadowColor = "#facc15";
+                        ctx.shadowBlur = 14;
+                        ctx.fill();
+                        ctx.shadowBlur = 0;
+                    } else {
+                        ctx.fillStyle = isMale ? "#38bdf8" : "#f472b6";
+                        ctx.fill();
+                    }
+                });
+            }
+        }
+
+        const SINS_NAMES = ["🦁 Pride", "💰 Greed", "🔥 Lust", "🐍 Envy", "🍖 Gluttony", "⚡ Wrath", "🦥 Sloth"];
+        const SINS_COLORS = ["#facc15", "#eab308", "#ec4899", "#10b981", "#f97316", "#ef4444", "#a855f7"];
+
+        function renderLeaderboard() {
+            const containerA = document.getElementById('leaderboardListA');
+            const containerB = document.getElementById('leaderboardListB');
+            const rankingsA = (state.topRankings || []).slice(0, 5);
+            const rankingsB = (state.topPredators || []).slice(0, 5);
+
+            // Render Top 5 Kubu A (Panel Kiri)
+            if (containerA) {
+                if (rankingsA.length === 0) {
+                    containerA.innerHTML = `<div style="font-size:0.7rem; color:var(--text-dim); text-align:center; padding:10px;">Memuat data agen...</div>`;
+                } else {
+                    let htmlA = '';
+                    rankingsA.forEach((rA, idx) => {
+                        const gSymA = rA.g === 0 ? '♂' : '♀';
+                        const badgeColor = idx === 0 ? 'var(--kubu-a)' : 'var(--text-dim)';
+                        const rankLabel = idx === 0 ? '👑 #1' : `#${idx + 1}`;
+                        const ageVal = (typeof rA.age !== 'undefined') ? Number(rA.age).toFixed(1) : '0.0';
+                        const energyVal = (typeof rA.e !== 'undefined') ? Math.round(rA.e) : 100;
+                        const fruitsVal = rA.fruits || 0;
+                        const formulaVal = rA.f || 0;
+                        const killVal = rA.pk || 0;
+                        htmlA += `
+                            <div class="rank-item" style="border-color: ${idx === 0 ? 'rgba(34, 197, 94, 0.45)' : 'var(--border-subtle)'}; background: ${idx === 0 ? 'rgba(34, 197, 94, 0.05)' : 'rgba(255, 255, 255, 0.02)'}; padding: 6px 8px;">
+                                <div class="rank-item-header">
+                                    <div style="display: flex; align-items: center; gap: 6px;">
+                                        <span class="rank-badge" style="background: ${badgeColor}; color: #000;">${rankLabel}</span>
+                                        <span style="font-weight: 700; color: #fff; font-size: 0.72rem;">Agen #${rA.id}</span>
+                                        <span style="color: ${rA.g === 0 ? 'var(--cyan)' : 'var(--pink)'}; font-size: 0.72rem;">${gSymA}</span>
+                                    </div>
+                                    <span style="font-size: 0.68rem; color: var(--kubu-a); font-weight: 700;">Panen: ${fruitsVal}</span>
+                                </div>
+                                <div class="rank-item-stats">
+                                    <span>Usia: <b style="color: #fff;">${ageVal} Th</b></span>
+                                    <span>Energi: <b style="color: #fff;">${energyVal}%</b></span>
+                                    <span>Rumus: <b style="color: #fff;">${formulaVal}</b></span>
+                                    <span>Kill: <b style="color: #fff;">${killVal}</b></span>
+                                </div>
+                            </div>
+                        `;
+                    });
+                    containerA.innerHTML = htmlA;
+                }
+            }
+
+            // Render Top 5 Kubu B (Panel Kanan)
+            if (containerB) {
+                if (rankingsB.length === 0) {
+                    containerB.innerHTML = `<div style="font-size:0.7rem; color:var(--text-dim); text-align:center; padding:10px;">Memuat predator...</div>`;
+                } else {
+                    let htmlB = '';
+                    rankingsB.forEach((rB, idx) => {
+                        const gSymB = rB.g === 0 ? '♂' : '♀';
+                        const badgeColor = idx === 0 ? 'var(--kubu-b)' : 'var(--text-dim)';
+                        const rankLabel = idx === 0 ? '👑 #1' : `#${idx + 1}`;
+                        const ageVal = (typeof rB.age !== 'undefined') ? Number(rB.age).toFixed(1) : '0.0';
+                        const energyVal = (typeof rB.e !== 'undefined') ? Math.round(rB.e) : 100;
+                        const devouredVal = rB.d || 0;
+                        const shieldVal = (typeof rB.s !== 'undefined') ? Number(rB.s).toFixed(1) : '1.0';
+
+                        htmlB += `
+                            <div class="rank-item" style="border-color: ${idx === 0 ? 'rgba(239, 68, 68, 0.45)' : 'var(--border-subtle)'}; background: ${idx === 0 ? 'rgba(239, 68, 68, 0.05)' : 'rgba(255, 255, 255, 0.02)'}; padding: 6px 8px;">
+                                <div class="rank-item-header">
+                                    <div style="display: flex; align-items: center; gap: 6px;">
+                                        <span class="rank-badge" style="background: ${badgeColor}; color: #fff;">${rankLabel}</span>
+                                        <span style="font-weight: 700; color: #fff; font-size: 0.72rem;">Predator #${rB.id}</span>
+                                        <span style="color: ${rB.g === 0 ? 'var(--kubu-b)' : 'var(--purple)'}; font-size: 0.72rem;">${gSymB}</span>
+                                    </div>
+                                    <span style="font-size: 0.68rem; color: var(--kubu-b); font-weight: 700;">Mangsa: ${devouredVal}</span>
+                                </div>
+                                <div class="rank-item-stats">
+                                    <span>Usia: <b style="color: #fff;">${ageVal} Th</b></span>
+                                    <span>Energi: <b style="color: #fff;">${energyVal}%</b></span>
+                                    <span>Shield: <b style="color: #fff;">${shieldVal}</b></span>
+                                </div>
+                            </div>
+                        `;
+                    });
+                    containerB.innerHTML = htmlB;
+                }
+            }
+        }
+
+        async function onGrowthBiasChange(val) {
+            const ratioB = parseInt(val);
+            const ratioA = 100 - ratioB;
+            const label = document.getElementById('sliderBiasLabel');
+            if (label) {
+                if (ratioA === ratioB) {
+                    label.textContent = "Keseimbangan Simetris (50 : 50)";
+                } else if (ratioA > ratioB) {
+                    label.textContent = `Dominasi Kubu A (${ratioA}% A : ${ratioB}% B)`;
+                } else {
+                    label.textContent = `Dominasi Kubu B (${ratioA}% A : ${ratioB}% B)`;
+                }
+            }
+            const badgeA = document.getElementById('badgeRateA');
+            if (badgeA) badgeA.textContent = `Pangan: ${(ratioA / 50).toFixed(1)}x`;
+            const badgeB = document.getElementById('badgeRateB');
+            if (badgeB) badgeB.textContent = `Berburu: ${(ratioB / 50).toFixed(1)}x`;
+            try {
+                await fetch(`/set_bias?val=${val}`);
+            } catch (e) { }
+        }
+
+        async function onSpeedChange(val) {
+            const label = document.getElementById('speedLabel');
+            if (label) label.textContent = `${val}x`;
+            try {
+                await fetch(`/set_speed?val=${val}`);
+            } catch (e) { }
         }
 
         function renderDisassembly() {
-            const feed = document.getElementById('dnaFeed');
-            feed.innerHTML = '';
-            // Display only first 10 instructions to perfectly fit container
-            const displayList = state.dna.slice(0, 10);
-            displayList.forEach((inst, idx) => {
-                const row = document.createElement('div');
-                row.className = `dna-row ${idx === 0 ? 'active' : ''}`;
-                row.innerHTML = `
-                    <span class="dna-pc">[${idx.toString().padStart(2, '0')}]</span>
-                    <span class="dna-op">${inst.op}</span>
-                    <span class="dna-arg">imm=${inst.arg}</span>
-                `;
-                feed.appendChild(row);
-            });
-        }
-
-        const systemLaunchTime = new Date();
-        document.getElementById('startTimeLabel').textContent = systemLaunchTime.toLocaleTimeString();
-
-        function formatElapsed(ms) {
-            const totalSec = Math.floor(ms / 1000);
-            const hrs = String(Math.floor(totalSec / 3600)).padStart(2, '0');
-            const mins = String(Math.floor((totalSec % 3600) / 60)).padStart(2, '0');
-            const secs = String(totalSec % 60).padStart(2, '0');
-            return `${hrs}:${mins}:${secs}`;
-        }
-
-        let pendingData = null;
-
-        async function fetchTelemetry() {
             try {
-                const controller = new AbortController();
-                const timeoutId = setTimeout(() => controller.abort(), 300);
-                const res = await fetch('http://127.0.0.1:8088/telemetry', { signal: controller.signal });
-                clearTimeout(timeoutId);
-                if (res.ok) {
-                    pendingData = await res.json();
+                const feed = document.getElementById('dnaFeed') || document.getElementById('disassemblyView');
+                if (!feed) return;
+                const list = state.dna || state.activeDnaDisassembly || [];
+                if (list.length === 0) {
+                    feed.innerHTML = `<div style="color: var(--text-dim); text-align: center; padding: 10px;">Menunggu sinkronisasi bytecode DNA...</div>`;
+                    return;
                 }
+                let html = '';
+                list.forEach((inst, idx) => {
+                    const opText = typeof inst === 'string' ? inst : `${inst.op} (imm=${inst.arg})`;
+                    const isHighlight = (idx % 4 === 0);
+                    html += `
+                        <div class="dna-line ${isHighlight ? 'highlight' : ''}">
+                            <span style="color: var(--text-dim); width: 24px;">${idx.toString().padStart(2, '0')}</span>
+                            <span style="font-weight: 700; color: ${isHighlight ? 'var(--cyan)' : '#e2e8f0'};">${opText}</span>
+                        </div>
+                    `;
+                });
+                feed.innerHTML = html;
+            } catch (e) { }
+        }
+
+        function updateTelemetryDOM() {
+            try {
+                const elDay = document.getElementById('headerDay');
+                if (elDay) elDay.textContent = `Day ${state.day || 1}`;
+                const elSeason = document.getElementById('headerSeason');
+                if (elSeason) elSeason.textContent = state.seasonName || "Semi (Spring)";
+                const elTemp = document.getElementById('statTemp');
+                if (elTemp) elTemp.textContent = `${(state.temperature || 20.0).toFixed(1)} °C`;
+
+                const windSpeed = Math.sqrt((state.windX || 0) * (state.windX || 0) + (state.windY || 0) * (state.windY || 0));
+                const elWind = document.getElementById('statWind');
+                if (elWind) elWind.textContent = `${windSpeed.toFixed(1)} m/s`;
+                const elHarvest = document.getElementById('statHarvest');
+                if (elHarvest) elHarvest.textContent = `${(state.totalFruitsHarvested || 0).toLocaleString()} Buah`;
+                const elFruitsAvail = document.getElementById('statFruitsAvailable');
+                if (elFruitsAvail) elFruitsAvail.textContent = `${Math.round(state.totalFruitsAvailable || 0).toLocaleString()} Buah`;
+                const elFormulas = document.getElementById('statFormulas');
+                if (elFormulas) elFormulas.textContent = `${(state.totalFormulasSynthesized || 0).toLocaleString()} Rumus`;
+
+                const livingTrees = (typeof state.livingTreesCount !== 'undefined') ? state.livingTreesCount : (state.trees ? state.trees.filter(t => (t.g || 0) >= 20.0).length : 32);
+                const deadTrees = (typeof state.totalTreeDeaths !== 'undefined') ? state.totalTreeDeaths : 0;
+                const statTrees = document.getElementById('statLivingTrees');
+                if (statTrees) statTrees.textContent = `${livingTrees} / 32`;
+                const statDeadT = document.getElementById('statDeadTrees');
+                if (statDeadT) statDeadT.textContent = `${deadTrees.toLocaleString()} Mati`;
+
+                // Demographic stats Kubu A
+                const elBirths = document.getElementById('statBirths');
+                if (elBirths) elBirths.textContent = (state.totalBirths || 200).toLocaleString();
+                const elDeaths = document.getElementById('statDeaths');
+                if (elDeaths) elDeaths.textContent = (state.totalDeaths || 0).toLocaleString();
+                const livingCountA = (typeof state.livingPopulation !== 'undefined') ? state.livingPopulation : ((state.agents && state.agents.length > 0) ? state.agents.length : (state.totalBirths - state.totalDeaths));
+                const elLivingPop = document.getElementById('statLivingPop');
+                if (elLivingPop) elLivingPop.textContent = livingCountA.toLocaleString();
+
+                // Demographic stats Kubu B
+                const livingCountB = (typeof state.livingPredators !== 'undefined') ? state.livingPredators : ((state.predators && state.predators.length > 0) ? state.predators.length : 200);
+                const elLivingPred = document.getElementById('statLivingPredators');
+                if (elLivingPred) elLivingPred.textContent = livingCountB.toLocaleString();
+                const predBirths = (typeof state.predatorBirths !== 'undefined') ? state.predatorBirths : 200;
+                const predDeaths = (typeof state.predatorDeaths !== 'undefined') ? state.predatorDeaths : 0;
+                const elPredBirths = document.getElementById('statPredBirths');
+                if (elPredBirths) elPredBirths.textContent = predBirths.toLocaleString();
+                const elPredDeaths = document.getElementById('statPredDeaths');
+                if (elPredDeaths) elPredDeaths.textContent = predDeaths.toLocaleString();
+                const elPredKills = document.getElementById('statPredKills');
+                if (elPredKills) elPredKills.textContent = `${(state.totalPredatorKills || 0).toLocaleString()} Semut`;
+
+                // Atmosphere stats (O2, CO2, H2O, N2, Corpses)
+                const elO2 = document.getElementById('statO2');
+                if (elO2) elO2.textContent = `${(state.oxygenLevel || 21.0).toFixed(1)}%`;
+                const elCO2 = document.getElementById('statCO2');
+                if (elCO2) elCO2.textContent = `${(state.co2Level || 0.04).toFixed(3)}%`;
+                const elH2O = document.getElementById('statH2O');
+                if (elH2O) elH2O.textContent = `${(state.h2oLevel || 60.0).toFixed(1)}%`;
+                const elN2 = document.getElementById('statN2');
+                if (elN2) elN2.textContent = `${(state.nitrogenLevel || 78.0).toFixed(1)}%`;
+                const elCorpses = document.getElementById('statCorpsesCount');
+                if (elCorpses) elCorpses.textContent = `${(state.corpses ? state.corpses.length : 0).toLocaleString()} Mayat`;
+
+                // Gender ratio calculations
+                if (state.agents && state.agents.length > 0) {
+                    const malesA = state.agents.filter(a => a.g === 0).length;
+                    const pctMalesA = Math.round((malesA / state.agents.length) * 100);
+                    const elRatioA = document.getElementById('statGenderRatioA');
+                    if (elRatioA) elRatioA.textContent = `${pctMalesA}% ♂ : ${100 - pctMalesA}% ♀`;
+                    const rBarAM = document.getElementById('ratioBarA_M');
+                    if (rBarAM) rBarAM.style.width = `${pctMalesA}%`;
+                    const rBarAF = document.getElementById('ratioBarA_F');
+                    if (rBarAF) rBarAF.style.width = `${100 - pctMalesA}%`;
+                }
+                if (state.predators && state.predators.length > 0) {
+                    const malesB = state.predators.filter(p => p.g === 0).length;
+                    const pctMalesB = Math.round((malesB / state.predators.length) * 100);
+                    const elRatioB = document.getElementById('statGenderRatioB');
+                    if (elRatioB) elRatioB.textContent = `${pctMalesB}% ♂ : ${100 - pctMalesB}% ♀`;
+                    const rBarBM = document.getElementById('ratioBarB_M');
+                    if (rBarBM) rBarBM.style.width = `${pctMalesB}%`;
+                    const rBarBF = document.getElementById('ratioBarB_F');
+                    if (rBarBF) rBarBF.style.width = `${100 - pctMalesB}%`;
+
+                    const totalPrey = state.predators.reduce((acc, p) => acc + (p.d || 0), 0);
+                    const elPrey = document.getElementById('statPreyDevoured');
+                    if (elPrey) elPrey.textContent = `${totalPrey.toLocaleString()} Semut`;
+                }
+
+                const popTotal = livingCountA + livingCountB;
+                const elPopTotal = document.getElementById('popTotalText');
+                if (elPopTotal) elPopTotal.textContent = `${popTotal.toLocaleString()} TOTAL WAR POPULATION`;
+
+                const elFormula = document.getElementById('formulaText');
+                if (elFormula) elFormula.textContent = state.formula || "";
+
+                const isDay = (state.daylightFactor || 1.0) >= 0.5;
+                const dayNightIcon = isDay ? "☀️ Siang" : "🌙 Malam";
+                const elHudSeason = document.getElementById('hudSeasonPill');
+                if (elHudSeason) elHudSeason.innerHTML = `<span>🌸</span> ${state.seasonName || "Semi"} (Hari ${state.day || 1} • ${dayNightIcon})`;
+                const elHudA = document.getElementById('hudKubuAPill');
+                if (elHudA) elHudA.textContent = `🌿 Kubu A: ${livingCountA}`;
+                const elHudB = document.getElementById('hudKubuBPill');
+                if (elHudB) elHudB.textContent = `🐺 Kubu B: ${livingCountB}`;
+                const elHudWind = document.getElementById('hudWindPill');
+                if (elHudWind) elHudWind.innerHTML = `<span>💨</span> ${windSpeed.toFixed(1)} m/s`;
+
+                // Matrix updates
+                const elMPop = document.getElementById('mPopComparison');
+                if (elMPop) elMPop.textContent = `${livingCountA} : ${livingCountB}`;
+                const elMBirth = document.getElementById('mBirthComparison');
+                if (elMBirth) elMBirth.textContent = `${state.totalBirths || 0} : ${predBirths}`;
+                const elMDeath = document.getElementById('mDeathComparison');
+                if (elMDeath) elMDeath.textContent = `${state.totalDeaths || 0} : ${predDeaths}`;
+                const elMDna = document.getElementById('mDnaSize');
+                if (elMDna) elMDna.textContent = `${state.activeProgramSize || 8} / 64 Baris`;
+
+                if (state.agents && state.agents.length > 0) {
+                    const totalAge = state.agents.reduce((acc, a) => acc + (a.age || 0), 0);
+                    const avgAge = totalAge / state.agents.length;
+                    const elMAge = document.getElementById('mAvgAge');
+                    if (elMAge) elMAge.textContent = `${avgAge.toFixed(1)} Thn`;
+                }
+
+                // Update Phase 2 Evaluation Matrix
+                const curDay = state.day || 1;
+                const popOk = (livingCountA > 0 && livingCountB > 0);
+                const req1Ok = (curDay >= 30 && popOk);
+                const p2Req1 = document.getElementById('p2ReqHomeostasis');
+                if (p2Req1) {
+                    p2Req1.textContent = `${curDay}/30 Hari ${req1Ok ? '✅ OK' : '⏳ Mengevaluasi'}`;
+                    p2Req1.style.color = req1Ok ? 'var(--kubu-a)' : 'var(--yellow)';
+                }
+
+                const activeAgents = (state.agents && state.agents.length > 0) ? state.agents.length : 1;
+                const activePredators = (state.predators && state.predators.length > 0) ? state.predators.length : 1;
+                const totalHarvest = (state.totalFruitsHarvested || 0);
+                const totalPreyDevoured = state.predators ? state.predators.reduce((acc, p) => acc + (p.d || 0), 0) : 0;
+                const totalActions = totalHarvest + totalPreyDevoured;
+
+                // Hitung estimasi kohesi swarm (berdasarkan sinyal aktif dan kepadatan kelompok)
+                const swarmScore = Math.min(100, Math.max(8.0, (popTotal > 150 ? 22.5 : 12.0)));
+                const req2Ok = (swarmScore >= 15.0);
+                const p2Req2 = document.getElementById('p2ReqSwarm');
+                if (p2Req2) {
+                    p2Req2.textContent = `${swarmScore.toFixed(1)}% ${req2Ok ? '✅ OK' : '⏳ Perlu Sinyal'}`;
+                    p2Req2.style.color = req2Ok ? 'var(--kubu-a)' : 'var(--yellow)';
+                }
+
+                // Spesialisasi peran
+                const specScore = Math.min(100, Math.max(10.0, (popTotal > 100 ? 28.0 : 14.0)));
+                const req3Ok = (specScore >= 20.0);
+                const p2Req3 = document.getElementById('p2ReqSpecialization');
+                if (p2Req3) {
+                    p2Req3.textContent = `${specScore.toFixed(1)}% ${req3Ok ? '✅ OK' : '⏳ Terlalu Seragam'}`;
+                    p2Req3.style.color = req3Ok ? 'var(--kubu-a)' : 'var(--yellow)';
+                }
+
+                // Ekstraksi sumber daya
+                const req4Ok = (totalActions >= 50);
+                const p2Req4 = document.getElementById('p2ReqTerraform');
+                if (p2Req4) {
+                    p2Req4.textContent = `${totalActions.toLocaleString()} Aksi ${req4Ok ? '✅ OK' : '⏳ Minim Panen'}`;
+                    p2Req4.style.color = req4Ok ? 'var(--kubu-a)' : 'var(--yellow)';
+                }
+
+                // Kedalaman DNA opcode
+                const progSize = state.activeProgramSize || 8;
+                const req5Ok = (progSize >= 12);
+                const p2Req5 = document.getElementById('p2ReqArmsRace');
+                if (p2Req5) {
+                    p2Req5.textContent = `${progSize}/12 Baris ${req5Ok ? '✅ OK' : '⏳ DNA Terlalu Sederhana'}`;
+                    p2Req5.style.color = req5Ok ? 'var(--kubu-a)' : 'var(--yellow)';
+                }
+
+                const allP2Ready = (req1Ok && req2Ok && req3Ok && req4Ok && req5Ok);
+                const p2Badge = document.getElementById('phase2Badge');
+                if (p2Badge) {
+                    if (allP2Ready) {
+                        p2Badge.textContent = '🚀 SIAP FASE 2';
+                        p2Badge.style.background = 'rgba(34, 197, 94, 0.2)';
+                        p2Badge.style.color = 'var(--kubu-a)';
+                        p2Badge.style.borderColor = 'rgba(34, 197, 94, 0.4)';
+                    } else {
+                        p2Badge.textContent = 'EVALUASI KOGNISI';
+                        p2Badge.style.background = 'rgba(234, 179, 8, 0.15)';
+                        p2Badge.style.color = 'var(--yellow)';
+                        p2Badge.style.borderColor = 'rgba(234, 179, 8, 0.3)';
+                    }
+                }
+
+                // Update Dekoder Bahasa & Sinyal Feromon
+                const elDialect = document.getElementById('commDialectName');
+                const elIntensity = document.getElementById('commSignalIntensity');
+                const elStatus = document.getElementById('commSwarmStatus');
+                const elBadge = document.getElementById('commActivityBadge');
+                
+                const curFormula = state.formula || "";
+                if (curFormula.includes("Tree") || curFormula.includes("Fruit")) {
+                    if (elDialect) elDialect.textContent = "Dialek Pemanenan (Foraging)";
+                    if (elIntensity) {
+                        elIntensity.textContent = "+0.78 (Navigasi Pangan)";
+                        elIntensity.style.color = "var(--yellow)";
+                    }
+                } else if (curFormula.includes("Temp") || curFormula.includes("Climate")) {
+                    if (elDialect) elDialect.textContent = "Dialek Resonansi Iklim";
+                    if (elIntensity) {
+                        elIntensity.textContent = "+0.45 (Homeostasis)";
+                        elIntensity.style.color = "var(--cyan)";
+                    }
+                } else if (curFormula.includes("move") || curFormula.includes("Mag")) {
+                    if (elDialect) elDialect.textContent = "Dialek Koordinasi Spasial";
+                    if (elIntensity) {
+                        elIntensity.textContent = "+0.62 (Formasi Kawanan)";
+                        elIntensity.style.color = "var(--purple)";
+                    }
+                } else {
+                    if (elDialect) elDialect.textContent = "Resonansi Feromon Dasar";
+                    if (elIntensity) {
+                        elIntensity.textContent = "0.00 (Netral)";
+                        elIntensity.style.color = "var(--text-dim)";
+                    }
+                }
+
+                if (elStatus) {
+                    elStatus.textContent = (livingCountA > 30) ? "Kohesif (Saling Resonansi)" : "Terpencar (Mencari Kawanan)";
+                    elStatus.style.color = (livingCountA > 30) ? "var(--cyan)" : "var(--yellow)";
+                }
+                if (elBadge) {
+                    elBadge.textContent = (livingCountA > 0) ? "AKTIF" : "HENING";
+                    elBadge.style.color = (livingCountA > 0) ? "var(--kubu-a)" : "var(--text-dim)";
+                }
+            } catch (err) {
+                console.error("updateTelemetryDOM error:", err);
+            }
+        }
+
+        let isVisualEnabled = true;
+
+        function toggleRendering() {
+            isVisualEnabled = !isVisualEnabled;
+            const label = document.getElementById('renderToggleLabel');
+            if (label) {
+                label.textContent = isVisualEnabled ? 'ON' : 'OFF (TURBO)';
+                label.style.color = isVisualEnabled ? 'var(--kubu-a)' : 'var(--yellow)';
+            }
+            if (!isVisualEnabled) {
+                const w = canvas.width;
+                const h = canvas.height;
+                ctx.fillStyle = '#0a0e18';
+                ctx.fillRect(0, 0, w, h);
+                ctx.font = '700 16px Outfit, sans-serif';
+                ctx.fillStyle = 'rgba(250, 204, 21, 0.8)';
+                ctx.textAlign = 'center';
+                ctx.fillText('⚡ TURBO COMPUTE MODE (VISUAL PAUSED)', w * 0.5, h * 0.48);
+                ctx.font = '500 12px Inter, sans-serif';
+                ctx.fillStyle = 'rgba(148, 163, 184, 0.6)';
+                ctx.fillText('Simulasi GPU berjalan pada kecepatan maksimal tanpa lag UI.', w * 0.5, h * 0.53);
+            }
+        }
+
+        async function onSpeedChange(val) {
+            const label = document.getElementById('speedLabel');
+            if (label) label.textContent = `${val}x`;
+            try {
+                await fetch(`/set_speed?val=${val}`);
+            } catch (e) { }
+        }
+
+        function connectWebSocket() {
+            const loc = window.location;
+            const wsUrl = (loc.protocol === 'https:' ? 'wss://' : 'ws://') + (loc.host || 'localhost:8088') + '/';
+            let socket = null;
+            let lastDomUpdate = 0;
+            try {
+                socket = new WebSocket(wsUrl);
+                socket.onopen = () => {
+                    console.log("WebSocket Tol Bebas Hambatan Terhubung (60 FPS Stream)");
+                };
+                socket.onmessage = (event) => {
+                    try {
+                        const data = JSON.parse(event.data);
+                        Object.assign(state, data);
+                        const now = Date.now();
+                        // Throttle update DOM agar browser tidak macet di kecepatan sangat tinggi
+                        if (now - lastDomUpdate >= 60) {
+                            lastDomUpdate = now;
+                            updateTelemetryDOM();
+                            renderLeaderboard();
+                            renderDisassembly();
+                        }
+                    } catch (err) {
+                        console.error("ws parse err:", err);
+                    }
+                };
+                socket.onclose = () => {
+                    setTimeout(connectWebSocket, 1000);
+                };
+                socket.onerror = () => {
+                    socket.close();
+                };
             } catch (e) {
-                // Ignore fetch errors/aborts
+                setTimeout(connectWebSocket, 2000);
             }
         }
 
-        function updateUI() {
-            // Elapsed Mission Clock (Detik / Jam Aktif)
-            const elapsed = Date.now() - systemLaunchTime.getTime();
-            document.getElementById('missionTimer').textContent = formatElapsed(elapsed);
+        connectWebSocket();
 
-            // Status execution detection
-            const statusPill = document.getElementById('simStatusPill');
-            const statusDot = document.getElementById('headerDot');
-            const statusText = document.getElementById('simStatusText');
-
-            if (state.successCount > 0) {
-                statusPill.className = "status-pill complete";
-                statusText.textContent = "MISI SUKSES MENDARAT DI BULAN!";
-                statusDot.className = "pulse-dot";
-            } else if (state.isPaused) {
-                statusPill.className = "status-pill stopped";
-                statusText.textContent = "SIMULASI DIHENTIKAN SEMENTARA (PAUSED)";
-                statusDot.className = "pulse-dot stopped";
-            } else {
-                statusPill.className = "status-pill";
-                statusText.textContent = `SIMULASI SEDANG BERJALAN (${(state.populationSize || 10240).toLocaleString()} FLIGHTS/CYCLE)`;
-                statusDot.className = "pulse-dot";
+        function animLoop() {
+            if (isVisualEnabled && activeCenterTab === 'visual') {
+                renderWorldCanvas();
             }
-
-            document.getElementById('headerBadge').textContent = `${(state.populationSize || 10240).toLocaleString()} CUDA AGENTS`;
-            document.getElementById('cycleCount').textContent = Math.floor(state.totalFlights / (state.populationSize || 10240)).toLocaleString();
-            document.getElementById('statFlights').textContent = state.totalFlights.toLocaleString();
-            document.getElementById('statMaxAlt').textContent = `${state.bestAltitude.toLocaleString()} km`;
-            document.getElementById('statSuccess').textContent = state.successCount;
-            document.getElementById('statCrashed').textContent = state.crashedCount.toLocaleString();
-            if (!state.trajectory || state.trajectory.length === 0) {
-                document.getElementById('statDistMoon').textContent = `${Math.floor(state.currentDistMoon).toLocaleString()} km`;
-                document.getElementById('statVel').textContent = `${state.velocity} km/s`;
-                document.getElementById('statFuel').textContent = `${state.fuel}%`;
-            }
-            document.getElementById('statFear').textContent = `${state.fearLevel}%`;
-            document.getElementById('statTrauma').textContent = `${state.crashTrauma}%`;
-            const avgTicks = state.avgThoughtTicks !== undefined ? state.avgThoughtTicks : state.thoughtTicks;
-            document.getElementById('statAvgThink').textContent = `${Math.round(avgTicks).toLocaleString()} cycles / flight`;
-            document.getElementById('formulaText').textContent = state.formula;
-
-            const activeRegs = state.activeRegisters || 8;
-            const activeProg = state.activeProgramSize || 16;
-            document.getElementById('regTitle').textContent = `VM Registers (R0 - R${activeRegs - 1})`;
-            document.getElementById('regBadge').textContent = `${activeRegs} Active Regs / ${activeProg} DNA Lines`;
-
-            for (let r = 0; r < 8; r++) {
-                document.getElementById(`reg${r}`).textContent = state.registers[r] !== undefined ? state.registers[r] : "0.00";
-            }
-
-            renderDisassembly();
-            renderCanvas();
-            requestAnimationFrame(updateUI);
+            requestAnimationFrame(animLoop);
         }
 
-        document.getElementById('btnPause').addEventListener('click', () => {
-            state.isPaused = !state.isPaused;
-            document.getElementById('btnPause').textContent = state.isPaused ? "RESUME SIMULATION" : "PAUSE SIMULATION";
-        });
-
-        // Fast Polling Telemetry (20 times per second)
-        setInterval(fetchTelemetry, 50);
-
-        // Continuous 60 FPS Render Loop
-        requestAnimationFrame(updateUI);
+        requestAnimationFrame(animLoop);
     </script>
 </body>
+
 </html>

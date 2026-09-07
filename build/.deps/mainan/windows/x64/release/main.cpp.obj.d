@@ -2,16 +2,6 @@
     files = {
         "main.cpp"
     },
-    values = {
-        [[C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\bin\HostX64\x64\cl.exe]],
-        {
-            "-nologo",
-            "-MD",
-            "-std:c++17",
-            [[-IC:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v13.3\include]],
-            "/EHsc"
-        }
-    },
     depfiles = "{\
     \"Version\": \"1.2\",\
     \"Data\": {\
@@ -256,49 +246,46 @@
             \"c:\\\\program files (x86)\\\\windows kits\\\\10\\\\include\\\\10.0.26100.0\\\\shared\\\\ws2ipdef.h\",\
             \"c:\\\\program files (x86)\\\\windows kits\\\\10\\\\include\\\\10.0.26100.0\\\\shared\\\\in6addr.h\",\
             \"c:\\\\program files (x86)\\\\windows kits\\\\10\\\\include\\\\10.0.26100.0\\\\shared\\\\windowsx.h\",\
-            \"c:\\\\program files (x86)\\\\microsoft visual studio\\\\2022\\\\buildtools\\\\vc\\\\tools\\\\msvc\\\\14.44.35207\\\\include\\\\ctime\",\
+            \"c:\\\\program files (x86)\\\\microsoft visual studio\\\\2022\\\\buildtools\\\\vc\\\\tools\\\\msvc\\\\14.44.35207\\\\include\\\\algorithm\",\
             \"c:\\\\program files (x86)\\\\microsoft visual studio\\\\2022\\\\buildtools\\\\vc\\\\tools\\\\msvc\\\\14.44.35207\\\\include\\\\yvals_core.h\",\
             \"c:\\\\program files (x86)\\\\microsoft visual studio\\\\2022\\\\buildtools\\\\vc\\\\tools\\\\msvc\\\\14.44.35207\\\\include\\\\xkeycheck.h\",\
-            \"c:\\\\program files (x86)\\\\windows kits\\\\10\\\\include\\\\10.0.26100.0\\\\ucrt\\\\time.h\",\
-            \"c:\\\\program files (x86)\\\\windows kits\\\\10\\\\include\\\\10.0.26100.0\\\\ucrt\\\\corecrt_wtime.h\",\
-            \"c:\\\\program files (x86)\\\\microsoft visual studio\\\\2022\\\\buildtools\\\\vc\\\\tools\\\\msvc\\\\14.44.35207\\\\include\\\\iomanip\",\
-            \"c:\\\\program files (x86)\\\\microsoft visual studio\\\\2022\\\\buildtools\\\\vc\\\\tools\\\\msvc\\\\14.44.35207\\\\include\\\\istream\",\
-            \"c:\\\\program files (x86)\\\\microsoft visual studio\\\\2022\\\\buildtools\\\\vc\\\\tools\\\\msvc\\\\14.44.35207\\\\include\\\\__msvc_ostream.hpp\",\
-            \"c:\\\\program files (x86)\\\\microsoft visual studio\\\\2022\\\\buildtools\\\\vc\\\\tools\\\\msvc\\\\14.44.35207\\\\include\\\\ios\",\
-            \"c:\\\\program files (x86)\\\\microsoft visual studio\\\\2022\\\\buildtools\\\\vc\\\\tools\\\\msvc\\\\14.44.35207\\\\include\\\\xlocnum\",\
-            \"c:\\\\program files (x86)\\\\microsoft visual studio\\\\2022\\\\buildtools\\\\vc\\\\tools\\\\msvc\\\\14.44.35207\\\\include\\\\cfloat\",\
-            \"c:\\\\program files (x86)\\\\windows kits\\\\10\\\\include\\\\10.0.26100.0\\\\ucrt\\\\float.h\",\
-            \"c:\\\\program files (x86)\\\\microsoft visual studio\\\\2022\\\\buildtools\\\\vc\\\\tools\\\\msvc\\\\14.44.35207\\\\include\\\\climits\",\
-            \"c:\\\\program files (x86)\\\\microsoft visual studio\\\\2022\\\\buildtools\\\\vc\\\\tools\\\\msvc\\\\14.44.35207\\\\include\\\\cmath\",\
+            \"c:\\\\program files (x86)\\\\microsoft visual studio\\\\2022\\\\buildtools\\\\vc\\\\tools\\\\msvc\\\\14.44.35207\\\\include\\\\__msvc_heap_algorithms.hpp\",\
+            \"c:\\\\program files (x86)\\\\microsoft visual studio\\\\2022\\\\buildtools\\\\vc\\\\tools\\\\msvc\\\\14.44.35207\\\\include\\\\xutility\",\
             \"c:\\\\program files (x86)\\\\microsoft visual studio\\\\2022\\\\buildtools\\\\vc\\\\tools\\\\msvc\\\\14.44.35207\\\\include\\\\yvals.h\",\
             \"c:\\\\program files (x86)\\\\windows kits\\\\10\\\\include\\\\10.0.26100.0\\\\ucrt\\\\crtdbg.h\",\
             \"c:\\\\program files (x86)\\\\microsoft visual studio\\\\2022\\\\buildtools\\\\vc\\\\tools\\\\msvc\\\\14.44.35207\\\\include\\\\vcruntime_new_debug.h\",\
             \"c:\\\\program files (x86)\\\\microsoft visual studio\\\\2022\\\\buildtools\\\\vc\\\\tools\\\\msvc\\\\14.44.35207\\\\include\\\\vcruntime_new.h\",\
             \"c:\\\\program files (x86)\\\\microsoft visual studio\\\\2022\\\\buildtools\\\\vc\\\\tools\\\\msvc\\\\14.44.35207\\\\include\\\\crtdefs.h\",\
             \"c:\\\\program files (x86)\\\\microsoft visual studio\\\\2022\\\\buildtools\\\\vc\\\\tools\\\\msvc\\\\14.44.35207\\\\include\\\\use_ansi.h\",\
+            \"c:\\\\program files (x86)\\\\microsoft visual studio\\\\2022\\\\buildtools\\\\vc\\\\tools\\\\msvc\\\\14.44.35207\\\\include\\\\__msvc_iter_core.hpp\",\
+            \"c:\\\\program files (x86)\\\\microsoft visual studio\\\\2022\\\\buildtools\\\\vc\\\\tools\\\\msvc\\\\14.44.35207\\\\include\\\\utility\",\
+            \"c:\\\\program files (x86)\\\\microsoft visual studio\\\\2022\\\\buildtools\\\\vc\\\\tools\\\\msvc\\\\14.44.35207\\\\include\\\\initializer_list\",\
+            \"c:\\\\program files (x86)\\\\microsoft visual studio\\\\2022\\\\buildtools\\\\vc\\\\tools\\\\msvc\\\\14.44.35207\\\\include\\\\cstddef\",\
+            \"c:\\\\program files (x86)\\\\microsoft visual studio\\\\2022\\\\buildtools\\\\vc\\\\tools\\\\msvc\\\\14.44.35207\\\\include\\\\xtr1common\",\
+            \"c:\\\\program files (x86)\\\\microsoft visual studio\\\\2022\\\\buildtools\\\\vc\\\\tools\\\\msvc\\\\14.44.35207\\\\include\\\\type_traits\",\
+            \"c:\\\\program files (x86)\\\\microsoft visual studio\\\\2022\\\\buildtools\\\\vc\\\\tools\\\\msvc\\\\14.44.35207\\\\include\\\\cstdint\",\
+            \"c:\\\\program files (x86)\\\\microsoft visual studio\\\\2022\\\\buildtools\\\\vc\\\\tools\\\\msvc\\\\14.44.35207\\\\include\\\\stdint.h\",\
+            \"c:\\\\program files (x86)\\\\microsoft visual studio\\\\2022\\\\buildtools\\\\vc\\\\tools\\\\msvc\\\\14.44.35207\\\\include\\\\cstring\",\
+            \"c:\\\\program files (x86)\\\\microsoft visual studio\\\\2022\\\\buildtools\\\\vc\\\\tools\\\\msvc\\\\14.44.35207\\\\include\\\\climits\",\
             \"c:\\\\program files (x86)\\\\microsoft visual studio\\\\2022\\\\buildtools\\\\vc\\\\tools\\\\msvc\\\\14.44.35207\\\\include\\\\cstdlib\",\
             \"c:\\\\program files (x86)\\\\windows kits\\\\10\\\\include\\\\10.0.26100.0\\\\ucrt\\\\math.h\",\
             \"c:\\\\program files (x86)\\\\windows kits\\\\10\\\\include\\\\10.0.26100.0\\\\ucrt\\\\corecrt_math.h\",\
-            \"c:\\\\program files (x86)\\\\microsoft visual studio\\\\2022\\\\buildtools\\\\vc\\\\tools\\\\msvc\\\\14.44.35207\\\\include\\\\xtr1common\",\
-            \"c:\\\\program files (x86)\\\\microsoft visual studio\\\\2022\\\\buildtools\\\\vc\\\\tools\\\\msvc\\\\14.44.35207\\\\include\\\\intrin0.h\",\
-            \"c:\\\\program files (x86)\\\\microsoft visual studio\\\\2022\\\\buildtools\\\\vc\\\\tools\\\\msvc\\\\14.44.35207\\\\include\\\\intrin0.inl.h\",\
+            \"c:\\\\program files (x86)\\\\microsoft visual studio\\\\2022\\\\buildtools\\\\vc\\\\tools\\\\msvc\\\\14.44.35207\\\\include\\\\cwchar\",\
             \"c:\\\\program files (x86)\\\\microsoft visual studio\\\\2022\\\\buildtools\\\\vc\\\\tools\\\\msvc\\\\14.44.35207\\\\include\\\\cstdio\",\
             \"c:\\\\program files (x86)\\\\windows kits\\\\10\\\\include\\\\10.0.26100.0\\\\ucrt\\\\stdio.h\",\
             \"c:\\\\program files (x86)\\\\windows kits\\\\10\\\\include\\\\10.0.26100.0\\\\ucrt\\\\corecrt_wstdio.h\",\
             \"c:\\\\program files (x86)\\\\windows kits\\\\10\\\\include\\\\10.0.26100.0\\\\ucrt\\\\corecrt_stdio_config.h\",\
-            \"c:\\\\program files (x86)\\\\microsoft visual studio\\\\2022\\\\buildtools\\\\vc\\\\tools\\\\msvc\\\\14.44.35207\\\\include\\\\iterator\",\
-            \"c:\\\\program files (x86)\\\\microsoft visual studio\\\\2022\\\\buildtools\\\\vc\\\\tools\\\\msvc\\\\14.44.35207\\\\include\\\\iosfwd\",\
-            \"c:\\\\program files (x86)\\\\microsoft visual studio\\\\2022\\\\buildtools\\\\vc\\\\tools\\\\msvc\\\\14.44.35207\\\\include\\\\cstring\",\
-            \"c:\\\\program files (x86)\\\\microsoft visual studio\\\\2022\\\\buildtools\\\\vc\\\\tools\\\\msvc\\\\14.44.35207\\\\include\\\\cwchar\",\
             \"c:\\\\program files (x86)\\\\windows kits\\\\10\\\\include\\\\10.0.26100.0\\\\ucrt\\\\wchar.h\",\
             \"c:\\\\program files (x86)\\\\windows kits\\\\10\\\\include\\\\10.0.26100.0\\\\ucrt\\\\corecrt_wconio.h\",\
             \"c:\\\\program files (x86)\\\\windows kits\\\\10\\\\include\\\\10.0.26100.0\\\\ucrt\\\\corecrt_wdirect.h\",\
             \"c:\\\\program files (x86)\\\\windows kits\\\\10\\\\include\\\\10.0.26100.0\\\\ucrt\\\\corecrt_wio.h\",\
             \"c:\\\\program files (x86)\\\\windows kits\\\\10\\\\include\\\\10.0.26100.0\\\\ucrt\\\\corecrt_share.h\",\
             \"c:\\\\program files (x86)\\\\windows kits\\\\10\\\\include\\\\10.0.26100.0\\\\ucrt\\\\corecrt_wprocess.h\",\
+            \"c:\\\\program files (x86)\\\\windows kits\\\\10\\\\include\\\\10.0.26100.0\\\\ucrt\\\\corecrt_wtime.h\",\
             \"c:\\\\program files (x86)\\\\windows kits\\\\10\\\\include\\\\10.0.26100.0\\\\ucrt\\\\sys\\\\stat.h\",\
             \"c:\\\\program files (x86)\\\\windows kits\\\\10\\\\include\\\\10.0.26100.0\\\\ucrt\\\\sys\\\\types.h\",\
             \"c:\\\\program files (x86)\\\\microsoft visual studio\\\\2022\\\\buildtools\\\\vc\\\\tools\\\\msvc\\\\14.44.35207\\\\include\\\\intrin.h\",\
+            \"c:\\\\program files (x86)\\\\microsoft visual studio\\\\2022\\\\buildtools\\\\vc\\\\tools\\\\msvc\\\\14.44.35207\\\\include\\\\intrin0.inl.h\",\
             \"c:\\\\program files (x86)\\\\microsoft visual studio\\\\2022\\\\buildtools\\\\vc\\\\tools\\\\msvc\\\\14.44.35207\\\\include\\\\setjmp.h\",\
             \"c:\\\\program files (x86)\\\\microsoft visual studio\\\\2022\\\\buildtools\\\\vc\\\\tools\\\\msvc\\\\14.44.35207\\\\include\\\\immintrin.h\",\
             \"c:\\\\program files (x86)\\\\microsoft visual studio\\\\2022\\\\buildtools\\\\vc\\\\tools\\\\msvc\\\\14.44.35207\\\\include\\\\wmmintrin.h\",\
@@ -312,40 +299,46 @@
             \"c:\\\\program files (x86)\\\\windows kits\\\\10\\\\include\\\\10.0.26100.0\\\\ucrt\\\\malloc.h\",\
             \"c:\\\\program files (x86)\\\\microsoft visual studio\\\\2022\\\\buildtools\\\\vc\\\\tools\\\\msvc\\\\14.44.35207\\\\include\\\\zmmintrin.h\",\
             \"c:\\\\program files (x86)\\\\microsoft visual studio\\\\2022\\\\buildtools\\\\vc\\\\tools\\\\msvc\\\\14.44.35207\\\\include\\\\ammintrin.h\",\
-            \"c:\\\\program files (x86)\\\\microsoft visual studio\\\\2022\\\\buildtools\\\\vc\\\\tools\\\\msvc\\\\14.44.35207\\\\include\\\\xutility\",\
-            \"c:\\\\program files (x86)\\\\microsoft visual studio\\\\2022\\\\buildtools\\\\vc\\\\tools\\\\msvc\\\\14.44.35207\\\\include\\\\__msvc_iter_core.hpp\",\
-            \"c:\\\\program files (x86)\\\\microsoft visual studio\\\\2022\\\\buildtools\\\\vc\\\\tools\\\\msvc\\\\14.44.35207\\\\include\\\\utility\",\
-            \"c:\\\\program files (x86)\\\\microsoft visual studio\\\\2022\\\\buildtools\\\\vc\\\\tools\\\\msvc\\\\14.44.35207\\\\include\\\\initializer_list\",\
-            \"c:\\\\program files (x86)\\\\microsoft visual studio\\\\2022\\\\buildtools\\\\vc\\\\tools\\\\msvc\\\\14.44.35207\\\\include\\\\cstddef\",\
-            \"c:\\\\program files (x86)\\\\microsoft visual studio\\\\2022\\\\buildtools\\\\vc\\\\tools\\\\msvc\\\\14.44.35207\\\\include\\\\type_traits\",\
-            \"c:\\\\program files (x86)\\\\microsoft visual studio\\\\2022\\\\buildtools\\\\vc\\\\tools\\\\msvc\\\\14.44.35207\\\\include\\\\cstdint\",\
-            \"c:\\\\program files (x86)\\\\microsoft visual studio\\\\2022\\\\buildtools\\\\vc\\\\tools\\\\msvc\\\\14.44.35207\\\\include\\\\stdint.h\",\
-            \"c:\\\\program files (x86)\\\\microsoft visual studio\\\\2022\\\\buildtools\\\\vc\\\\tools\\\\msvc\\\\14.44.35207\\\\include\\\\streambuf\",\
-            \"c:\\\\program files (x86)\\\\microsoft visual studio\\\\2022\\\\buildtools\\\\vc\\\\tools\\\\msvc\\\\14.44.35207\\\\include\\\\xiosbase\",\
-            \"c:\\\\program files (x86)\\\\windows kits\\\\10\\\\include\\\\10.0.26100.0\\\\ucrt\\\\share.h\",\
-            \"c:\\\\program files (x86)\\\\microsoft visual studio\\\\2022\\\\buildtools\\\\vc\\\\tools\\\\msvc\\\\14.44.35207\\\\include\\\\system_error\",\
-            \"c:\\\\program files (x86)\\\\microsoft visual studio\\\\2022\\\\buildtools\\\\vc\\\\tools\\\\msvc\\\\14.44.35207\\\\include\\\\__msvc_system_error_abi.hpp\",\
-            \"c:\\\\program files (x86)\\\\microsoft visual studio\\\\2022\\\\buildtools\\\\vc\\\\tools\\\\msvc\\\\14.44.35207\\\\include\\\\cerrno\",\
-            \"c:\\\\program files (x86)\\\\microsoft visual studio\\\\2022\\\\buildtools\\\\vc\\\\tools\\\\msvc\\\\14.44.35207\\\\include\\\\stdexcept\",\
+            \"c:\\\\program files (x86)\\\\microsoft visual studio\\\\2022\\\\buildtools\\\\vc\\\\tools\\\\msvc\\\\14.44.35207\\\\include\\\\__msvc_minmax.hpp\",\
+            \"c:\\\\program files (x86)\\\\microsoft visual studio\\\\2022\\\\buildtools\\\\vc\\\\tools\\\\msvc\\\\14.44.35207\\\\include\\\\xmemory\",\
+            \"c:\\\\program files (x86)\\\\microsoft visual studio\\\\2022\\\\buildtools\\\\vc\\\\tools\\\\msvc\\\\14.44.35207\\\\include\\\\limits\",\
+            \"c:\\\\program files (x86)\\\\microsoft visual studio\\\\2022\\\\buildtools\\\\vc\\\\tools\\\\msvc\\\\14.44.35207\\\\include\\\\cfloat\",\
+            \"c:\\\\program files (x86)\\\\windows kits\\\\10\\\\include\\\\10.0.26100.0\\\\ucrt\\\\float.h\",\
+            \"c:\\\\program files (x86)\\\\microsoft visual studio\\\\2022\\\\buildtools\\\\vc\\\\tools\\\\msvc\\\\14.44.35207\\\\include\\\\intrin0.h\",\
+            \"c:\\\\program files (x86)\\\\microsoft visual studio\\\\2022\\\\buildtools\\\\vc\\\\tools\\\\msvc\\\\14.44.35207\\\\include\\\\new\",\
             \"c:\\\\program files (x86)\\\\microsoft visual studio\\\\2022\\\\buildtools\\\\vc\\\\tools\\\\msvc\\\\14.44.35207\\\\include\\\\exception\",\
             \"c:\\\\program files (x86)\\\\microsoft visual studio\\\\2022\\\\buildtools\\\\vc\\\\tools\\\\msvc\\\\14.44.35207\\\\include\\\\vcruntime_exception.h\",\
             \"c:\\\\program files (x86)\\\\microsoft visual studio\\\\2022\\\\buildtools\\\\vc\\\\tools\\\\msvc\\\\14.44.35207\\\\include\\\\eh.h\",\
             \"c:\\\\program files (x86)\\\\windows kits\\\\10\\\\include\\\\10.0.26100.0\\\\ucrt\\\\corecrt_terminate.h\",\
-            \"c:\\\\program files (x86)\\\\microsoft visual studio\\\\2022\\\\buildtools\\\\vc\\\\tools\\\\msvc\\\\14.44.35207\\\\include\\\\xstring\",\
-            \"c:\\\\program files (x86)\\\\microsoft visual studio\\\\2022\\\\buildtools\\\\vc\\\\tools\\\\msvc\\\\14.44.35207\\\\include\\\\__msvc_sanitizer_annotate_container.hpp\",\
-            \"c:\\\\program files (x86)\\\\microsoft visual studio\\\\2022\\\\buildtools\\\\vc\\\\tools\\\\msvc\\\\14.44.35207\\\\include\\\\__msvc_string_view.hpp\",\
-            \"c:\\\\program files (x86)\\\\microsoft visual studio\\\\2022\\\\buildtools\\\\vc\\\\tools\\\\msvc\\\\14.44.35207\\\\include\\\\xmemory\",\
-            \"c:\\\\program files (x86)\\\\microsoft visual studio\\\\2022\\\\buildtools\\\\vc\\\\tools\\\\msvc\\\\14.44.35207\\\\include\\\\limits\",\
-            \"c:\\\\program files (x86)\\\\microsoft visual studio\\\\2022\\\\buildtools\\\\vc\\\\tools\\\\msvc\\\\14.44.35207\\\\include\\\\new\",\
             \"c:\\\\program files (x86)\\\\microsoft visual studio\\\\2022\\\\buildtools\\\\vc\\\\tools\\\\msvc\\\\14.44.35207\\\\include\\\\xatomic.h\",\
-            \"c:\\\\program files (x86)\\\\microsoft visual studio\\\\2022\\\\buildtools\\\\vc\\\\tools\\\\msvc\\\\14.44.35207\\\\include\\\\xpolymorphic_allocator.h\",\
-            \"c:\\\\program files (x86)\\\\microsoft visual studio\\\\2022\\\\buildtools\\\\vc\\\\tools\\\\msvc\\\\14.44.35207\\\\include\\\\tuple\",\
-            \"c:\\\\program files (x86)\\\\microsoft visual studio\\\\2022\\\\buildtools\\\\vc\\\\tools\\\\msvc\\\\14.44.35207\\\\include\\\\xcall_once.h\",\
-            \"c:\\\\program files (x86)\\\\microsoft visual studio\\\\2022\\\\buildtools\\\\vc\\\\tools\\\\msvc\\\\14.44.35207\\\\include\\\\xerrc.h\",\
             \"c:\\\\program files (x86)\\\\microsoft visual studio\\\\2022\\\\buildtools\\\\vc\\\\tools\\\\msvc\\\\14.44.35207\\\\include\\\\atomic\",\
             \"c:\\\\program files (x86)\\\\microsoft visual studio\\\\2022\\\\buildtools\\\\vc\\\\tools\\\\msvc\\\\14.44.35207\\\\include\\\\xthreads.h\",\
             \"c:\\\\program files (x86)\\\\microsoft visual studio\\\\2022\\\\buildtools\\\\vc\\\\tools\\\\msvc\\\\14.44.35207\\\\include\\\\__msvc_threads_core.hpp\",\
             \"c:\\\\program files (x86)\\\\microsoft visual studio\\\\2022\\\\buildtools\\\\vc\\\\tools\\\\msvc\\\\14.44.35207\\\\include\\\\xtimec.h\",\
+            \"c:\\\\program files (x86)\\\\microsoft visual studio\\\\2022\\\\buildtools\\\\vc\\\\tools\\\\msvc\\\\14.44.35207\\\\include\\\\ctime\",\
+            \"c:\\\\program files (x86)\\\\windows kits\\\\10\\\\include\\\\10.0.26100.0\\\\ucrt\\\\time.h\",\
+            \"c:\\\\program files (x86)\\\\microsoft visual studio\\\\2022\\\\buildtools\\\\vc\\\\tools\\\\msvc\\\\14.44.35207\\\\include\\\\chrono\",\
+            \"c:\\\\program files (x86)\\\\microsoft visual studio\\\\2022\\\\buildtools\\\\vc\\\\tools\\\\msvc\\\\14.44.35207\\\\include\\\\__msvc_chrono.hpp\",\
+            \"c:\\\\program files (x86)\\\\microsoft visual studio\\\\2022\\\\buildtools\\\\vc\\\\tools\\\\msvc\\\\14.44.35207\\\\include\\\\ratio\",\
+            \"c:\\\\program files (x86)\\\\microsoft visual studio\\\\2022\\\\buildtools\\\\vc\\\\tools\\\\msvc\\\\14.44.35207\\\\include\\\\system_error\",\
+            \"c:\\\\program files (x86)\\\\microsoft visual studio\\\\2022\\\\buildtools\\\\vc\\\\tools\\\\msvc\\\\14.44.35207\\\\include\\\\__msvc_system_error_abi.hpp\",\
+            \"c:\\\\program files (x86)\\\\microsoft visual studio\\\\2022\\\\buildtools\\\\vc\\\\tools\\\\msvc\\\\14.44.35207\\\\include\\\\cerrno\",\
+            \"c:\\\\program files (x86)\\\\microsoft visual studio\\\\2022\\\\buildtools\\\\vc\\\\tools\\\\msvc\\\\14.44.35207\\\\include\\\\stdexcept\",\
+            \"c:\\\\program files (x86)\\\\microsoft visual studio\\\\2022\\\\buildtools\\\\vc\\\\tools\\\\msvc\\\\14.44.35207\\\\include\\\\xstring\",\
+            \"c:\\\\program files (x86)\\\\microsoft visual studio\\\\2022\\\\buildtools\\\\vc\\\\tools\\\\msvc\\\\14.44.35207\\\\include\\\\__msvc_sanitizer_annotate_container.hpp\",\
+            \"c:\\\\program files (x86)\\\\microsoft visual studio\\\\2022\\\\buildtools\\\\vc\\\\tools\\\\msvc\\\\14.44.35207\\\\include\\\\__msvc_string_view.hpp\",\
+            \"c:\\\\program files (x86)\\\\microsoft visual studio\\\\2022\\\\buildtools\\\\vc\\\\tools\\\\msvc\\\\14.44.35207\\\\include\\\\iosfwd\",\
+            \"c:\\\\program files (x86)\\\\microsoft visual studio\\\\2022\\\\buildtools\\\\vc\\\\tools\\\\msvc\\\\14.44.35207\\\\include\\\\xpolymorphic_allocator.h\",\
+            \"c:\\\\program files (x86)\\\\microsoft visual studio\\\\2022\\\\buildtools\\\\vc\\\\tools\\\\msvc\\\\14.44.35207\\\\include\\\\tuple\",\
+            \"c:\\\\program files (x86)\\\\microsoft visual studio\\\\2022\\\\buildtools\\\\vc\\\\tools\\\\msvc\\\\14.44.35207\\\\include\\\\xcall_once.h\",\
+            \"c:\\\\program files (x86)\\\\microsoft visual studio\\\\2022\\\\buildtools\\\\vc\\\\tools\\\\msvc\\\\14.44.35207\\\\include\\\\xerrc.h\",\
+            \"c:\\\\program files (x86)\\\\microsoft visual studio\\\\2022\\\\buildtools\\\\vc\\\\tools\\\\msvc\\\\14.44.35207\\\\include\\\\xfilesystem_abi.h\",\
+            \"c:\\\\program files (x86)\\\\microsoft visual studio\\\\2022\\\\buildtools\\\\vc\\\\tools\\\\msvc\\\\14.44.35207\\\\include\\\\cmath\",\
+            \"c:\\\\program files (x86)\\\\microsoft visual studio\\\\2022\\\\buildtools\\\\vc\\\\tools\\\\msvc\\\\14.44.35207\\\\include\\\\fstream\",\
+            \"c:\\\\program files (x86)\\\\microsoft visual studio\\\\2022\\\\buildtools\\\\vc\\\\tools\\\\msvc\\\\14.44.35207\\\\include\\\\__msvc_filebuf.hpp\",\
+            \"c:\\\\program files (x86)\\\\microsoft visual studio\\\\2022\\\\buildtools\\\\vc\\\\tools\\\\msvc\\\\14.44.35207\\\\include\\\\streambuf\",\
+            \"c:\\\\program files (x86)\\\\microsoft visual studio\\\\2022\\\\buildtools\\\\vc\\\\tools\\\\msvc\\\\14.44.35207\\\\include\\\\xiosbase\",\
+            \"c:\\\\program files (x86)\\\\windows kits\\\\10\\\\include\\\\10.0.26100.0\\\\ucrt\\\\share.h\",\
             \"c:\\\\program files (x86)\\\\microsoft visual studio\\\\2022\\\\buildtools\\\\vc\\\\tools\\\\msvc\\\\14.44.35207\\\\include\\\\xlocale\",\
             \"c:\\\\program files (x86)\\\\microsoft visual studio\\\\2022\\\\buildtools\\\\vc\\\\tools\\\\msvc\\\\14.44.35207\\\\include\\\\memory\",\
             \"c:\\\\program files (x86)\\\\microsoft visual studio\\\\2022\\\\buildtools\\\\vc\\\\tools\\\\msvc\\\\14.44.35207\\\\include\\\\typeinfo\",\
@@ -356,30 +349,27 @@
             \"c:\\\\program files (x86)\\\\microsoft visual studio\\\\2022\\\\buildtools\\\\vc\\\\tools\\\\msvc\\\\14.44.35207\\\\include\\\\cctype\",\
             \"c:\\\\program files (x86)\\\\microsoft visual studio\\\\2022\\\\buildtools\\\\vc\\\\tools\\\\msvc\\\\14.44.35207\\\\include\\\\clocale\",\
             \"c:\\\\program files (x86)\\\\windows kits\\\\10\\\\include\\\\10.0.26100.0\\\\ucrt\\\\locale.h\",\
+            \"c:\\\\program files (x86)\\\\microsoft visual studio\\\\2022\\\\buildtools\\\\vc\\\\tools\\\\msvc\\\\14.44.35207\\\\include\\\\istream\",\
+            \"c:\\\\program files (x86)\\\\microsoft visual studio\\\\2022\\\\buildtools\\\\vc\\\\tools\\\\msvc\\\\14.44.35207\\\\include\\\\__msvc_ostream.hpp\",\
+            \"c:\\\\program files (x86)\\\\microsoft visual studio\\\\2022\\\\buildtools\\\\vc\\\\tools\\\\msvc\\\\14.44.35207\\\\include\\\\ios\",\
+            \"c:\\\\program files (x86)\\\\microsoft visual studio\\\\2022\\\\buildtools\\\\vc\\\\tools\\\\msvc\\\\14.44.35207\\\\include\\\\xlocnum\",\
+            \"c:\\\\program files (x86)\\\\microsoft visual studio\\\\2022\\\\buildtools\\\\vc\\\\tools\\\\msvc\\\\14.44.35207\\\\include\\\\iterator\",\
+            \"c:\\\\program files (x86)\\\\microsoft visual studio\\\\2022\\\\buildtools\\\\vc\\\\tools\\\\msvc\\\\14.44.35207\\\\include\\\\iomanip\",\
             \"c:\\\\program files (x86)\\\\microsoft visual studio\\\\2022\\\\buildtools\\\\vc\\\\tools\\\\msvc\\\\14.44.35207\\\\include\\\\xlocmon\",\
             \"c:\\\\program files (x86)\\\\microsoft visual studio\\\\2022\\\\buildtools\\\\vc\\\\tools\\\\msvc\\\\14.44.35207\\\\include\\\\xloctime\",\
             \"c:\\\\program files (x86)\\\\microsoft visual studio\\\\2022\\\\buildtools\\\\vc\\\\tools\\\\msvc\\\\14.44.35207\\\\include\\\\iostream\",\
             \"c:\\\\program files (x86)\\\\microsoft visual studio\\\\2022\\\\buildtools\\\\vc\\\\tools\\\\msvc\\\\14.44.35207\\\\include\\\\ostream\",\
             \"c:\\\\program files (x86)\\\\microsoft visual studio\\\\2022\\\\buildtools\\\\vc\\\\tools\\\\msvc\\\\14.44.35207\\\\include\\\\sstream\",\
             \"c:\\\\program files (x86)\\\\microsoft visual studio\\\\2022\\\\buildtools\\\\vc\\\\tools\\\\msvc\\\\14.44.35207\\\\include\\\\string\",\
-            \"c:\\\\program files (x86)\\\\microsoft visual studio\\\\2022\\\\buildtools\\\\vc\\\\tools\\\\msvc\\\\14.44.35207\\\\include\\\\vector\",\
-            \"c:\\\\program files (x86)\\\\microsoft visual studio\\\\2022\\\\buildtools\\\\vc\\\\tools\\\\msvc\\\\14.44.35207\\\\include\\\\__msvc_bit_utils.hpp\",\
-            \"c:\\\\program files (x86)\\\\microsoft visual studio\\\\2022\\\\buildtools\\\\vc\\\\tools\\\\msvc\\\\14.44.35207\\\\include\\\\fstream\",\
-            \"c:\\\\program files (x86)\\\\microsoft visual studio\\\\2022\\\\buildtools\\\\vc\\\\tools\\\\msvc\\\\14.44.35207\\\\include\\\\__msvc_filebuf.hpp\",\
             \"c:\\\\program files (x86)\\\\microsoft visual studio\\\\2022\\\\buildtools\\\\vc\\\\tools\\\\msvc\\\\14.44.35207\\\\include\\\\thread\",\
-            \"c:\\\\program files (x86)\\\\microsoft visual studio\\\\2022\\\\buildtools\\\\vc\\\\tools\\\\msvc\\\\14.44.35207\\\\include\\\\__msvc_chrono.hpp\",\
-            \"c:\\\\program files (x86)\\\\microsoft visual studio\\\\2022\\\\buildtools\\\\vc\\\\tools\\\\msvc\\\\14.44.35207\\\\include\\\\ratio\",\
             \"c:\\\\program files (x86)\\\\windows kits\\\\10\\\\include\\\\10.0.26100.0\\\\ucrt\\\\process.h\",\
             \"c:\\\\program files (x86)\\\\windows kits\\\\10\\\\include\\\\10.0.26100.0\\\\ucrt\\\\corecrt_startup.h\",\
             \"c:\\\\program files (x86)\\\\windows kits\\\\10\\\\include\\\\10.0.26100.0\\\\ucrt\\\\math.h\",\
             \"c:\\\\program files (x86)\\\\microsoft visual studio\\\\2022\\\\buildtools\\\\vc\\\\tools\\\\msvc\\\\14.44.35207\\\\include\\\\vcruntime_startup.h\",\
-            \"c:\\\\program files (x86)\\\\microsoft visual studio\\\\2022\\\\buildtools\\\\vc\\\\tools\\\\msvc\\\\14.44.35207\\\\include\\\\chrono\",\
-            \"c:\\\\program files (x86)\\\\microsoft visual studio\\\\2022\\\\buildtools\\\\vc\\\\tools\\\\msvc\\\\14.44.35207\\\\include\\\\xfilesystem_abi.h\",\
-            \"d:\\\\myprojects\\\\mainan\\\\mind_math.h\",\
-            \"c:\\\\program files (x86)\\\\microsoft visual studio\\\\2022\\\\buildtools\\\\vc\\\\tools\\\\msvc\\\\14.44.35207\\\\include\\\\algorithm\",\
-            \"c:\\\\program files (x86)\\\\microsoft visual studio\\\\2022\\\\buildtools\\\\vc\\\\tools\\\\msvc\\\\14.44.35207\\\\include\\\\__msvc_heap_algorithms.hpp\",\
-            \"c:\\\\program files (x86)\\\\microsoft visual studio\\\\2022\\\\buildtools\\\\vc\\\\tools\\\\msvc\\\\14.44.35207\\\\include\\\\__msvc_minmax.hpp\",\
-            \"d:\\\\myprojects\\\\mainan\\\\uji\\\\ground_truth_moon.h\",\
+            \"c:\\\\program files (x86)\\\\microsoft visual studio\\\\2022\\\\buildtools\\\\vc\\\\tools\\\\msvc\\\\14.44.35207\\\\include\\\\vector\",\
+            \"c:\\\\program files (x86)\\\\microsoft visual studio\\\\2022\\\\buildtools\\\\vc\\\\tools\\\\msvc\\\\14.44.35207\\\\include\\\\__msvc_bit_utils.hpp\",\
+            \"d:\\\\myprojects\\\\mainan\\\\agent\\\\dunia\\\\parameter_dunia.h\",\
+            \"d:\\\\myprojects\\\\mainan\\\\agent\\\\ingatan\\\\parameter_agent.h\",\
             \"c:\\\\program files\\\\nvidia gpu computing toolkit\\\\cuda\\\\v13.3\\\\include\\\\cuda_runtime.h\",\
             \"c:\\\\program files\\\\nvidia gpu computing toolkit\\\\cuda\\\\v13.3\\\\include\\\\crt\\\\host_config.h\",\
             \"c:\\\\program files\\\\nvidia gpu computing toolkit\\\\cuda\\\\v13.3\\\\include\\\\builtin_types.h\",\
@@ -419,17 +409,21 @@
             \"c:\\\\program files\\\\nvidia gpu computing toolkit\\\\cuda\\\\v13.3\\\\include\\\\vector_functions.h\",\
             \"c:\\\\program files\\\\nvidia gpu computing toolkit\\\\cuda\\\\v13.3\\\\include\\\\cuda_runtime_api.h\",\
             \"c:\\\\program files\\\\nvidia gpu computing toolkit\\\\cuda\\\\v13.3\\\\include\\\\vector_functions.hpp\",\
-            \"c:\\\\program files\\\\nvidia gpu computing toolkit\\\\cuda\\\\v13.3\\\\include\\\\cuda_runtime_api.h\",\
-            \"d:\\\\myprojects\\\\mainan\\\\agent\\\\ingatan\\\\parameter_agent.h\",\
-            \"c:\\\\program files (x86)\\\\microsoft visual studio\\\\2022\\\\buildtools\\\\vc\\\\tools\\\\msvc\\\\14.44.35207\\\\include\\\\unordered_set\",\
-            \"c:\\\\program files (x86)\\\\microsoft visual studio\\\\2022\\\\buildtools\\\\vc\\\\tools\\\\msvc\\\\14.44.35207\\\\include\\\\xhash\",\
-            \"c:\\\\program files (x86)\\\\microsoft visual studio\\\\2022\\\\buildtools\\\\vc\\\\tools\\\\msvc\\\\14.44.35207\\\\include\\\\list\",\
-            \"c:\\\\program files (x86)\\\\microsoft visual studio\\\\2022\\\\buildtools\\\\vc\\\\tools\\\\msvc\\\\14.44.35207\\\\include\\\\xbit_ops.h\",\
-            \"c:\\\\program files (x86)\\\\microsoft visual studio\\\\2022\\\\buildtools\\\\vc\\\\tools\\\\msvc\\\\14.44.35207\\\\include\\\\xnode_handle.h\"\
+            \"c:\\\\program files\\\\nvidia gpu computing toolkit\\\\cuda\\\\v13.3\\\\include\\\\cuda_runtime_api.h\"\
         ],\
         \"ImportedModules\": [],\
         \"ImportedHeaderUnits\": []\
     }\
 }",
-    depfiles_format = "cl_json"
+    depfiles_format = "cl_json",
+    values = {
+        [[C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\bin\HostX64\x64\cl.exe]],
+        {
+            "-nologo",
+            "-MD",
+            "-std:c++17",
+            [[-IC:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v13.3\include]],
+            "/EHsc"
+        }
+    }
 }

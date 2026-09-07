@@ -1,11 +1,11 @@
 [
 {
   "directory": "d:\\MyProjects\\mainan",
-  "arguments": ["C:\\Program Files\\NVIDIA GPU Computing Toolkit\\CUDA\\v13.3\\bin\\nvcc.exe", "-c", "-Xcompiler", "\"-MD\"", "-I\"C:\\Program Files\\NVIDIA GPU Computing Toolkit\\CUDA\\v13.3\\include\"", "--std", "c++17", "-m64", "-rdc=true", "-o", "build\\.objs\\mainan\\windows\\x64\\release\\gpu_mind.cu.obj", "gpu_mind.cu"],
-  "file": "gpu_mind.cu"
+  "arguments": ["C:\\Program Files (x86)\\Microsoft Visual Studio\\2022\\BuildTools\\VC\\Tools\\MSVC\\14.44.35207\\bin\\HostX64\\x64\\cl.exe", "/c", "/nologo", "/MD", "/std:c++17", "/IC:\\Program Files\\NVIDIA GPU Computing Toolkit\\CUDA\\v13.3\\include", "/EHsc", "/Fobuild\\.objs\\mainan\\windows\\x64\\release\\main.cpp.obj", "main.cpp"],
+  "file": "main.cpp"
 },
 {
   "directory": "d:\\MyProjects\\mainan",
-  "arguments": ["C:\\Program Files (x86)\\Microsoft Visual Studio\\2022\\BuildTools\\VC\\Tools\\MSVC\\14.44.35207\\bin\\HostX64\\x64\\cl.exe", "/c", "/nologo", "/MD", "/std:c++17", "/IC:\\Program Files\\NVIDIA GPU Computing Toolkit\\CUDA\\v13.3\\include", "/EHsc", "/Fobuild\\.objs\\mainan\\windows\\x64\\release\\main.cpp.obj", "main.cpp"],
-  "file": "main.cpp"
+  "arguments": ["C:\\Program Files\\NVIDIA GPU Computing Toolkit\\CUDA\\v13.3\\bin\\nvcc.exe", "-c", "-Xcompiler", "\"-MD\"", "-I\"C:\\Program Files\\NVIDIA GPU Computing Toolkit\\CUDA\\v13.3\\include\"", "--std", "c++17", "-m64", "-rdc=true", "-o", "build\\.objs\\mainan\\windows\\x64\\release\\gpu_mind.cu.obj", "gpu_mind.cu"],
+  "file": "gpu_mind.cu"
 }]

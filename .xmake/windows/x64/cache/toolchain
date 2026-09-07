@@ -1,126 +1,78 @@
 {
-    yasm_arch_x64_plat_windows = {
-        plat = "windows",
-        __checked = true,
-        __global = true,
-        arch = "x64"
-    },
-    gfortran_arch_x64_plat_windows = {
-        plat = "windows",
-        __checked = true,
-        __global = true,
-        arch = "x64"
-    },
-    swift_arch_x64_plat_windows = {
-        plat = "windows",
-        __checked = true,
-        __global = true,
-        arch = "x64"
-    },
-    tool_target_mainan_windows_x64_cxx = {
-        program = [[C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\bin\HostX64\x64\cl.exe]],
-        toolchain_info = {
-            plat = "windows",
-            name = "msvc",
-            cachekey = "msvc_arch_x64_plat_windows",
-            arch = "x64"
-        },
-        toolname = "cl"
-    },
-    tool_target_mainan_windows_x64_ld = {
-        program = [[C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\bin\HostX64\x64\link.exe]],
-        toolchain_info = {
-            plat = "windows",
-            name = "msvc",
-            cachekey = "msvc_arch_x64_plat_windows",
-            arch = "x64"
-        },
-        toolname = "link"
-    },
-    go_arch_x64_plat_windows = {
-        plat = "windows",
-        __checked = true,
-        __global = true,
-        arch = "x64"
-    },
-    cuda_arch_x64_plat_windows = {
-        plat = "windows",
-        __checked = true,
-        __global = true,
-        arch = "x64"
-    },
-    nasm_arch_x64_plat_windows = {
-        plat = "windows",
-        __checked = true,
-        __global = true,
-        arch = "x64"
-    },
     rust_arch_x64_plat_windows = {
-        plat = "windows",
         __checked = true,
-        __global = true,
-        arch = "x64"
-    },
-    tool_target_mainan_windows_x64_culd = {
-        program = [[C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v13.3\bin\nvcc]],
-        toolchain_info = {
-            plat = "windows",
-            name = "cuda",
-            cachekey = "cuda_arch_x64_plat_windows",
-            arch = "x64"
-        },
-        toolname = "nvcc"
-    },
-    clang_arch_x64_plat_windows = {
         plat = "windows",
-        __global = true,
-        arch = "x64"
-    },
-    nim_arch_x64_plat_windows = {
-        plat = "windows",
-        __checked = false,
-        __global = true,
-        arch = "x64"
-    },
-    tool_target_mainan_windows_x64_cc = {
-        program = [[C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\bin\HostX64\x64\cl.exe]],
-        toolchain_info = {
-            plat = "windows",
-            name = "msvc",
-            cachekey = "msvc_arch_x64_plat_windows",
-            arch = "x64"
-        },
-        toolname = "cl"
-    },
-    fpc_arch_x64_plat_windows = {
-        plat = "windows",
-        __checked = true,
-        __global = true,
-        arch = "x64"
-    },
-    tool_target_mainan_windows_x64_cu = {
-        program = [[C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v13.3\bin\nvcc]],
-        toolchain_info = {
-            plat = "windows",
-            name = "cuda",
-            cachekey = "cuda_arch_x64_plat_windows",
-            arch = "x64"
-        },
-        toolname = "nvcc"
+        arch = "x64",
+        __global = true
     },
     zig_arch_x64_plat_windows = {
-        plat = "windows",
         __checked = false,
-        __global = true,
-        arch = "x64"
+        plat = "windows",
+        arch = "x64",
+        __global = true
+    },
+    swift_arch_x64_plat_windows = {
+        __checked = true,
+        plat = "windows",
+        arch = "x64",
+        __global = true
+    },
+    gfortran_arch_x64_plat_windows = {
+        __checked = true,
+        plat = "windows",
+        arch = "x64",
+        __global = true
     },
     dotnet_arch_x64_plat_windows = {
-        plat = "windows",
         __checked = false,
-        __global = true,
-        arch = "x64"
+        plat = "windows",
+        arch = "x64",
+        __global = true
+    },
+    tool_target_mainan_windows_x64_cu = {
+        toolname = "nvcc",
+        program = [[C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v13.3\bin\nvcc]],
+        toolchain_info = {
+            name = "cuda",
+            cachekey = "cuda_arch_x64_plat_windows",
+            plat = "windows",
+            arch = "x64"
+        }
     },
     msvc_arch_x64_plat_windows = {
+        arch = "x64",
+        vs_toolset = "14.44.35207",
+        vcvars = {
+            ExtensionSdkDir = [[C:\Program Files (x86)\Microsoft SDKs\Windows Kits\10\ExtensionSDKs]],
+            VCInstallDir = [[C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\]],
+            VSCMD_ARG_app_plat = "Desktop",
+            WindowsSdkVerBinPath = [[C:\Program Files (x86)\Windows Kits\10\bin\10.0.26100.0\]],
+            LIBPATH = [[C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\lib\x64;C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\lib\x86\store\references;C:\Program Files (x86)\Windows Kits\10\UnionMetadata\10.0.26100.0;C:\Program Files (x86)\Windows Kits\10\References\10.0.26100.0;C:\Windows\Microsoft.NET\Framework64\v4.0.30319]],
+            INCLUDE = [[C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include;C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Auxiliary\VS\include;C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\ucrt;C:\Program Files (x86)\Windows Kits\10\\include\10.0.26100.0\\um;C:\Program Files (x86)\Windows Kits\10\\include\10.0.26100.0\\shared;C:\Program Files (x86)\Windows Kits\10\\include\10.0.26100.0\\winrt;C:\Program Files (x86)\Windows Kits\10\\include\10.0.26100.0\\cppwinrt]],
+            UCRTVersion = "10.0.26100.0",
+            PATH = [[C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\bin\HostX64\x64;C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\Common7\IDE\VC\VCPackages;C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\Common7\IDE\CommonExtensions\Microsoft\TestWindow;C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\MSBuild\Current\bin\Roslyn;C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\Team Tools\DiagnosticsHub\Collector;C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\Common7\IDE\Extensions\Microsoft\CodeCoverage.Console;C:\Program Files (x86)\Windows Kits\10\bin\10.0.26100.0\\x64;C:\Program Files (x86)\Windows Kits\10\bin\\x64;C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\\MSBuild\Current\Bin\amd64;C:\Windows\Microsoft.NET\Framework64\v4.0.30319;C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\Common7\IDE\;C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\Common7\Tools\;C:\Users\danra\scoop\apps\gcc\current\bin;D:\Miniconda;D:\Miniconda\Scripts;C:\Users\danra\scoop\shims;C:\Users\danra\.cargo\bin;C:\Users\danra\AppData\Local\Programs\Python\Launcher\;C:\Users\danra\AppData\Local\Microsoft\WindowsApps;C:\Users\danra\AppData\Local\Programs\Microsoft VS Code\bin;C:\Users\danra\AppData\Roaming\npm;C:\Users\danra\AppData\Local\Microsoft\WinGet\Packages\Genymobile.scrcpy_Microsoft.Winget.Source_8wekyb3d8bbwe\scrcpy-win64-v3.3.4;C:\Users\danra\AppData\Local\Microsoft\WinGet\Packages\DenoLand.Deno_Microsoft.Winget.Source_8wekyb3d8bbwe;C:\Users\danra\AppData\Local\Microsoft\WinGet\Packages\Gyan.FFmpeg_Microsoft.Winget.Source_8wekyb3d8bbwe\ffmpeg-8.1-full_build\bin;C:\Users\danra\AppData\Local\Microsoft\WinGet\Packages\yt-dlp.FFmpeg_Microsoft.Winget.Source_8wekyb3d8bbwe\ffmpeg-N-123778-g3b55818764-win64-gpl\bin;C:\Users\danra\AppData\Local\Microsoft\WinGet\Packages\yt-dlp.yt-dlp_Microsoft.Winget.Source_8wekyb3d8bbwe;C:\Users\danra\AppData\Local\Programs\Ollama;C:\Users\danra\AppData\Local\Programs\Antigravity\bin;C:\Users\danra\AppData\Local\Programs\Antigravity IDE\bin;C:\Users\danra\AppData\Local\Google\Cloud SDK\google-cloud-sdk\bin;C:\Windows\System32;C:\Windows;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Program Files\nodejs\;C:\Program Files\Git\cmd;C:\Program Files\NVIDIA Corporation\NVIDIA App\NvDLISR;C:\Program Files\Tailscale\;C:\Program Files\Zero Install;C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin;C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\Common7\IDE\CommonExtensions\Microsoft\CMake\Ninja;C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\Common7\IDE\VC\Linux\bin\ConnectionManagerExe;C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\vcpkg]],
+            VisualStudioVersion = "17.0",
+            VCToolsInstallDir = [[C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\]],
+            VSCMD_ARG_HOST_ARCH = "x64",
+            LIB = [[C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\lib\x64;C:\Program Files (x86)\Windows Kits\10\lib\10.0.26100.0\ucrt\x64;C:\Program Files (x86)\Windows Kits\10\\lib\10.0.26100.0\\um\x64]],
+            VCToolsVersion = "14.44.35207",
+            VSCMD_VER = "17.14.25",
+            VCIDEInstallDir = [[C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\Common7\IDE\VC\]],
+            VS170COMNTOOLS = [[C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\Common7\Tools\]],
+            WindowsLibPath = [[C:\Program Files (x86)\Windows Kits\10\UnionMetadata\10.0.26100.0;C:\Program Files (x86)\Windows Kits\10\References\10.0.26100.0]],
+            VSInstallDir = [[C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\]],
+            VCToolsRedistDir = [[C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Redist\MSVC\14.44.35112\]],
+            WindowsSdkBinPath = [[C:\Program Files (x86)\Windows Kits\10\bin\]],
+            UniversalCRTSdkDir = [[C:\Program Files (x86)\Windows Kits\10\]],
+            WindowsSdkDir = [[C:\Program Files (x86)\Windows Kits\10\]],
+            DevEnvdir = [[C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\Common7\IDE\]],
+            VSCMD_ARG_TGT_ARCH = "x64",
+            WindowsSDKVersion = "10.0.26100.0"
+        },
+        vs_sdkver = "10.0.26100.0",
+        __global = true,
+        plat = "windows",
+        vs = "2022",
         vcarchs = {
             "arm",
             "arm64",
@@ -128,39 +80,87 @@
             "x64",
             "x86"
         },
-        __global = true,
-        vs = "2022",
+        __checked = "2022"
+    },
+    tool_target_mainan_windows_x64_culd = {
+        toolname = "nvcc",
+        program = [[C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v13.3\bin\nvcc]],
+        toolchain_info = {
+            name = "cuda",
+            cachekey = "cuda_arch_x64_plat_windows",
+            plat = "windows",
+            arch = "x64"
+        }
+    },
+    go_arch_x64_plat_windows = {
+        __checked = true,
         plat = "windows",
-        vs_sdkver = "10.0.26100.0",
-        __checked = "2022",
-        vcvars = {
-            WindowsSdkVerBinPath = [[C:\Program Files (x86)\Windows Kits\10\bin\10.0.26100.0\]],
-            WindowsSDKVersion = "10.0.26100.0",
-            VSCMD_ARG_TGT_ARCH = "x64",
-            UniversalCRTSdkDir = [[C:\Program Files (x86)\Windows Kits\10\]],
-            LIBPATH = [[C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\lib\x64;C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\lib\x86\store\references;C:\Program Files (x86)\Windows Kits\10\UnionMetadata\10.0.26100.0;C:\Program Files (x86)\Windows Kits\10\References\10.0.26100.0;C:\Windows\Microsoft.NET\Framework64\v4.0.30319]],
-            VSCMD_ARG_app_plat = "Desktop",
-            PATH = [[C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\bin\HostX64\x64;C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\Common7\IDE\VC\VCPackages;C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\Common7\IDE\CommonExtensions\Microsoft\TestWindow;C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\MSBuild\Current\bin\Roslyn;C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\Team Tools\DiagnosticsHub\Collector;C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\Common7\IDE\Extensions\Microsoft\CodeCoverage.Console;C:\Program Files (x86)\Windows Kits\10\bin\10.0.26100.0\\x64;C:\Program Files (x86)\Windows Kits\10\bin\\x64;C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\\MSBuild\Current\Bin\amd64;C:\Windows\Microsoft.NET\Framework64\v4.0.30319;C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\Common7\IDE\;C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\Common7\Tools\;C:\Users\danra\scoop\apps\gcc\current\bin;D:\Miniconda;D:\Miniconda\Scripts;C:\Users\danra\scoop\shims;C:\Users\danra\.cargo\bin;C:\Users\danra\AppData\Local\Programs\Python\Launcher\;C:\Users\danra\AppData\Local\Microsoft\WindowsApps;C:\Users\danra\AppData\Local\Programs\Microsoft VS Code\bin;C:\Users\danra\AppData\Roaming\npm;C:\Users\danra\AppData\Local\Microsoft\WinGet\Packages\Genymobile.scrcpy_Microsoft.Winget.Source_8wekyb3d8bbwe\scrcpy-win64-v3.3.4;C:\Users\danra\AppData\Local\Microsoft\WinGet\Packages\DenoLand.Deno_Microsoft.Winget.Source_8wekyb3d8bbwe;C:\Users\danra\AppData\Local\Microsoft\WinGet\Packages\Gyan.FFmpeg_Microsoft.Winget.Source_8wekyb3d8bbwe\ffmpeg-8.1-full_build\bin;C:\Users\danra\AppData\Local\Microsoft\WinGet\Packages\yt-dlp.FFmpeg_Microsoft.Winget.Source_8wekyb3d8bbwe\ffmpeg-N-123778-g3b55818764-win64-gpl\bin;C:\Users\danra\AppData\Local\Microsoft\WinGet\Packages\yt-dlp.yt-dlp_Microsoft.Winget.Source_8wekyb3d8bbwe;C:\Users\danra\AppData\Local\Programs\Ollama;C:\Users\danra\AppData\Local\Programs\Antigravity\bin;C:\Users\danra\AppData\Local\Programs\Antigravity IDE\bin;C:\Users\danra\AppData\Local\Google\Cloud SDK\google-cloud-sdk\bin;C:\Windows\System32;C:\Windows;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Program Files\nodejs\;C:\Program Files\Git\cmd;C:\Program Files\NVIDIA Corporation\NVIDIA App\NvDLISR;C:\Program Files\Tailscale\;C:\Program Files\Zero Install;C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin;C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\Common7\IDE\CommonExtensions\Microsoft\CMake\Ninja;C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\Common7\IDE\VC\Linux\bin\ConnectionManagerExe;C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\vcpkg]],
-            VCIDEInstallDir = [[C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\Common7\IDE\VC\]],
-            UCRTVersion = "10.0.26100.0",
-            VSCMD_VER = "17.14.25",
-            VCToolsVersion = "14.44.35207",
-            VisualStudioVersion = "17.0",
-            VCInstallDir = [[C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\]],
-            VCToolsInstallDir = [[C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\]],
-            WindowsSdkDir = [[C:\Program Files (x86)\Windows Kits\10\]],
-            WindowsLibPath = [[C:\Program Files (x86)\Windows Kits\10\UnionMetadata\10.0.26100.0;C:\Program Files (x86)\Windows Kits\10\References\10.0.26100.0]],
-            VS170COMNTOOLS = [[C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\Common7\Tools\]],
-            WindowsSdkBinPath = [[C:\Program Files (x86)\Windows Kits\10\bin\]],
-            LIB = [[C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\lib\x64;C:\Program Files (x86)\Windows Kits\10\lib\10.0.26100.0\ucrt\x64;C:\Program Files (x86)\Windows Kits\10\\lib\10.0.26100.0\\um\x64]],
-            DevEnvdir = [[C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\Common7\IDE\]],
-            VCToolsRedistDir = [[C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Redist\MSVC\14.44.35112\]],
-            VSInstallDir = [[C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\]],
-            INCLUDE = [[C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include;C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Auxiliary\VS\include;C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\ucrt;C:\Program Files (x86)\Windows Kits\10\\include\10.0.26100.0\\um;C:\Program Files (x86)\Windows Kits\10\\include\10.0.26100.0\\shared;C:\Program Files (x86)\Windows Kits\10\\include\10.0.26100.0\\winrt;C:\Program Files (x86)\Windows Kits\10\\include\10.0.26100.0\\cppwinrt]],
-            ExtensionSdkDir = [[C:\Program Files (x86)\Microsoft SDKs\Windows Kits\10\ExtensionSDKs]],
-            VSCMD_ARG_HOST_ARCH = "x64"
-        },
-        vs_toolset = "14.44.35207",
-        arch = "x64"
+        arch = "x64",
+        __global = true
+    },
+    cuda_arch_x64_plat_windows = {
+        __checked = true,
+        plat = "windows",
+        arch = "x64",
+        __global = true
+    },
+    tool_target_mainan_windows_x64_ld = {
+        toolname = "link",
+        program = [[C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\bin\HostX64\x64\link.exe]],
+        toolchain_info = {
+            name = "msvc",
+            cachekey = "msvc_arch_x64_plat_windows",
+            plat = "windows",
+            arch = "x64"
+        }
+    },
+    clang_arch_x64_plat_windows = {
+        plat = "windows",
+        arch = "x64",
+        __global = true
+    },
+    nasm_arch_x64_plat_windows = {
+        __checked = true,
+        plat = "windows",
+        arch = "x64",
+        __global = true
+    },
+    nim_arch_x64_plat_windows = {
+        __checked = false,
+        plat = "windows",
+        arch = "x64",
+        __global = true
+    },
+    fpc_arch_x64_plat_windows = {
+        __checked = true,
+        plat = "windows",
+        arch = "x64",
+        __global = true
+    },
+    yasm_arch_x64_plat_windows = {
+        __checked = true,
+        plat = "windows",
+        arch = "x64",
+        __global = true
+    },
+    tool_target_mainan_windows_x64_cxx = {
+        toolname = "cl",
+        program = [[C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\bin\HostX64\x64\cl.exe]],
+        toolchain_info = {
+            name = "msvc",
+            cachekey = "msvc_arch_x64_plat_windows",
+            plat = "windows",
+            arch = "x64"
+        }
+    },
+    tool_target_mainan_windows_x64_cc = {
+        toolname = "cl",
+        program = [[C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\bin\HostX64\x64\cl.exe]],
+        toolchain_info = {
+            name = "msvc",
+            cachekey = "msvc_arch_x64_plat_windows",
+            plat = "windows",
+            arch = "x64"
+        }
     }
 }

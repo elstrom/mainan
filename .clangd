@@ -1,18 +1,26 @@
 CompileFlags:
-  Compiler: C:/Users/danra/scoop/apps/gcc/current/bin/g++.exe
+  Compiler: "C:/Program Files (x86)/Microsoft Visual Studio/2022/BuildTools/VC/Tools/MSVC/14.44.35207/bin/HostX64/x64/cl.exe"
   Add:
-    - -std=c++17
-    - -Wno-typedef-redefinition
-    - -I
-    - C:/Program Files/NVIDIA GPU Computing Toolkit/CUDA/v13.3/include
-    - -nocudainc
-    - -nocudalib
+    - "--cuda-path=C:/Program Files/NVIDIA GPU Computing Toolkit/CUDA/v13.3"
+    - "--cuda-gpu-arch=sm_52"
+    - "/std:c++17"
+    - "/EHsc"
+    - "/nologo"
+    - "-I."
+    - "-IC:/Program Files/NVIDIA GPU Computing Toolkit/CUDA/v13.3/include"
+    - "-IC:/Program Files (x86)/Microsoft Visual Studio/2022/BuildTools/VC/Tools/MSVC/14.44.35207/include"
+    - "-IC:/Program Files (x86)/Windows Kits/10/include/10.0.26100.0/ucrt"
+    - "-IC:/Program Files (x86)/Windows Kits/10/include/10.0.26100.0/shared"
+    - "-IC:/Program Files (x86)/Windows Kits/10/include/10.0.26100.0/um"
+    - "-D_CRT_SECURE_NO_WARNINGS"
+    - "-DNOMINMAX"
+    - "-w"
   Remove:
-    - -rdc=true
+    - "-rdc=true"
+    - "-Xcompiler*"
+    - "--std*"
+    - "-m64"
 
 Diagnostics:
   Suppress:
-    - cuda_cannot_find_libdevice
-    - undeclared_var_use
-    - pp_file_not_found
-    - nvcc_unknown_arg
+    - "*"
