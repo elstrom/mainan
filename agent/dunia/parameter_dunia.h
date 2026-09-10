@@ -13,7 +13,9 @@ namespace DuniaFisika {
 
     // Konfigurasi Mode Eksekusi & Headless Benchmark
     constexpr bool HEADLESS_MODE = true;            // True: Matikan UI Web/Browser untuk percepatan maksimal (~1000x)
-    constexpr bool STOP_ON_EXTINCTION = true;        // True: Berhenti otomatis dan laporkan hasil saat salah satu kubu punah
+    constexpr bool STOP_ON_EXTINCTION = true;        // True: Tangani kepunahan saat salah satu kubu punah
+    constexpr bool AUTO_RESTART_ON_EXTINCTION = true;// True: Infinite loop (otomatis restart simulasi baru setelah lapor kepunahan)
+    inline const char* EVOLUTION_LOG_FILE = "d:/MyProjects/mainan/agent/ingatan/evolution_milestones.log"; // File log milestone rekor generasi
     constexpr double TIME_ACCELERATION_FACTOR = 2.0; // 2x Waktu Nyata
     constexpr double SECONDS_PER_DAY = 60.0;         // 60 detik simulasi = 1 hari ekosistem
     constexpr int DAYS_PER_SEASON = 15;              // 15 hari = 1 musim
@@ -34,24 +36,59 @@ namespace DuniaFisika {
     constexpr double OVERCROWDING_PENALTY_MULT = 0.05;// Peningkatan metabolisme per agen tetangga di area padat
 
     // Parameter Predator Agen Musuh / Faksi B (Apex Cognitive Hunter)
-    constexpr int INITIAL_PREDATORS = 200;           // Populasi awal Faksi B (Predator/Karnivora)
-    constexpr int MAX_PREDATORS_BUFFER = 1000;      // Kapasitas buffer memori GPU Faksi B (optimal & cepat)
-    constexpr double PREDATOR_SPEED = 11.5;          // Kecepatan gerak predator setara & kompetitif dengan mangsa (12.0)
+    constexpr int INITIAL_PREDATORS = 200;           // Populasi awal Faksi B (Predator/Karnivora) seimbang dengan Herbivora (200)
+    constexpr int MAX_PREDATORS_BUFFER = 5000;      // Kapasitas buffer memori GPU Faksi B (optimal & cepat)
+    constexpr double PREDATOR_SPEED = 12.0;          // Kecepatan gerak predator seimbang dengan herbivora (12.0)
     constexpr double PREDATOR_ATTACK_RADIUS = 16.0;  // Radius jangkauan serangan predator ke mangsa
-    constexpr double PREDATOR_DAMAGE_RATE = 20.0;    // Kerusakan energi per detik pada mangsa
-    constexpr double PREDATOR_ENERGY_GAIN = 18.0;    // Energi predator bertambah saat berhasil melukai/memangsa
+    constexpr double PREDATOR_DAMAGE_RATE = 25.0;    // Kerusakan serangan dasar per detik
+    constexpr double PREDATOR_ENERGY_GAIN = 20.0;    // Energi predator bertambah saat berhasil melukai/memangsa
     constexpr double PREDATOR_INITIAL_ENERGY = 100.0; // Energi awal predator
     constexpr double PREDATOR_METABOLISM = 0.12;    // Konsumsi energi dasar predator per detik (setara & seimbang dengan herbivora)
     constexpr double PREDATOR_MATING_RADIUS = 28.0; // Jarak perkawinan Faksi B (♂ + ♀)
     constexpr double PREDATOR_MATING_MIN_ENERGY = 40.0; // Ambang batas reproduksi karnivora (adaptasi seimbang)
     constexpr double PREDATOR_MATING_COST = 15.0;   // Energi melahirkan anak predator baru
     constexpr double PREDATOR_MATING_COOLDOWN = 5.0; // Jeda waktu kawin predator (detik)
-    constexpr double HERBIVORE_DEFENSE_REDUCTION = 0.90; // Reduksi kerusakan hingga 90% saat rumus kognisi selaras/berhasil menangkis
-    constexpr double HERBIVORE_COUNTER_BASE_DAMAGE = 18.0; // Damage serangan balik dasar herbivora saat kognisi unggul
-    constexpr double PRIMITIVE_TOOL_DAMAGE_BONUS = 25.0;  // Bonus damage tombak/alat batu purba terhadap predator
-    constexpr double PRIMITIVE_SHIELD_DEFENSE_BONUS = 0.50; // Bonus ketahanan perisai batu/alat purba
-    constexpr double MINERAL_SANCTUARY_RADIUS = 45.0;     // Radius medan pelindung/sanctuary di sekitar mineral kristal/logam
-    constexpr double MINERAL_FIELD_SLOW_FACTOR = 0.45;    // Predator melambat 55% saat masuk ke zona medan mineral resonance
+    
+    // Sistem Pertarungan Adil & Era Megalitikum (Material Batu, Logam, & Struktur Pertahanan)
+    constexpr double MEGALITH_MINING_RADIUS = 35.0;       // Radius interaksi penambangan deposit megalitikum
+    constexpr double MEGALITH_MINING_RATE = 2.0;         // Laju penambangan material per detik
+    constexpr double MEGALITH_CRAFT_THRESHOLD = 5.0;     // Ambang akumulasi material untuk menghasilkan 1 alat/struktur megalitikum
+    constexpr double MEGALITH_CRAFT_ENERGY_COST = 12.0;  // Biaya energi saat berhasil membuat alat megalitikum baru
+    constexpr double MEGALITH_TOOL_USAGE_ENERGY_RATE = 0.08;// Biaya konsumsi energi saat membawa/menggunakan alat tempur
+    constexpr double MEGALITH_WEAPON_ATTACK_BONUS = 15.0;// Bonus damage saat menguasai deposit batu/logam
+    constexpr double MEGALITH_SHIELD_DEFENSE_BONUS = 0.40;// Reduksi damage pertahanan saat di sekitar deposit batu/struktur
+    constexpr double HERBIVORE_BASE_ATTACK_DAMAGE = 20.0;// Serangan fisik dasar herbivora saat duel jarak dekat
+    constexpr double COMBAT_CLASH_RADIUS = 16.0;         // Radius benturan duel antar faksi
+    constexpr double CORPSE_CARNIVORE_RECOVERY = 0.85;   // Efisiensi nutrisi karnivora saat mengonsumsi bangkai (semua jenis bangkai)
+
+    // Parameter Bencana Alam & Tekanan Lingkungan Dinamis (Disasters & Cosmic Stress)
+    constexpr double DISASTER_INTERVAL_SECONDS = 90.0;   // Bencana terjadi setiap 90 detik (1.5 hari simulasi)
+    constexpr double DISASTER_DURATION_SECONDS = 15.0;   // Durasi bencana berlangsung 15 detik
+    constexpr double SOLAR_STORM_HEAT_SPIKE = 22.0;      // Badai Matahari: lonjakan panas +22°C
+    constexpr double BLIZZARD_TEMP_DROP = -25.0;         // Badai Salju Ekstrem: suhu anjlok -25°C
+    constexpr double EMP_MAGNETIC_CHAOS = 8.0;           // Badai Magnetik/EMP: mengacaukan sensor & transmisi komunikasi
+
+    // Parameter Kubu Alam AI (Adversarial System & Adaptive Pressure Curve)
+    constexpr double NATURE_PRESSURE_TARGET_POP = 250.0; // Kapasitas daya tampung ideal ekosistem
+    constexpr double NATURE_PRESSURE_KP = 0.005;         // Responsivitas kurva tekanan adaptif
+    constexpr double NATURE_ENTROPY_DECAY_RATE = 0.05;   // Laju erosi entropi terhadap koloni yang stagnan
+    constexpr double NATURE_RESOURCE_SCARCITY_MULT = 1.8;// Skalasi kelangkaan pangan/material saat populasi over-limit
+    constexpr double RESERVOIR_LEAK_RATE = 0.15;         // Laju kebocoran / continuous decay Dynamic Reservoir
+    constexpr double RESERVOIR_CHAOS_NONLINEARITY = 1.4; // Tingkat non-linearitas tanggap dynamical graph
+
+    // 10 Fitur Ekosistem & Ability Alam Adversarial Baru
+    constexpr double PATHOGEN_INFECTION_RADIUS = 25.0;   // Jarak penularan wabah pathogen pada koloni berkerumun
+    constexpr double PATHOGEN_DAMAGE_RATE = 12.0;        // Kerusakan energi per detik pada individu terinfeksi
+    constexpr double CORPSE_TOXICITY_RADIUS = 30.0;      // Radius racun pembusukan mayat jika tidak diolah
+    constexpr double CORPSE_TOXICITY_DAMAGE = 8.0;       // Racun tanah/air akibat mayat membusuk
+    constexpr double EROSION_TERRAIN_SPEED = 0.5;        // Laju pergeseran jurang/alur erosi dinamis
+    constexpr double SAFE_HAVEN_RADIUS = 60.0;           // Radius Gua / Zona Perlindungan dari bencana
+    constexpr int SAFE_HAVEN_MAX_CAPACITY = 20;          // Kapasitas maksimum agen per Gua/Safe Haven
+    constexpr double TOOL_RUST_DECAY_RATE = 0.02;        // Laju degradasi/karat pada alat dan struktur megalitikum
+    constexpr double GEOTHERMAL_LAVA_RADIUS = 40.0;      // Radius bahaya semburan lava / abu vulkanik
+    constexpr double GEOTHERMAL_LAVA_DAMAGE = 35.0;      // Kerusakan panas mematikan abu/lava vulkanik
+    constexpr double WATER_SALINITY_DRAIN = 4.0;         // Dehidrasi akibat fluktuasi salinitas air tercemar
+    constexpr double SPATIAL_DRAG_SLOWDOWN = 0.50;       // Reduksi kecepatan 50% di zona gravitasi/drag spasial padat
 
     // Parameter Siklus Siang & Malam (Diurnal Cycle & Multi-Fisika)
     constexpr double DAY_NIGHT_CYCLE_SECONDS = 60.0; // 60 detik = 1 siklus penuh (30s Siang, 30s Malam)
@@ -111,4 +148,17 @@ namespace DuniaFisika {
     constexpr double SIN_LUST_COOLDOWN_MULT = 0.5;       // Waktu jeda kawin 50% lebih singkat pada sin Lust
     constexpr double SIN_SLOTH_METABOLISM_SAVING = 0.6;  // Konsumsi metabolisme 40% lebih hemat pada sin Sloth
     constexpr double SIN_PRIDE_RESONANCE_BONUS = 1.25;   // Bonus +25% kekuatan perisai/rumus pada sin Pride
+
+    // Parameter Sistem Artifact (Ujian Aritmatika & Keabadian)
+    constexpr double ARTIFACT_CLAIM_RADIUS = 35.0;          // Radius klaim artifact oleh agen (m)
+    constexpr double ARTIFACT_IMMORTALITY_DAYS = 20.0;      // Durasi keabadian setelah klaim (hari simulasi)
+    constexpr double ARTIFACT_ANSWER_TOLERANCE = 0.12;      // Toleransi kecocokan comm_signal vs jawaban [-1,1]
+    constexpr double ARTIFACT_BALANCER_POP_THRESHOLD = 0.05;// Threshold punah: < 5% total pop → spawn balancer
+    constexpr int    ARTIFACT_BALANCER_SPAWN_COUNT = 5;     // Jumlah agen balancer yang di-spawn saat hampir punah
+
+    // Parameter Respon Takut Eksponensial/Sigmoid, Epigenetik Trauma & Neuromodulasi
+    constexpr double FEAR_SIGMOID_STEEPNESS = 6.0;         // Keterjalan kurva sigmoid rasa takut
+    constexpr double FEAR_SIGMOID_MIDPOINT = 0.45;         // Titik tengah pemicu lonjakan panik eksponensial
+    constexpr double FEAR_NEUROMODULATION_PLASTICITY = 4.0;// Pengali lonjakan plastisitas/mutasi Hebbian saat panik tinggi
+    constexpr double EPIGENETIC_TRAUMA_WEIGHT_BIAS = 0.15; // Pembobotan trauma rasa takut induk yang diwariskan ke anak
 }

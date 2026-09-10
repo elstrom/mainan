@@ -478,6 +478,30 @@
             display: flex;
         }
 
+        .god-btn {
+            border: 1px solid var(--border-subtle);
+            border-radius: 8px;
+            padding: 8px 12px;
+            font-size: 0.72rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        .god-btn:hover {
+            transform: translateY(-2px);
+            filter: brightness(1.25);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+        }
+
+        .god-btn:active {
+            transform: translateY(0);
+        }
+
         /* Leaderboard & DNA Card List */
         .rank-item {
             background: rgba(255, 255, 255, 0.025);
@@ -661,17 +685,6 @@
         </div>
     </header>
 
-    <!-- 2. Formula & Sub-Header Bar -->
-    <div class="sub-bar">
-        <div class="formula-tag">
-            <span>🧬 Tree-Growth Cognition (Alpha):</span>
-            <strong id="formulaText">Growth = tanh(TreeDist·MagX + FruitQty - Temp)</strong>
-        </div>
-        <div style="color:var(--text-dim); font-size:0.7rem;">
-            Realtime CUDA Multi-Agent Physics Core (v2.4)
-        </div>
-    </div>
-
     <!-- 3. Main Workspace Grid -->
     <div class="main-workspace">
 
@@ -714,12 +727,12 @@
                         <span class="stat-mini-val" style="color:var(--kubu-b);" id="statDeaths">0</span>
                     </div>
                     <div class="stat-mini-box span-2">
-                        <span class="stat-mini-label">Total Panen Buah Pohon</span>
-                        <span class="stat-mini-val" style="color:var(--yellow);" id="statHarvest">0 Buah</span>
+                        <span class="stat-mini-label">Kecepatan Interaksi Material</span>
+                        <span class="stat-mini-val" style="color:var(--cyan);" id="statMatA">0 /mnt</span>
                     </div>
                     <div class="stat-mini-box span-2">
-                        <span class="stat-mini-label">Rumus Kognisi Dicetuskan</span>
-                        <span class="stat-mini-val" style="color:var(--orange);" id="statFormulas">0 Rumus</span>
+                        <span class="stat-mini-label">Alat/Struktur Dibuat dari Material</span>
+                        <span class="stat-mini-val" style="color:var(--yellow);" id="statCraftA">0 Alat</span>
                     </div>
                 </div>
 
@@ -730,29 +743,7 @@
                     <span style="font-size:0.65rem; color:var(--kubu-a);">Herbivora</span>
                 </div>
                 <div id="leaderboardListA"
-                    style="display:flex; flex-direction:column; gap:5px; flex:1; overflow-y:auto; max-height:190px;">
-                </div>
-
-                <!-- Swarm Communication & Language Decoder Card -->
-                <div style="background:rgba(6, 182, 212, 0.04); border:1px solid rgba(6, 182, 212, 0.25); border-radius:8px; padding:8px 10px; margin-top:auto;">
-                    <div style="font-size:0.68rem; font-weight:800; color:var(--cyan); text-transform:uppercase; display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
-                        <span>📡 Dekoder Bahasa Gelombang</span>
-                        <span id="commActivityBadge" style="font-size:0.62rem; color:var(--kubu-a);">AKTIF</span>
-                    </div>
-                    <div style="font-size:0.65rem; color:var(--text-sub); display:flex; flex-direction:column; gap:3px;">
-                        <div style="display:flex; justify-content:space-between;">
-                            <span>Dialek Utama:</span>
-                            <strong style="color:#e2e8f0;" id="commDialectName">Resonansi Feromon</strong>
-                        </div>
-                        <div style="display:flex; justify-content:space-between;">
-                            <span>Intensitas Sinyal:</span>
-                            <strong style="color:var(--yellow);" id="commSignalIntensity">+0.82 (Panggilan Pangan)</strong>
-                        </div>
-                        <div style="display:flex; justify-content:space-between;">
-                            <span>Status Kawanan:</span>
-                            <strong style="color:var(--cyan);" id="commSwarmStatus">Kohesif (Saling Resonansi)</strong>
-                        </div>
-                    </div>
+                    style="display:flex; flex-direction:column; gap:5px; flex:1; overflow-y:auto; max-height:280px;">
                 </div>
             </div>
         </div>
@@ -772,8 +763,9 @@
                         id="hudKubuBPill">
                         🐺 Kubu B: 200
                     </div>
-                    <div class="hud-chip" id="hudWindPill">
-                        💨 1.5 m/s
+                    <div class="hud-chip" style="color:var(--yellow); border-color:rgba(234,179,8,0.35);"
+                        id="hudNaturePill">
+                        ⚡ Kubu Alam: 1.00x
                     </div>
                 </div>
 
@@ -781,7 +773,9 @@
                     <button class="tab-switch-btn active" id="tabBtnVisual" onclick="switchCenterTab('visual')">🌍
                         Visual 2D</button>
                     <button class="tab-switch-btn" id="tabBtnMatrix" onclick="switchCenterTab('matrix')">📊
-                        Matriks</button>
+                        Matriks Kognisi</button>
+                    <button class="tab-switch-btn" id="tabBtnGodMode" onclick="switchCenterTab('godmode')">⚡
+                        God-Mode & Injector</button>
                 </div>
             </div>
 
@@ -791,82 +785,61 @@
             <!-- Matrix Tab Overlay -->
             <div class="matrix-overlay" id="tabMatrix">
                 <div style="font-size:0.85rem; font-weight:800; color:var(--text-main); margin-bottom:4px;">
-                    📊 Matriks Demografi & Perbandingan Dua Koloni
+                    📊 Matriks Evaluasi Kognisi, Emergence & Kecerdasan Kolektif
                 </div>
 
                 <div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:10px;">
-                    <div class="hero-metric-card">
-                        <span class="metric-label">Perbandingan Populasi</span>
-                        <span class="metric-big-num" style="color:var(--kubu-a);" id="mPopComparison">200 : 200</span>
+                    <div class="hero-metric-card" style="grid-column: span 2;">
+                        <span class="metric-label">Ketinggian Hierarki Strategi</span>
+                        <span class="metric-big-num" style="color:var(--yellow); font-size: 0.95rem; line-height: 1.3;" id="mStrategyHierarchy">Tingkat 1: Refleks & Pencarian Pangan</span>
                     </div>
                     <div class="hero-metric-card">
-                        <span class="metric-label">Perbandingan Kelahiran</span>
-                        <span class="metric-big-num" style="color:var(--cyan);" id="mBirthComparison">200 : 200</span>
+                        <span class="metric-label">Energy Return on Investment (EROI)</span>
+                        <span class="metric-big-num" style="color:var(--kubu-a);" id="mEroi">1.00x</span>
                     </div>
                     <div class="hero-metric-card">
-                        <span class="metric-label">Perbandingan Kematian</span>
-                        <span class="metric-big-num" style="color:var(--kubu-b);" id="mDeathComparison">0 : 0</span>
+                        <span class="metric-label">Variasi & Entropi DNA</span>
+                        <span class="metric-big-num" style="color:var(--purple);" id="mDnaDiversity">0.0%</span>
                     </div>
                     <div class="hero-metric-card">
-                        <span class="metric-label">Instruksi VM DNA</span>
-                        <span class="metric-big-num" style="color:var(--purple);" id="mDnaSize">8 / 64 Baris</span>
+                        <span class="metric-label">Social Learning & Sinyal</span>
+                        <span class="metric-big-num" style="color:var(--cyan);" id="mSocialLearning">0.0%</span>
                     </div>
                     <div class="hero-metric-card">
-                        <span class="metric-label">Rata-rata Usia</span>
-                        <span class="metric-big-num" style="color:var(--blue);" id="mAvgAge">0.0 Thn</span>
-                    </div>
-                    <div class="hero-metric-card">
-                        <span class="metric-label">Siklus Reproduksi</span>
-                        <span class="metric-big-num" style="color:var(--pink);" id="mMatingStatus">♂ + ♀ Aktif</span>
+                        <span class="metric-label">Populasi Hidup (A : B)</span>
+                        <span class="metric-big-num" style="color:var(--blue);" id="mPopComparison">200 : 200</span>
                     </div>
                 </div>
 
                 <div
                     style="background:rgba(255,255,255,0.025); border:1px solid var(--border-subtle); border-radius:8px; padding:12px; margin-top:8px;">
                     <div style="font-size:0.75rem; font-weight:700; color:var(--text-sub); margin-bottom:8px;">
-                        🌲 Ekosistem Hutan, Atmosfer & Material Periodik
+                        🌲 Ekosistem, Suhu & Dinamika Penambangan Material
                     </div>
-                    <div style="display:grid; grid-template-columns: repeat(4, 1fr); gap:8px;">
+                    <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap:8px;">
                         <div class="stat-mini-box">
-                            <span class="stat-mini-label">Suhu Alam (Rumah Kaca)</span>
+                            <span class="stat-mini-label">Suhu Alam (Termal)</span>
                             <span class="stat-mini-val" style="color:var(--yellow);" id="statTemp">22.0 °C</span>
                         </div>
                         <div class="stat-mini-box">
-                            <span class="stat-mini-label">Kecepatan Angin</span>
-                            <span class="stat-mini-val" style="color:var(--cyan);" id="statWind">1.5 m/s</span>
-                        </div>
-                        <div class="stat-mini-box">
-                            <span class="stat-mini-label">Oksigen (O2)</span>
-                            <span class="stat-mini-val" style="color:var(--cyan);" id="statO2">21.0%</span>
-                        </div>
-                        <div class="stat-mini-box">
-                            <span class="stat-mini-label">Karbon Dioksida (CO2)</span>
-                            <span class="stat-mini-val" style="color:var(--orange);" id="statCO2">0.04%</span>
-                        </div>
-                        <div class="stat-mini-box">
-                            <span class="stat-mini-label">Kelembaban (H2O)</span>
-                            <span class="stat-mini-val" style="color:var(--blue);" id="statH2O">60.0%</span>
-                        </div>
-                        <div class="stat-mini-box">
-                            <span class="stat-mini-label">Nitrogen (N2)</span>
-                            <span class="stat-mini-val" style="color:var(--purple);" id="statN2">78.0%</span>
-                        </div>
-                        <div class="stat-mini-box">
-                            <span class="stat-mini-label">Pohon Hidup</span>
+                            <span class="stat-mini-label">Pohon Hidup & Sehat</span>
                             <span class="stat-mini-val" style="color:var(--kubu-a);" id="statLivingTrees">32 / 32</span>
                         </div>
                         <div class="stat-mini-box">
-                            <span class="stat-mini-label">Pohon Mati</span>
+                            <span class="stat-mini-label">Pohon Mati Alami</span>
                             <span class="stat-mini-val" style="color:var(--kubu-b);" id="statDeadTrees">0 Mati</span>
                         </div>
-                        <div class="stat-mini-box span-2">
+                        <div class="stat-mini-box">
                             <span class="stat-mini-label">Buah Matang Tersedia</span>
-                            <span class="stat-mini-val" style="color:var(--yellow);" id="statFruitsAvailable">0
-                                Buah</span>
+                            <span class="stat-mini-val" style="color:var(--yellow);" id="statFruitsAvailable">0 Buah</span>
                         </div>
-                        <div class="stat-mini-box span-2">
+                        <div class="stat-mini-box">
                             <span class="stat-mini-label">Bangkai Mayat Tersedia</span>
                             <span class="stat-mini-val" style="color:var(--pink);" id="statCorpsesCount">0 Mayat</span>
+                        </div>
+                        <div class="stat-mini-box">
+                            <span class="stat-mini-label">Aktivitas Material (A / B)</span>
+                            <span class="stat-mini-val" style="color:var(--cyan);" id="statMaterialRpmMatrix">0 /mnt : 0 /mnt</span>
                         </div>
                     </div>
                 </div>
@@ -874,7 +847,7 @@
                 <div
                     style="background:rgba(255,255,255,0.025); border:1px solid var(--border-subtle); border-radius:8px; padding:12px; margin-top:8px;">
                     <div style="font-size:0.75rem; font-weight:700; color:var(--cyan); margin-bottom:8px; display:flex; justify-content:space-between; align-items:center;">
-                        <span>🧬 Status Kesiapan Evolusi Kognitif: FASE 2 (Swarm & Role Specialization)</span>
+                        <span>🧬 Status Kesiapan Evolusi Kognitif: Menuju Era Megalitikum & ASI</span>
                         <span id="phase2Badge" style="font-size:0.68rem; padding:2px 8px; border-radius:12px; background:rgba(234,179,8,0.15); color:var(--yellow); border:1px solid rgba(234,179,8,0.3);">EVALUASI KOGNISI</span>
                     </div>
                     <div style="display:grid; grid-template-columns: 1fr 1fr; gap:8px;">
@@ -883,56 +856,131 @@
                             <span class="stat-mini-val" id="p2ReqHomeostasis" style="color:var(--yellow);">0 / 30 Hari ⏳</span>
                         </div>
                         <div class="stat-mini-box" style="flex-direction:row; justify-content:space-between; align-items:center;">
-                            <span class="stat-mini-label">2. Swarm Comm Signal (Sinyal ≥ 15%)</span>
+                            <span class="stat-mini-label">2. Social Learning Transfer (≥ 15%)</span>
                             <span class="stat-mini-val" id="p2ReqSwarm" style="color:var(--yellow);">0.0% ⏳</span>
                         </div>
                         <div class="stat-mini-box" style="flex-direction:row; justify-content:space-between; align-items:center;">
-                            <span class="stat-mini-label">3. Role Specialization (Divergensi ≥ 20%)</span>
+                            <span class="stat-mini-label">3. Variasi & Entropi DNA (≥ 30%)</span>
                             <span class="stat-mini-val" id="p2ReqSpecialization" style="color:var(--yellow);">0.0% ⏳</span>
                         </div>
                         <div class="stat-mini-box" style="flex-direction:row; justify-content:space-between; align-items:center;">
-                            <span class="stat-mini-label">4. Material Extraction (Panen & Mayat)</span>
-                            <span class="stat-mini-val" id="p2ReqTerraform" style="color:var(--yellow);">0 Aksi ⏳</span>
+                            <span class="stat-mini-label">4. Energy Efficiency (EROI ≥ 1.5x)</span>
+                            <span class="stat-mini-val" id="p2ReqTerraform" style="color:var(--yellow);">1.00x ⏳</span>
                         </div>
                     </div>
                     <div class="stat-mini-box" style="flex-direction:row; justify-content:space-between; align-items:center; margin-top:8px;">
-                        <span class="stat-mini-label">5. Co-Evolution Arms Race (Opcode DNA ≥ 12 Baris & Efisiensi Berburu)</span>
-                        <span class="stat-mini-val" id="p2ReqArmsRace" style="color:var(--yellow);">0 / 12 Opcode ⏳</span>
+                        <span class="stat-mini-label">5. Megalithic Tool Mastery (Total Alat Dibuat ≥ 10 Alat)</span>
+                        <span class="stat-mini-val" id="p2ReqArmsRace" style="color:var(--yellow);">0 / 10 Alat ⏳</span>
                     </div>
                 </div>
 
                 <div
                     style="background:rgba(255,255,255,0.025); border:1px solid var(--border-subtle); border-radius:8px; padding:12px; margin-top:8px;">
                     <div style="font-size:0.75rem; font-weight:700; color:var(--text-sub); margin-bottom:8px;">
-                        Keseimbangan Ekosistem & Mekanisme Pertarungan
+                        Keseimbangan Ekosistem & Perang Dua Kubu
                     </div>
                     <table style="width:100%; border-collapse:collapse; font-size:0.74rem;">
                         <thead>
                             <tr
                                 style="text-align:left; color:var(--text-dim); border-bottom:1px solid var(--border-subtle);">
-                                <th style="padding:6px;">Aspek Sistem</th>
+                                <th style="padding:6px;">Aspek Kognitif & Fisika</th>
                                 <th style="padding:6px;">Kubu A (Herbivora)</th>
                                 <th style="padding:6px;">Kubu B (Karnivora/Predator)</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr style="border-bottom:1px solid rgba(255,255,255,0.04);">
-                                <td style="padding:6px; color:var(--text-sub);">Sumber Energi</td>
-                                <td style="padding:6px; color:var(--kubu-a);">Buah & Pohon (Fotosintesis)</td>
-                                <td style="padding:6px; color:var(--kubu-b);">Memangsa Semut Kubu A</td>
+                                <td style="padding:6px; color:var(--text-sub);">Sumber Daya Utama</td>
+                                <td style="padding:6px; color:var(--kubu-a);">Buah & Fotosintesis Pohon</td>
+                                <td style="padding:6px; color:var(--kubu-b);">Pemangsaan Mangsa & Scavenging Bangkai</td>
                             </tr>
                             <tr style="border-bottom:1px solid rgba(255,255,255,0.04);">
-                                <td style="padding:6px; color:var(--text-sub);">Reproduksi</td>
-                                <td style="padding:6px; color:var(--pink);">Perkawinan Seksual Jantan ♂ + Betina ♀</td>
-                                <td style="padding:6px; color:var(--pink);">Perkawinan Seksual Jantan ♂ + Betina ♀</td>
+                                <td style="padding:6px; color:var(--text-sub);">Teknologi Megalitikum</td>
+                                <td style="padding:6px; color:var(--yellow);">Batu & Senjata Pertahanan</td>
+                                <td style="padding:6px; color:var(--orange);">Logam & Senjata Serang Berburu</td>
                             </tr>
                             <tr>
-                                <td style="padding:6px; color:var(--text-sub);">Pertahanan / Serangan</td>
-                                <td style="padding:6px; color:var(--yellow);">Menembus Shield dengan Rumus Kognisi</td>
-                                <td style="padding:6px; color:var(--orange);">Serangan Fisik Jarak Dekat & Perisai</td>
+                                <td style="padding:6px; color:var(--text-sub);">Dinamika Komunikasi</td>
+                                <td style="padding:6px; color:var(--cyan);">Gelombang Sinyal Foraging Kawanan</td>
+                                <td style="padding:6px; color:var(--pink);">Sinyal Koordinasi Pengepungan Mangsa</td>
                             </tr>
                         </tbody>
                     </table>
+                </div>
+            </div>
+
+            <!-- God-Mode & Live Injection Overlay -->
+            <div class="matrix-overlay" id="tabGodMode">
+                <div style="font-size:0.88rem; font-weight:800; color:var(--cyan); display:flex; justify-content:space-between; align-items:center;">
+                    <span>⚡ GOD-MODE CONTROL PANEL & LIVE SYSTEM INJECTOR</span>
+                    <span id="godModeToast" style="font-size:0.72rem; color:var(--yellow); font-weight:700;"></span>
+                </div>
+
+                <!-- 1. Live Entity Spawning Section -->
+                <div style="background:rgba(255,255,255,0.03); border:1px solid var(--border-subtle); border-radius:10px; padding:12px;">
+                    <div style="font-size:0.75rem; font-weight:700; color:var(--text-sub); margin-bottom:8px; text-transform:uppercase;">
+                        🧬 Injeksi Populasi & Sumber Daya Alam (Live Entity Spawner)
+                    </div>
+                    <div style="display:grid; grid-template-columns: repeat(4, 1fr); gap:8px;">
+                        <button onclick="spawnEntity('herbi', 10)" class="god-btn" style="border-color:rgba(34,197,94,0.4); background:rgba(34,197,94,0.1); color:var(--kubu-a);">+10 Herbivora</button>
+                        <button onclick="spawnEntity('herbi', 50)" class="god-btn" style="border-color:rgba(34,197,94,0.4); background:rgba(34,197,94,0.15); color:var(--kubu-a); font-weight:800;">+50 Herbivora</button>
+                        <button onclick="spawnEntity('karni', 10)" class="god-btn" style="border-color:rgba(239,68,68,0.4); background:rgba(239,68,68,0.1); color:var(--kubu-b);">+10 Predator</button>
+                        <button onclick="spawnEntity('karni', 50)" class="god-btn" style="border-color:rgba(239,68,68,0.4); background:rgba(239,68,68,0.15); color:var(--kubu-b); font-weight:800;">+50 Predator</button>
+                        <button onclick="spawnEntity('tree', 5)" class="god-btn" style="border-color:rgba(234,179,8,0.4); background:rgba(234,179,8,0.1); color:var(--yellow);">+5 Pohon Subur</button>
+                        <button onclick="spawnEntity('tree', 15)" class="god-btn" style="border-color:rgba(234,179,8,0.4); background:rgba(234,179,8,0.15); color:var(--yellow); font-weight:800;">+15 Pohon Subur</button>
+                        <button onclick="spawnEntity('mineral', 4)" class="god-btn" style="border-color:rgba(6,182,212,0.4); background:rgba(6,182,212,0.1); color:var(--cyan);">+4 Deposit Mineral</button>
+                        <button onclick="spawnEntity('mineral', 12)" class="god-btn" style="border-color:rgba(6,182,212,0.4); background:rgba(6,182,212,0.15); color:var(--cyan); font-weight:800;">+12 Deposit Mineral</button>
+                    </div>
+                </div>
+
+                <!-- 2. Cataclysm / Disaster Triggers -->
+                <div style="background:rgba(255,255,255,0.03); border:1px solid var(--border-subtle); border-radius:10px; padding:12px;">
+                    <div style="font-size:0.75rem; font-weight:700; color:var(--text-sub); margin-bottom:8px; text-transform:uppercase;">
+                        ☄️ Pemicu Bencana Alam & Kataklisme (Cataclysm Triggers)
+                    </div>
+                    <div style="display:grid; grid-template-columns: repeat(4, 1fr); gap:8px;">
+                        <button onclick="triggerDisaster('solar')" class="god-btn" style="border-color:rgba(251,146,60,0.4); background:rgba(251,146,60,0.12); color:var(--orange);">☀️ Solar Storm (+22°C)</button>
+                        <button onclick="triggerDisaster('blizzard')" class="god-btn" style="border-color:rgba(56,189,248,0.4); background:rgba(56,189,248,0.12); color:var(--blue);">❄️ Blizzard (-25°C)</button>
+                        <button onclick="triggerDisaster('emp')" class="god-btn" style="border-color:rgba(192,132,252,0.4); background:rgba(192,132,252,0.12); color:var(--purple);">⚡ Badai EMP Magnetik</button>
+                        <button onclick="triggerDisaster('lava')" class="god-btn" style="border-color:rgba(239,68,68,0.4); background:rgba(239,68,68,0.12); color:var(--kubu-b);">🌋 Erupsi Lava & Gas</button>
+                    </div>
+                </div>
+
+                <!-- 3. State Checkpoint Management -->
+                <div style="background:rgba(255,255,255,0.03); border:1px solid var(--border-subtle); border-radius:10px; padding:12px;">
+                    <div style="font-size:0.75rem; font-weight:700; color:var(--text-sub); margin-bottom:8px; text-transform:uppercase;">
+                        💾 Manajemen State & Checkpoint (Save / Resume)
+                    </div>
+                    <div style="display:flex; gap:10px; align-items:center;">
+                        <button onclick="saveCheckpointNow()" class="god-btn" style="flex:1; border-color:rgba(34,197,94,0.5); background:rgba(34,197,94,0.15); color:var(--kubu-a); font-weight:700; padding:10px;">💾 Simpan Checkpoint Sekarang</button>
+                        <button onclick="loadCheckpointNow()" class="god-btn" style="flex:1; border-color:rgba(6,182,212,0.5); background:rgba(6,182,212,0.15); color:var(--cyan); font-weight:700; padding:10px;">📂 Muat Ulang Checkpoint Terakhir</button>
+                    </div>
+                    <div style="font-size:0.68rem; color:var(--text-dim); margin-top:6px;">
+                        *Simulasi otomatis menyimpan state setiap 5 hari ke file <code>ecosystem_checkpoint.bin</code>.
+                    </div>
+                </div>
+
+                <!-- 4. Dynamic Physics Tweaker -->
+                <div style="background:rgba(255,255,255,0.03); border:1px solid var(--border-subtle); border-radius:10px; padding:12px;">
+                    <div style="font-size:0.75rem; font-weight:700; color:var(--text-sub); margin-bottom:8px; text-transform:uppercase;">
+                        🌐 Modifikasi Hukum Fisika & Iklim Realtime
+                    </div>
+                    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:12px;">
+                        <div>
+                            <div style="display:flex; justify-content:space-between; font-size:0.72rem; color:var(--text-sub); margin-bottom:4px;">
+                                <span>Tekanan Alam AI (Nature Pressure)</span>
+                                <span id="valNaturePres" style="color:var(--yellow); font-weight:700;">1.00x</span>
+                            </div>
+                            <input type="range" min="0.5" max="5.0" step="0.1" value="1.0" oninput="setNaturePressureLive(this.value)" style="width:100%; accent-color:var(--yellow);">
+                        </div>
+                        <div>
+                            <div style="display:flex; justify-content:space-between; font-size:0.72rem; color:var(--text-sub); margin-bottom:4px;">
+                                <span>Vektor Angin Horizontal (Wind X)</span>
+                                <span id="valWindX" style="color:var(--cyan); font-weight:700;">1.5 m/s</span>
+                            </div>
+                            <input type="range" min="-10.0" max="10.0" step="0.5" value="1.5" oninput="setWindLive(this.value)" style="width:100%; accent-color:var(--cyan);">
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -976,12 +1024,12 @@
                         <span class="stat-mini-val" style="color:var(--kubu-b);" id="statPredDeaths">0</span>
                     </div>
                     <div class="stat-mini-box span-2">
-                        <span class="stat-mini-label">Mangsa Berhasil Dimangsa</span>
-                        <span class="stat-mini-val" style="color:var(--orange);" id="statPreyDevoured">0 Semut</span>
+                        <span class="stat-mini-label">Kecepatan Interaksi Material</span>
+                        <span class="stat-mini-val" style="color:var(--cyan);" id="statMatB">0 /mnt</span>
                     </div>
                     <div class="stat-mini-box span-2">
-                        <span class="stat-mini-label">Predator Terbunuh Rumus A</span>
-                        <span class="stat-mini-val" style="color:var(--purple);" id="statPredKills">0 Semut</span>
+                        <span class="stat-mini-label">Alat/Struktur Dibuat dari Material</span>
+                        <span class="stat-mini-val" style="color:var(--yellow);" id="statCraftB">0 Alat</span>
                     </div>
                 </div>
 
@@ -997,10 +1045,9 @@
 
                 <!-- Legend Bar -->
                 <div class="legend-bar" style="margin-top:auto;">
-                    <div>🟢 <strong>Pohon</strong>: Buah Pangan</div>
-                    <div>🔵/🌸 <strong>Kubu A</strong>: ♂ / ♀</div>
-                    <div>🔴/🟣 <strong>Kubu B</strong>: ♂ / ♀</div>
-                    <div>⭐ <strong>Emas</strong>: Alpha Leader</div>
+                    <div>⭐ <strong>Kubu A (Herbi)</strong>: Bintang (♂ Biru / ♀ Pink)</div>
+                    <div>💀 <strong>Kubu B (Karni)</strong>: Tengkorak (♂ Biru / ♀ Pink)</div>
+                    <div>👑 <strong>Alpha Leader</strong>: Kuning Emas</div>
                 </div>
             </div>
         </div>
@@ -1042,10 +1089,84 @@
 
         function switchCenterTab(tab) {
             activeCenterTab = tab;
-            document.getElementById('tabBtnVisual').classList.toggle('active', tab === 'visual');
-            document.getElementById('tabBtnMatrix').classList.toggle('active', tab === 'matrix');
-            document.getElementById('tabMatrix').classList.toggle('active', tab === 'matrix');
+            const btnVis = document.getElementById('tabBtnVisual');
+            const btnMat = document.getElementById('tabBtnMatrix');
+            const btnGod = document.getElementById('tabBtnGodMode');
+            const tabMat = document.getElementById('tabMatrix');
+            const tabGod = document.getElementById('tabGodMode');
+
+            if (btnVis) btnVis.classList.toggle('active', tab === 'visual');
+            if (btnMat) btnMat.classList.toggle('active', tab === 'matrix');
+            if (btnGod) btnGod.classList.toggle('active', tab === 'godmode');
+            if (tabMat) tabMat.classList.toggle('active', tab === 'matrix');
+            if (tabGod) tabGod.classList.toggle('active', tab === 'godmode');
+
             if (tab === 'visual') resizeCanvas();
+        }
+
+        function showGodToast(msg) {
+            const t = document.getElementById('godModeToast');
+            if (t) {
+                t.textContent = `⚡ ${msg}`;
+                setTimeout(() => { if (t.textContent === `⚡ ${msg}`) t.textContent = ''; }, 3500);
+            }
+        }
+
+        async function spawnEntity(type, count) {
+            try {
+                const res = await fetch(`/spawn?type=${type}&count=${count}`);
+                const data = await res.json();
+                showGodToast(`Spawn +${data.spawned || count} ${type.toUpperCase()} Sukses!`);
+            } catch (e) {
+                showGodToast(`Gagal spawn ${type}`);
+            }
+        }
+
+        async function triggerDisaster(type) {
+            try {
+                await fetch(`/trigger_disaster?type=${type}`);
+                showGodToast(`Kataklisme ${type.toUpperCase()} Berhasil Dipicu!`);
+            } catch (e) {
+                showGodToast(`Gagal trigger bencana`);
+            }
+        }
+
+        async function saveCheckpointNow() {
+            try {
+                const res = await fetch('/save_checkpoint');
+                const data = await res.json();
+                showGodToast(data.message || "State Checkpoint Berhasil Disimpan!");
+            } catch (e) {
+                showGodToast("Gagal menyimpan checkpoint");
+            }
+        }
+
+        async function loadCheckpointNow() {
+            try {
+                const res = await fetch('/load_checkpoint');
+                const data = await res.json();
+                showGodToast(data.message || "State Checkpoint Berhasil Dimuat!");
+            } catch (e) {
+                showGodToast("Gagal memuat checkpoint");
+            }
+        }
+
+        async function setNaturePressureLive(val) {
+            const num = parseFloat(val);
+            const el = document.getElementById('valNaturePres');
+            if (el) el.textContent = `${num.toFixed(2)}x`;
+            try {
+                await fetch(`/set_physics?param=nature_pressure&val=${num}`);
+            } catch (e) { }
+        }
+
+        async function setWindLive(val) {
+            const num = parseFloat(val);
+            const el = document.getElementById('valWindX');
+            if (el) el.textContent = `${num.toFixed(1)} m/s`;
+            try {
+                await fetch(`/set_physics?param=wind&x=${num}&y=0.5`);
+            } catch (e) { }
         }
 
         const canvas = document.getElementById('worldCanvas');
@@ -1223,63 +1344,128 @@
                 });
             }
 
-            // 4. Render Kubu B (Carnivores / Predators)
+        function drawStar(ctx, cx, cy, spikes, outerRadius, innerRadius, color, isAlpha) {
+            let rot = Math.PI / 2 * 3;
+            let x = cx;
+            let y = cy;
+            let step = Math.PI / spikes;
+
+            ctx.save();
+            if (isAlpha) {
+                ctx.shadowColor = "#facc15";
+                ctx.shadowBlur = 18;
+            }
+            ctx.beginPath();
+            ctx.moveTo(cx, cy - outerRadius);
+            for (let i = 0; i < spikes; i++) {
+                x = cx + Math.cos(rot) * outerRadius;
+                y = cy + Math.sin(rot) * outerRadius;
+                ctx.lineTo(x, y);
+                rot += step;
+
+                x = cx + Math.cos(rot) * innerRadius;
+                y = cy + Math.sin(rot) * innerRadius;
+                ctx.lineTo(x, y);
+                rot += step;
+            }
+            ctx.lineTo(cx, cy - outerRadius);
+            ctx.closePath();
+            ctx.fillStyle = isAlpha ? "#facc15" : color;
+            ctx.fill();
+            ctx.strokeStyle = isAlpha ? "#ffffff" : "rgba(255, 255, 255, 0.65)";
+            ctx.lineWidth = isAlpha ? 1.8 : 1.2;
+            ctx.stroke();
+
+            // Titik inti tengah bintang
+            ctx.beginPath();
+            ctx.arc(cx, cy, innerRadius * 0.45, 0, Math.PI * 2);
+            ctx.fillStyle = isAlpha ? "#ffffff" : "rgba(255, 255, 255, 0.75)";
+            ctx.fill();
+
+            ctx.restore();
+        }
+
+        function drawSkull(ctx, cx, cy, r, color, isAlpha) {
+            ctx.save();
+            if (isAlpha) {
+                ctx.shadowColor = "#facc15";
+                ctx.shadowBlur = 18;
+            }
+            const skullColor = isAlpha ? "#facc15" : color;
+            
+            // Cranium (upper dome) & Jaw
+            ctx.beginPath();
+            ctx.arc(cx, cy - r * 0.15, r * 0.88, Math.PI * 0.82, Math.PI * 2.18);
+            ctx.lineTo(cx + r * 0.48, cy + r * 0.85);
+            ctx.lineTo(cx - r * 0.48, cy + r * 0.85);
+            ctx.closePath();
+            ctx.fillStyle = skullColor;
+            ctx.fill();
+            ctx.strokeStyle = isAlpha ? "#ffffff" : "rgba(255, 255, 255, 0.65)";
+            ctx.lineWidth = isAlpha ? 1.8 : 1.2;
+            ctx.stroke();
+
+            // Eye sockets (dark hollows)
+            const eyeR = Math.max(1.4, r * 0.24);
+            const eyeOffsetY = cy - r * 0.12;
+            ctx.fillStyle = "#040711";
+            ctx.beginPath();
+            ctx.arc(cx - r * 0.34, eyeOffsetY, eyeR, 0, Math.PI * 2);
+            ctx.arc(cx + r * 0.34, eyeOffsetY, eyeR, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Small nose socket
+            ctx.beginPath();
+            ctx.moveTo(cx, cy + r * 0.12);
+            ctx.lineTo(cx - r * 0.14, cy + r * 0.34);
+            ctx.lineTo(cx + r * 0.14, cy + r * 0.34);
+            ctx.closePath();
+            ctx.fill();
+
+            ctx.restore();
+        }
+
+            // 4. Render Kubu B (Karnivora / Predators: TENGKORAK)
             if (state.predators && state.predators.length > 0) {
+                const alphaPredId = (state.topPredators && state.topPredators.length > 0) ? state.topPredators[0].id : -1;
                 state.predators.forEach(pred => {
                     if (pred.e <= 0) return;
                     const px = pred.x * scaleX;
                     const py = pred.y * scaleY;
+                    const isAlpha = (pred.id === alphaPredId);
                     const isMale = (pred.g === 0);
                     const age = pred.age || 0;
-                    const radius = Math.max(2.8, Math.min(5.2, 2.8 + (age / 100) * 2.4));
+                    const radius = isAlpha ? 11.5 : Math.max(6.5, Math.min(10.0, 6.5 + (age / 100) * 3.5));
+                    const genderColor = isMale ? "#38bdf8" : "#f472b6";
 
-                    // Glowing Aura
-                    ctx.beginPath();
-                    ctx.arc(px, py, radius + 3.5, 0, Math.PI * 2);
-                    ctx.fillStyle = isMale ? "rgba(239, 68, 68, 0.22)" : "rgba(192, 132, 252, 0.22)";
-                    ctx.fill();
-
-                    // Core Body
-                    ctx.beginPath();
-                    ctx.arc(px, py, radius, 0, Math.PI * 2);
-                    ctx.fillStyle = isMale ? "#ef4444" : "#c084fc";
-                    ctx.fill();
+                    drawSkull(ctx, px, py, radius, genderColor, isAlpha);
 
                     // Shield indicator
                     if (pred.s && pred.s > 0.3) {
                         ctx.beginPath();
-                        ctx.arc(px, py, radius + 2, 0, Math.PI * 2);
-                        ctx.strokeStyle = "rgba(251, 146, 60, 0.8)";
-                        ctx.lineWidth = 1.2;
+                        ctx.arc(px, py, radius + 3.5, 0, Math.PI * 2);
+                        ctx.strokeStyle = "rgba(251, 146, 60, 0.85)";
+                        ctx.lineWidth = 1.5;
                         ctx.stroke();
                     }
                 });
             }
 
-            // 5. Render Kubu A (Herbivores)
+            // 5. Render Kubu A (Herbivora: BINTANG)
             if (state.agents && state.agents.length > 0) {
+                const alphaAgId = (state.topRankings && state.topRankings.length > 0) ? state.topRankings[0].id : state.alphaId;
                 state.agents.forEach((ag) => {
                     if (ag.e <= 0) return;
                     const ax = ag.x * scaleX;
                     const ay = ag.y * scaleY;
-                    const isAlpha = (ag.id === state.alphaId);
+                    const isAlpha = (ag.id === alphaAgId);
                     const isMale = (ag.g === 0);
                     const age = ag.age || 0;
-                    const radius = isAlpha ? 5.8 : Math.max(2.6, Math.min(4.8, 2.6 + (age / 100) * 2.2));
+                    const outerRadius = isAlpha ? 12.5 : Math.max(7.0, Math.min(10.5, 7.0 + (age / 100) * 3.5));
+                    const innerRadius = outerRadius * 0.48;
+                    const genderColor = isMale ? "#38bdf8" : "#f472b6";
 
-                    ctx.beginPath();
-                    ctx.arc(ax, ay, radius, 0, Math.PI * 2);
-
-                    if (isAlpha) {
-                        ctx.fillStyle = "#facc15";
-                        ctx.shadowColor = "#facc15";
-                        ctx.shadowBlur = 14;
-                        ctx.fill();
-                        ctx.shadowBlur = 0;
-                    } else {
-                        ctx.fillStyle = isMale ? "#38bdf8" : "#f472b6";
-                        ctx.fill();
-                    }
+                    drawStar(ctx, ax, ay, 5, outerRadius, innerRadius, genderColor, isAlpha);
                 });
             }
         }
@@ -1305,8 +1491,8 @@
                         const rankLabel = idx === 0 ? '👑 #1' : `#${idx + 1}`;
                         const ageVal = (typeof rA.age !== 'undefined') ? Number(rA.age).toFixed(1) : '0.0';
                         const energyVal = (typeof rA.e !== 'undefined') ? Math.round(rA.e) : 100;
-                        const fruitsVal = rA.fruits || 0;
-                        const formulaVal = rA.f || 0;
+                        const matVal = rA.mi || 0;
+                        const craftVal = rA.tc || 0;
                         const killVal = rA.pk || 0;
                         htmlA += `
                             <div class="rank-item" style="border-color: ${idx === 0 ? 'rgba(34, 197, 94, 0.45)' : 'var(--border-subtle)'}; background: ${idx === 0 ? 'rgba(34, 197, 94, 0.05)' : 'rgba(255, 255, 255, 0.02)'}; padding: 6px 8px;">
@@ -1316,12 +1502,12 @@
                                         <span style="font-weight: 700; color: #fff; font-size: 0.72rem;">Agen #${rA.id}</span>
                                         <span style="color: ${rA.g === 0 ? 'var(--cyan)' : 'var(--pink)'}; font-size: 0.72rem;">${gSymA}</span>
                                     </div>
-                                    <span style="font-size: 0.68rem; color: var(--kubu-a); font-weight: 700;">Panen: ${fruitsVal}</span>
+                                    <span style="font-size: 0.68rem; color: var(--cyan); font-weight: 700;">Material: ${matVal}</span>
                                 </div>
                                 <div class="rank-item-stats">
                                     <span>Usia: <b style="color: #fff;">${ageVal} Th</b></span>
                                     <span>Energi: <b style="color: #fff;">${energyVal}%</b></span>
-                                    <span>Rumus: <b style="color: #fff;">${formulaVal}</b></span>
+                                    <span>Alat: <b style="color: #fff;">${craftVal}</b></span>
                                     <span>Kill: <b style="color: #fff;">${killVal}</b></span>
                                 </div>
                             </div>
@@ -1344,7 +1530,8 @@
                         const ageVal = (typeof rB.age !== 'undefined') ? Number(rB.age).toFixed(1) : '0.0';
                         const energyVal = (typeof rB.e !== 'undefined') ? Math.round(rB.e) : 100;
                         const devouredVal = rB.d || 0;
-                        const shieldVal = (typeof rB.s !== 'undefined') ? Number(rB.s).toFixed(1) : '1.0';
+                        const matVal = rB.mi || 0;
+                        const craftVal = rB.tc || 0;
 
                         htmlB += `
                             <div class="rank-item" style="border-color: ${idx === 0 ? 'rgba(239, 68, 68, 0.45)' : 'var(--border-subtle)'}; background: ${idx === 0 ? 'rgba(239, 68, 68, 0.05)' : 'rgba(255, 255, 255, 0.02)'}; padding: 6px 8px;">
@@ -1354,12 +1541,13 @@
                                         <span style="font-weight: 700; color: #fff; font-size: 0.72rem;">Predator #${rB.id}</span>
                                         <span style="color: ${rB.g === 0 ? 'var(--kubu-b)' : 'var(--purple)'}; font-size: 0.72rem;">${gSymB}</span>
                                     </div>
-                                    <span style="font-size: 0.68rem; color: var(--kubu-b); font-weight: 700;">Mangsa: ${devouredVal}</span>
+                                    <span style="font-size: 0.68rem; color: var(--cyan); font-weight: 700;">Material: ${matVal}</span>
                                 </div>
                                 <div class="rank-item-stats">
                                     <span>Usia: <b style="color: #fff;">${ageVal} Th</b></span>
                                     <span>Energi: <b style="color: #fff;">${energyVal}%</b></span>
-                                    <span>Shield: <b style="color: #fff;">${shieldVal}</b></span>
+                                    <span>Alat: <b style="color: #fff;">${craftVal}</b></span>
+                                    <span>Mangsa: <b style="color: #fff;">${devouredVal}</b></span>
                                 </div>
                             </div>
                         `;
@@ -1435,12 +1623,16 @@
                 const windSpeed = Math.sqrt((state.windX || 0) * (state.windX || 0) + (state.windY || 0) * (state.windY || 0));
                 const elWind = document.getElementById('statWind');
                 if (elWind) elWind.textContent = `${windSpeed.toFixed(1)} m/s`;
-                const elHarvest = document.getElementById('statHarvest');
-                if (elHarvest) elHarvest.textContent = `${(state.totalFruitsHarvested || 0).toLocaleString()} Buah`;
-                const elFruitsAvail = document.getElementById('statFruitsAvailable');
-                if (elFruitsAvail) elFruitsAvail.textContent = `${Math.round(state.totalFruitsAvailable || 0).toLocaleString()} Buah`;
-                const elFormulas = document.getElementById('statFormulas');
-                if (elFormulas) elFormulas.textContent = `${(state.totalFormulasSynthesized || 0).toLocaleString()} Rumus`;
+                
+                // Material stats binding (Rate Per Minute)
+                const elMatA = document.getElementById('statMatA');
+                if (elMatA) elMatA.textContent = `${(state.rpmMaterialA || 0).toLocaleString()} /mnt`;
+                const elCraftA = document.getElementById('statCraftA');
+                if (elCraftA) elCraftA.textContent = `${(state.totalToolsCraftedA || 0).toLocaleString()} Alat`;
+                const elMatB = document.getElementById('statMatB');
+                if (elMatB) elMatB.textContent = `${(state.rpmMaterialB || 0).toLocaleString()} /mnt`;
+                const elCraftB = document.getElementById('statCraftB');
+                if (elCraftB) elCraftB.textContent = `${(state.totalToolsCraftedB || 0).toLocaleString()} Alat`;
 
                 const livingTrees = (typeof state.livingTreesCount !== 'undefined') ? state.livingTreesCount : (state.trees ? state.trees.filter(t => (t.g || 0) >= 20.0).length : 32);
                 const deadTrees = (typeof state.totalTreeDeaths !== 'undefined') ? state.totalTreeDeaths : 0;
@@ -1471,15 +1663,6 @@
                 const elPredKills = document.getElementById('statPredKills');
                 if (elPredKills) elPredKills.textContent = `${(state.totalPredatorKills || 0).toLocaleString()} Semut`;
 
-                // Atmosphere stats (O2, CO2, H2O, N2, Corpses)
-                const elO2 = document.getElementById('statO2');
-                if (elO2) elO2.textContent = `${(state.oxygenLevel || 21.0).toFixed(1)}%`;
-                const elCO2 = document.getElementById('statCO2');
-                if (elCO2) elCO2.textContent = `${(state.co2Level || 0.04).toFixed(3)}%`;
-                const elH2O = document.getElementById('statH2O');
-                if (elH2O) elH2O.textContent = `${(state.h2oLevel || 60.0).toFixed(1)}%`;
-                const elN2 = document.getElementById('statN2');
-                if (elN2) elN2.textContent = `${(state.nitrogenLevel || 78.0).toFixed(1)}%`;
                 const elCorpses = document.getElementById('statCorpsesCount');
                 if (elCorpses) elCorpses.textContent = `${(state.corpses ? state.corpses.length : 0).toLocaleString()} Mayat`;
 
@@ -1524,27 +1707,25 @@
                 if (elHudA) elHudA.textContent = `🌿 Kubu A: ${livingCountA}`;
                 const elHudB = document.getElementById('hudKubuBPill');
                 if (elHudB) elHudB.textContent = `🐺 Kubu B: ${livingCountB}`;
-                const elHudWind = document.getElementById('hudWindPill');
-                if (elHudWind) elHudWind.innerHTML = `<span>💨</span> ${windSpeed.toFixed(1)} m/s`;
+                const elHudNat = document.getElementById('hudNaturePill');
+                if (elHudNat) elHudNat.textContent = `⚡ Kubu Alam: ${(state.naturePressure || 1.0).toFixed(2)}x`;
 
-                // Matrix updates
+                // Cognitive Matrix updates
+                const elStrategy = document.getElementById('mStrategyHierarchy');
+                if (elStrategy) elStrategy.textContent = state.strategyHierarchy || "Tingkat 1: Refleks & Pencarian Pangan";
+                const elEroi = document.getElementById('mEroi');
+                if (elEroi) elEroi.textContent = `${(state.eroiScore || 1.0).toFixed(2)}x`;
+                const elDnaDiv = document.getElementById('mDnaDiversity');
+                if (elDnaDiv) elDnaDiv.textContent = `${(state.dnaDiversity || 0.0).toFixed(1)}%`;
+                const elSocLearn = document.getElementById('mSocialLearning');
+                if (elSocLearn) elSocLearn.textContent = `${(state.socialLearning || 0.0).toFixed(1)}%`;
                 const elMPop = document.getElementById('mPopComparison');
                 if (elMPop) elMPop.textContent = `${livingCountA} : ${livingCountB}`;
-                const elMBirth = document.getElementById('mBirthComparison');
-                if (elMBirth) elMBirth.textContent = `${state.totalBirths || 0} : ${predBirths}`;
-                const elMDeath = document.getElementById('mDeathComparison');
-                if (elMDeath) elMDeath.textContent = `${state.totalDeaths || 0} : ${predDeaths}`;
-                const elMDna = document.getElementById('mDnaSize');
-                if (elMDna) elMDna.textContent = `${state.activeProgramSize || 8} / 64 Baris`;
 
-                if (state.agents && state.agents.length > 0) {
-                    const totalAge = state.agents.reduce((acc, a) => acc + (a.age || 0), 0);
-                    const avgAge = totalAge / state.agents.length;
-                    const elMAge = document.getElementById('mAvgAge');
-                    if (elMAge) elMAge.textContent = `${avgAge.toFixed(1)} Thn`;
-                }
+                const elMatRpmMatrix = document.getElementById('statMaterialRpmMatrix');
+                if (elMatRpmMatrix) elMatRpmMatrix.textContent = `${state.rpmMaterialA || 0} /mnt : ${state.rpmMaterialB || 0} /mnt`;
 
-                // Update Phase 2 Evaluation Matrix
+                // Update Phase Evaluation Matrix
                 const curDay = state.day || 1;
                 const popOk = (livingCountA > 0 && livingCountB > 0);
                 const req1Ok = (curDay >= 30 && popOk);
@@ -1554,44 +1735,35 @@
                     p2Req1.style.color = req1Ok ? 'var(--kubu-a)' : 'var(--yellow)';
                 }
 
-                const activeAgents = (state.agents && state.agents.length > 0) ? state.agents.length : 1;
-                const activePredators = (state.predators && state.predators.length > 0) ? state.predators.length : 1;
-                const totalHarvest = (state.totalFruitsHarvested || 0);
-                const totalPreyDevoured = state.predators ? state.predators.reduce((acc, p) => acc + (p.d || 0), 0) : 0;
-                const totalActions = totalHarvest + totalPreyDevoured;
-
-                // Hitung estimasi kohesi swarm (berdasarkan sinyal aktif dan kepadatan kelompok)
-                const swarmScore = Math.min(100, Math.max(8.0, (popTotal > 150 ? 22.5 : 12.0)));
-                const req2Ok = (swarmScore >= 15.0);
+                const socScore = state.socialLearning || 0.0;
+                const req2Ok = (socScore >= 15.0);
                 const p2Req2 = document.getElementById('p2ReqSwarm');
                 if (p2Req2) {
-                    p2Req2.textContent = `${swarmScore.toFixed(1)}% ${req2Ok ? '✅ OK' : '⏳ Perlu Sinyal'}`;
+                    p2Req2.textContent = `${socScore.toFixed(1)}% ${req2Ok ? '✅ OK' : '⏳ Perlu Sinyal'}`;
                     p2Req2.style.color = req2Ok ? 'var(--kubu-a)' : 'var(--yellow)';
                 }
 
-                // Spesialisasi peran
-                const specScore = Math.min(100, Math.max(10.0, (popTotal > 100 ? 28.0 : 14.0)));
-                const req3Ok = (specScore >= 20.0);
+                const dnaDivScore = state.dnaDiversity || 0.0;
+                const req3Ok = (dnaDivScore >= 30.0);
                 const p2Req3 = document.getElementById('p2ReqSpecialization');
                 if (p2Req3) {
-                    p2Req3.textContent = `${specScore.toFixed(1)}% ${req3Ok ? '✅ OK' : '⏳ Terlalu Seragam'}`;
+                    p2Req3.textContent = `${dnaDivScore.toFixed(1)}% ${req3Ok ? '✅ OK' : '⏳ Rendah Variasi'}`;
                     p2Req3.style.color = req3Ok ? 'var(--kubu-a)' : 'var(--yellow)';
                 }
 
-                // Ekstraksi sumber daya
-                const req4Ok = (totalActions >= 50);
+                const eroiVal = state.eroiScore || 1.0;
+                const req4Ok = (eroiVal >= 1.5);
                 const p2Req4 = document.getElementById('p2ReqTerraform');
                 if (p2Req4) {
-                    p2Req4.textContent = `${totalActions.toLocaleString()} Aksi ${req4Ok ? '✅ OK' : '⏳ Minim Panen'}`;
+                    p2Req4.textContent = `${eroiVal.toFixed(2)}x ${req4Ok ? '✅ OK' : '⏳ Inefisien'}`;
                     p2Req4.style.color = req4Ok ? 'var(--kubu-a)' : 'var(--yellow)';
                 }
 
-                // Kedalaman DNA opcode
-                const progSize = state.activeProgramSize || 8;
-                const req5Ok = (progSize >= 12);
+                const totalCrafted = (state.totalToolsCraftedA || 0) + (state.totalToolsCraftedB || 0);
+                const req5Ok = (totalCrafted >= 10);
                 const p2Req5 = document.getElementById('p2ReqArmsRace');
                 if (p2Req5) {
-                    p2Req5.textContent = `${progSize}/12 Baris ${req5Ok ? '✅ OK' : '⏳ DNA Terlalu Sederhana'}`;
+                    p2Req5.textContent = `${totalCrafted}/10 Alat ${req5Ok ? '✅ OK' : '⏳ Belum Megalitikum'}`;
                     p2Req5.style.color = req5Ok ? 'var(--kubu-a)' : 'var(--yellow)';
                 }
 
@@ -1599,7 +1771,7 @@
                 const p2Badge = document.getElementById('phase2Badge');
                 if (p2Badge) {
                     if (allP2Ready) {
-                        p2Badge.textContent = '🚀 SIAP FASE 2';
+                        p2Badge.textContent = '🚀 SIAP ERA MEGALITIKUM & ASI';
                         p2Badge.style.background = 'rgba(34, 197, 94, 0.2)';
                         p2Badge.style.color = 'var(--kubu-a)';
                         p2Badge.style.borderColor = 'rgba(34, 197, 94, 0.4)';

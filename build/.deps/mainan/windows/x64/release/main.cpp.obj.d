@@ -1,7 +1,4 @@
 {
-    files = {
-        "main.cpp"
-    },
     depfiles = "{\
     \"Version\": \"1.2\",\
     \"Data\": {\
@@ -415,7 +412,6 @@
         \"ImportedHeaderUnits\": []\
     }\
 }",
-    depfiles_format = "cl_json",
     values = {
         [[C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\bin\HostX64\x64\cl.exe]],
         {
@@ -425,5 +421,9 @@
             [[-IC:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v13.3\include]],
             "/EHsc"
         }
-    }
+    },
+    files = {
+        "main.cpp"
+    },
+    depfiles_format = "cl_json"
 }

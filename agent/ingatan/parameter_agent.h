@@ -4,7 +4,7 @@
 namespace ParameterAgent {
     // Parameter Ekosistem Populasi Dinamis (Tanpa Cap 100)
     constexpr int INITIAL_POPULATION = 200;         // Populasi awal saat dunia dimulai
-    constexpr int MAX_POPULATION_BUFFER = 1000;     // Kapasitas buffer memori GPU untuk ekspansi populasi alami (optimal & cepat)
+    constexpr int MAX_POPULATION_BUFFER = 5000;     // Kapasitas buffer memori GPU untuk ekspansi populasi alami (optimal & cepat)
     constexpr int MAX_TREES = 32;                   // Kapasitas Pohon di Dunia
     
     // Parameter Kognisi Dinamis & Virtual Machine
@@ -27,6 +27,33 @@ namespace ParameterAgent {
     constexpr double METABOLISM_MOVE_COST = 0.05;   // Biaya energi per gerak
     constexpr double CLIMATE_HUNGER_IMPACT_MULT = 0.015; // Pengaruh stres suhu terhadap kelaparan
     constexpr double STARVATION_THRESHOLD = 0.0;    // Batas kelaparan
+
+    // Parameter Determinisme, Sensorik Tiga Pilar & Reservoir Recurrent Loop
+    constexpr unsigned int FIXED_SIMULATION_SEED = 42;  // Seed deterministik tetap untuk eksperimen konsisten
+    constexpr double FIXED_SUBSTEP_DT = 0.033;          // Timestep tetap per substep (~30 Hz)
+    constexpr int SENSORS_COUNT = 16;                   // Kapasitas Sensorik 3 Pilar (Exteroception, Interoception, Proprioception)
+    constexpr int PRED_SENSORS_COUNT = 4;               // Dimensi sensorik prediksi kausalitas waktu
+    constexpr double RESERVOIR_SPECTRAL_RADIUS = 0.95;  // Radius spektral bobot recurrent reservoir
+    constexpr double RESERVOIR_INPUT_SCALE = 0.5;       // Skala bobot input sensor ke reservoir
+
+    // Parameter Predictive Loss (Kausalitas Fisika)
+    constexpr double PREDICTIVE_LOSS_SCALE = 0.15;      // Skala koreksi error prediksi sensor ke register
+
+    // Parameter Kuantisasi Sinyal Swarm (Embrio Bahasa Diskrit)
+    constexpr double SWARM_QUANT_THRESHOLD = 0.33;      // Ambang batas ternary quantization sinyal komunikasi
+
+    // Parameter Hebbian Plasticity Real-Time
+    constexpr double HEBBIAN_LEARNING_RATE = 0.002;     // Laju update bobot reservoir online saat hidup
+    constexpr double HEBBIAN_DECAY = 0.0005;            // Weight decay anti-runaway Hebbian
+
+    // Parameter Full Adversarial Nature AI
+    constexpr double NATURE_AGGRESSION_MAX = 5.0;       // Batas atas tekanan adaptif alam (5x)
+    constexpr double NATURE_AGGRESSION_MIN = 0.5;       // Batas bawah tekanan — alam tidak pernah longgar
+    constexpr double NATURE_REBOUND_SPEED = 0.02;       // Kecepatan alam pulih kembali menekan
+
+    // Parameter Checkpointing & State Persistence
+    constexpr int CHECKPOINT_INTERVAL_DAYS = 5;         // Simpan checkpoint otomatis setiap 5 hari
+    inline const char* ECOSYSTEM_CHECKPOINT_FILE = "d:/MyProjects/mainan/agent/ingatan/ecosystem_checkpoint.bin";
 
     // Lokasi File Penyimpanan Permanen Otak Agen & Dashboard
     inline const char* DNA_STORAGE_FILE = "d:/MyProjects/mainan/agent/ingatan/best_herbivora_dna.bin";
