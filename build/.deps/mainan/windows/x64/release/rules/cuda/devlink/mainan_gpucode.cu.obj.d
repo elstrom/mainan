@@ -3,9 +3,9 @@
         [[build\.objs\mainan\windows\x64\release\gpu_mind.cu.obj]]
     },
     values = {
-        [[C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v13.3\bin\nvcc]],
+        [[C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v13.1\bin\nvcc]],
         {
-            [[-LC:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v13.3\lib\x64]],
+            [[-LC:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v13.1\lib\x64]],
             "-lcudart",
             "-lgdi32",
             "-luser32",

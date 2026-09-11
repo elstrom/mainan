@@ -1,8 +1,21 @@
 {
+    files = {
+        "main.cpp"
+    },
+    values = {
+        [[C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\bin\HostX64\x64\cl.exe]],
+        {
+            "-nologo",
+            "-MD",
+            "-std:c++17",
+            [[-IC:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v13.1\include]],
+            "/EHsc"
+        }
+    },
     depfiles = "{\
     \"Version\": \"1.2\",\
     \"Data\": {\
-        \"Source\": \"d:\\\\myprojects\\\\mainan\\\\main.cpp\",\
+        \"Source\": \"c:\\\\ai\\\\mainan\\\\main.cpp\",\
         \"ProvidedModule\": \"\",\
         \"Includes\": [\
             \"c:\\\\program files (x86)\\\\windows kits\\\\10\\\\include\\\\10.0.26100.0\\\\um\\\\winsock2.h\",\
@@ -365,65 +378,52 @@
             \"c:\\\\program files (x86)\\\\microsoft visual studio\\\\2022\\\\buildtools\\\\vc\\\\tools\\\\msvc\\\\14.44.35207\\\\include\\\\vcruntime_startup.h\",\
             \"c:\\\\program files (x86)\\\\microsoft visual studio\\\\2022\\\\buildtools\\\\vc\\\\tools\\\\msvc\\\\14.44.35207\\\\include\\\\vector\",\
             \"c:\\\\program files (x86)\\\\microsoft visual studio\\\\2022\\\\buildtools\\\\vc\\\\tools\\\\msvc\\\\14.44.35207\\\\include\\\\__msvc_bit_utils.hpp\",\
-            \"d:\\\\myprojects\\\\mainan\\\\agent\\\\dunia\\\\parameter_dunia.h\",\
-            \"d:\\\\myprojects\\\\mainan\\\\agent\\\\ingatan\\\\parameter_agent.h\",\
-            \"c:\\\\program files\\\\nvidia gpu computing toolkit\\\\cuda\\\\v13.3\\\\include\\\\cuda_runtime.h\",\
-            \"c:\\\\program files\\\\nvidia gpu computing toolkit\\\\cuda\\\\v13.3\\\\include\\\\crt\\\\host_config.h\",\
-            \"c:\\\\program files\\\\nvidia gpu computing toolkit\\\\cuda\\\\v13.3\\\\include\\\\builtin_types.h\",\
-            \"c:\\\\program files\\\\nvidia gpu computing toolkit\\\\cuda\\\\v13.3\\\\include\\\\device_types.h\",\
-            \"c:\\\\program files\\\\nvidia gpu computing toolkit\\\\cuda\\\\v13.3\\\\include\\\\crt\\\\host_defines.h\",\
-            \"c:\\\\program files\\\\nvidia gpu computing toolkit\\\\cuda\\\\v13.3\\\\include\\\\driver_types.h\",\
-            \"c:\\\\program files\\\\nvidia gpu computing toolkit\\\\cuda\\\\v13.3\\\\include\\\\crt\\\\host_defines.h\",\
-            \"c:\\\\program files\\\\nvidia gpu computing toolkit\\\\cuda\\\\v13.3\\\\include\\\\vector_types.h\",\
-            \"c:\\\\program files\\\\nvidia gpu computing toolkit\\\\cuda\\\\v13.3\\\\include\\\\crt\\\\host_defines.h\",\
-            \"c:\\\\program files\\\\nvidia gpu computing toolkit\\\\cuda\\\\v13.3\\\\include\\\\surface_types.h\",\
-            \"c:\\\\program files\\\\nvidia gpu computing toolkit\\\\cuda\\\\v13.3\\\\include\\\\driver_types.h\",\
-            \"c:\\\\program files\\\\nvidia gpu computing toolkit\\\\cuda\\\\v13.3\\\\include\\\\texture_types.h\",\
-            \"c:\\\\program files\\\\nvidia gpu computing toolkit\\\\cuda\\\\v13.3\\\\include\\\\driver_types.h\",\
-            \"c:\\\\program files\\\\nvidia gpu computing toolkit\\\\cuda\\\\v13.3\\\\include\\\\vector_types.h\",\
-            \"c:\\\\program files\\\\nvidia gpu computing toolkit\\\\cuda\\\\v13.3\\\\include\\\\library_types.h\",\
-            \"c:\\\\program files\\\\nvidia gpu computing toolkit\\\\cuda\\\\v13.3\\\\include\\\\channel_descriptor.h\",\
-            \"c:\\\\program files\\\\nvidia gpu computing toolkit\\\\cuda\\\\v13.3\\\\include\\\\cuda_runtime_api.h\",\
-            \"c:\\\\program files\\\\nvidia gpu computing toolkit\\\\cuda\\\\v13.3\\\\include\\\\crt\\\\host_defines.h\",\
-            \"c:\\\\program files\\\\nvidia gpu computing toolkit\\\\cuda\\\\v13.3\\\\include\\\\builtin_types.h\",\
-            \"c:\\\\program files\\\\nvidia gpu computing toolkit\\\\cuda\\\\v13.3\\\\include\\\\device_types.h\",\
-            \"c:\\\\program files\\\\nvidia gpu computing toolkit\\\\cuda\\\\v13.3\\\\include\\\\driver_types.h\",\
-            \"c:\\\\program files\\\\nvidia gpu computing toolkit\\\\cuda\\\\v13.3\\\\include\\\\surface_types.h\",\
-            \"c:\\\\program files\\\\nvidia gpu computing toolkit\\\\cuda\\\\v13.3\\\\include\\\\texture_types.h\",\
-            \"c:\\\\program files\\\\nvidia gpu computing toolkit\\\\cuda\\\\v13.3\\\\include\\\\vector_types.h\",\
-            \"c:\\\\program files\\\\nvidia gpu computing toolkit\\\\cuda\\\\v13.3\\\\include\\\\cuda_device_runtime_api.h\",\
-            \"c:\\\\program files\\\\nvidia gpu computing toolkit\\\\cuda\\\\v13.3\\\\include\\\\cuda_runtime_api.h\",\
-            \"c:\\\\program files\\\\nvidia gpu computing toolkit\\\\cuda\\\\v13.3\\\\include\\\\driver_functions.h\",\
-            \"c:\\\\program files\\\\nvidia gpu computing toolkit\\\\cuda\\\\v13.3\\\\include\\\\builtin_types.h\",\
-            \"c:\\\\program files\\\\nvidia gpu computing toolkit\\\\cuda\\\\v13.3\\\\include\\\\device_types.h\",\
-            \"c:\\\\program files\\\\nvidia gpu computing toolkit\\\\cuda\\\\v13.3\\\\include\\\\driver_types.h\",\
-            \"c:\\\\program files\\\\nvidia gpu computing toolkit\\\\cuda\\\\v13.3\\\\include\\\\surface_types.h\",\
-            \"c:\\\\program files\\\\nvidia gpu computing toolkit\\\\cuda\\\\v13.3\\\\include\\\\texture_types.h\",\
-            \"c:\\\\program files\\\\nvidia gpu computing toolkit\\\\cuda\\\\v13.3\\\\include\\\\vector_types.h\",\
-            \"c:\\\\program files\\\\nvidia gpu computing toolkit\\\\cuda\\\\v13.3\\\\include\\\\crt\\\\host_defines.h\",\
-            \"c:\\\\program files\\\\nvidia gpu computing toolkit\\\\cuda\\\\v13.3\\\\include\\\\driver_types.h\",\
-            \"c:\\\\program files\\\\nvidia gpu computing toolkit\\\\cuda\\\\v13.3\\\\include\\\\crt\\\\host_defines.h\",\
-            \"c:\\\\program files\\\\nvidia gpu computing toolkit\\\\cuda\\\\v13.3\\\\include\\\\vector_functions.h\",\
-            \"c:\\\\program files\\\\nvidia gpu computing toolkit\\\\cuda\\\\v13.3\\\\include\\\\cuda_runtime_api.h\",\
-            \"c:\\\\program files\\\\nvidia gpu computing toolkit\\\\cuda\\\\v13.3\\\\include\\\\vector_functions.hpp\",\
-            \"c:\\\\program files\\\\nvidia gpu computing toolkit\\\\cuda\\\\v13.3\\\\include\\\\cuda_runtime_api.h\"\
+            \"c:\\\\ai\\\\mainan\\\\agent\\\\dunia\\\\parameter_dunia.h\",\
+            \"c:\\\\ai\\\\mainan\\\\agent\\\\ingatan\\\\parameter_agent.h\",\
+            \"c:\\\\program files\\\\nvidia gpu computing toolkit\\\\cuda\\\\v13.1\\\\include\\\\cuda_runtime.h\",\
+            \"c:\\\\program files\\\\nvidia gpu computing toolkit\\\\cuda\\\\v13.1\\\\include\\\\crt\\\\host_config.h\",\
+            \"c:\\\\program files\\\\nvidia gpu computing toolkit\\\\cuda\\\\v13.1\\\\include\\\\builtin_types.h\",\
+            \"c:\\\\program files\\\\nvidia gpu computing toolkit\\\\cuda\\\\v13.1\\\\include\\\\device_types.h\",\
+            \"c:\\\\program files\\\\nvidia gpu computing toolkit\\\\cuda\\\\v13.1\\\\include\\\\crt\\\\host_defines.h\",\
+            \"c:\\\\program files\\\\nvidia gpu computing toolkit\\\\cuda\\\\v13.1\\\\include\\\\driver_types.h\",\
+            \"c:\\\\program files\\\\nvidia gpu computing toolkit\\\\cuda\\\\v13.1\\\\include\\\\crt\\\\host_defines.h\",\
+            \"c:\\\\program files\\\\nvidia gpu computing toolkit\\\\cuda\\\\v13.1\\\\include\\\\vector_types.h\",\
+            \"c:\\\\program files\\\\nvidia gpu computing toolkit\\\\cuda\\\\v13.1\\\\include\\\\crt\\\\host_defines.h\",\
+            \"c:\\\\program files\\\\nvidia gpu computing toolkit\\\\cuda\\\\v13.1\\\\include\\\\surface_types.h\",\
+            \"c:\\\\program files\\\\nvidia gpu computing toolkit\\\\cuda\\\\v13.1\\\\include\\\\driver_types.h\",\
+            \"c:\\\\program files\\\\nvidia gpu computing toolkit\\\\cuda\\\\v13.1\\\\include\\\\texture_types.h\",\
+            \"c:\\\\program files\\\\nvidia gpu computing toolkit\\\\cuda\\\\v13.1\\\\include\\\\driver_types.h\",\
+            \"c:\\\\program files\\\\nvidia gpu computing toolkit\\\\cuda\\\\v13.1\\\\include\\\\vector_types.h\",\
+            \"c:\\\\program files\\\\nvidia gpu computing toolkit\\\\cuda\\\\v13.1\\\\include\\\\library_types.h\",\
+            \"c:\\\\program files\\\\nvidia gpu computing toolkit\\\\cuda\\\\v13.1\\\\include\\\\channel_descriptor.h\",\
+            \"c:\\\\program files\\\\nvidia gpu computing toolkit\\\\cuda\\\\v13.1\\\\include\\\\cuda_runtime_api.h\",\
+            \"c:\\\\program files\\\\nvidia gpu computing toolkit\\\\cuda\\\\v13.1\\\\include\\\\crt\\\\host_defines.h\",\
+            \"c:\\\\program files\\\\nvidia gpu computing toolkit\\\\cuda\\\\v13.1\\\\include\\\\builtin_types.h\",\
+            \"c:\\\\program files\\\\nvidia gpu computing toolkit\\\\cuda\\\\v13.1\\\\include\\\\device_types.h\",\
+            \"c:\\\\program files\\\\nvidia gpu computing toolkit\\\\cuda\\\\v13.1\\\\include\\\\driver_types.h\",\
+            \"c:\\\\program files\\\\nvidia gpu computing toolkit\\\\cuda\\\\v13.1\\\\include\\\\surface_types.h\",\
+            \"c:\\\\program files\\\\nvidia gpu computing toolkit\\\\cuda\\\\v13.1\\\\include\\\\texture_types.h\",\
+            \"c:\\\\program files\\\\nvidia gpu computing toolkit\\\\cuda\\\\v13.1\\\\include\\\\vector_types.h\",\
+            \"c:\\\\program files\\\\nvidia gpu computing toolkit\\\\cuda\\\\v13.1\\\\include\\\\cuda_device_runtime_api.h\",\
+            \"c:\\\\program files\\\\nvidia gpu computing toolkit\\\\cuda\\\\v13.1\\\\include\\\\cuda_runtime_api.h\",\
+            \"c:\\\\program files\\\\nvidia gpu computing toolkit\\\\cuda\\\\v13.1\\\\include\\\\driver_functions.h\",\
+            \"c:\\\\program files\\\\nvidia gpu computing toolkit\\\\cuda\\\\v13.1\\\\include\\\\builtin_types.h\",\
+            \"c:\\\\program files\\\\nvidia gpu computing toolkit\\\\cuda\\\\v13.1\\\\include\\\\device_types.h\",\
+            \"c:\\\\program files\\\\nvidia gpu computing toolkit\\\\cuda\\\\v13.1\\\\include\\\\driver_types.h\",\
+            \"c:\\\\program files\\\\nvidia gpu computing toolkit\\\\cuda\\\\v13.1\\\\include\\\\surface_types.h\",\
+            \"c:\\\\program files\\\\nvidia gpu computing toolkit\\\\cuda\\\\v13.1\\\\include\\\\texture_types.h\",\
+            \"c:\\\\program files\\\\nvidia gpu computing toolkit\\\\cuda\\\\v13.1\\\\include\\\\vector_types.h\",\
+            \"c:\\\\program files\\\\nvidia gpu computing toolkit\\\\cuda\\\\v13.1\\\\include\\\\crt\\\\host_defines.h\",\
+            \"c:\\\\program files\\\\nvidia gpu computing toolkit\\\\cuda\\\\v13.1\\\\include\\\\driver_types.h\",\
+            \"c:\\\\program files\\\\nvidia gpu computing toolkit\\\\cuda\\\\v13.1\\\\include\\\\crt\\\\host_defines.h\",\
+            \"c:\\\\program files\\\\nvidia gpu computing toolkit\\\\cuda\\\\v13.1\\\\include\\\\vector_functions.h\",\
+            \"c:\\\\program files\\\\nvidia gpu computing toolkit\\\\cuda\\\\v13.1\\\\include\\\\cuda_runtime_api.h\",\
+            \"c:\\\\program files\\\\nvidia gpu computing toolkit\\\\cuda\\\\v13.1\\\\include\\\\vector_functions.hpp\",\
+            \"c:\\\\program files\\\\nvidia gpu computing toolkit\\\\cuda\\\\v13.1\\\\include\\\\cuda_runtime_api.h\"\
         ],\
         \"ImportedModules\": [],\
         \"ImportedHeaderUnits\": []\
     }\
 }",
-    depfiles_format = "cl_json",
-    values = {
-        [[C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\bin\HostX64\x64\cl.exe]],
-        {
-            "-nologo",
-            "-MD",
-            "-std:c++17",
-            [[-IC:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v13.3\include]],
-            "/EHsc"
-        }
-    },
-    files = {
-        "main.cpp"
-    }
+    depfiles_format = "cl_json"
 }

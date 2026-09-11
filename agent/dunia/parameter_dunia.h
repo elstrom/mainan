@@ -90,7 +90,7 @@ namespace DuniaFisika {
     constexpr double OVERCROWDING_PENALTY_MULT = 0.05;// Peningkatan metabolisme per agen tetangga di area padat
 
     // Parameter Predator Agen Musuh / Faksi B (Apex Cognitive Hunter)
-    constexpr int INITIAL_PREDATORS = 200;           // Populasi awal Faksi B (Predator/Karnivora) seimbang dengan Herbivora (200)
+    constexpr int INITIAL_PREDATORS = 50;           // Populasi awal Faksi B (Predator/Karnivora) seimbang dengan Herbivora (200)
     constexpr int MAX_PREDATORS_BUFFER = 5000;      // Kapasitas buffer memori GPU Faksi B (optimal & cepat)
     constexpr double PREDATOR_SPEED = 12.0;          // Kecepatan gerak predator seimbang dengan herbivora (12.0)
     constexpr double PREDATOR_ATTACK_RADIUS = 16.0;  // Radius jangkauan serangan predator ke mangsa
@@ -116,14 +116,14 @@ namespace DuniaFisika {
     constexpr double CORPSE_CARNIVORE_RECOVERY = 0.85;   // Efisiensi nutrisi karnivora saat mengonsumsi bangkai (semua jenis bangkai)
 
     // Parameter Bencana Alam & Tekanan Lingkungan Dinamis (Disasters & Cosmic Stress)
-    constexpr double DISASTER_INTERVAL_SECONDS = 90.0;   // Bencana terjadi setiap 90 detik (1.5 hari simulasi)
-    constexpr double DISASTER_DURATION_SECONDS = 15.0;   // Durasi bencana berlangsung 15 detik
+    constexpr double DISASTER_INTERVAL_SECONDS = 240.0;  // Bencana terjadi setiap 240 detik (4 hari simulasi) agar peradaban punya waktu berkembang
+    constexpr double DISASTER_DURATION_SECONDS = 12.0;   // Durasi bencana berlangsung 12 detik
     constexpr double SOLAR_STORM_HEAT_SPIKE = 22.0;      // Badai Matahari: lonjakan panas +22°C
     constexpr double BLIZZARD_TEMP_DROP = -25.0;         // Badai Salju Ekstrem: suhu anjlok -25°C
     constexpr double EMP_MAGNETIC_CHAOS = 8.0;           // Badai Magnetik/EMP: mengacaukan sensor & transmisi komunikasi
 
     // Parameter Kubu Alam AI (Adversarial System & Adaptive Pressure Curve)
-    constexpr double NATURE_PRESSURE_TARGET_POP = 250.0; // Kapasitas daya tampung ideal ekosistem
+    constexpr double NATURE_PRESSURE_TARGET_POP = 1000.0; // Kapasitas daya tampung ideal ekosistem diperluas ke 1000
     constexpr double NATURE_PRESSURE_KP = 0.005;         // Responsivitas kurva tekanan adaptif
     constexpr double NATURE_ENTROPY_DECAY_RATE = 0.05;   // Laju erosi entropi terhadap koloni yang stagnan
     constexpr double NATURE_RESOURCE_SCARCITY_MULT = 1.8;// Skalasi kelangkaan pangan/material saat populasi over-limit
@@ -159,8 +159,8 @@ namespace DuniaFisika {
     constexpr double DEFAULT_GROWTH_BIAS = 50.0;
 
     // Parameter Mutasi Ekstrim & Peluang Kelahiran Cacat / Super Acak
-    constexpr double SUPER_MUTATION_CHANCE = 0.35;    // 35% peluang mutasi acak radikal pada bayi baru lahir
-    constexpr double DEFECTIVE_BIRTH_CHANCE = 0.12;   // 12% kemungkinan lahir dengan cacat biologis (metabolisme boros / energi lemah / program otak acak)
+    constexpr double SUPER_MUTATION_CHANCE = 0.08;    // 8% peluang mutasi acak radikal (menjaga retensi kepintaran garis keturunan)
+    constexpr double DEFECTIVE_BIRTH_CHANCE = 0.03;   // 3% kemungkinan cacat (tidak memotong populasi cerdas secara agresif)
 
     // Parameter Material Periodik Dunia (Mineral, Logam Konduktif, Kristal Energi)
     constexpr int MAX_PERIODIC_DEPOSITS = 16;         // Jumlah formasi deposit material di dunia

@@ -11,7 +11,7 @@
             "-dynamicbase",
             "-nxcompat",
             "-machine:x64",
-            [[-libpath:C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v13.3\lib\x64]],
+            [[-libpath:C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v13.1\lib\x64]],
             "cudart.lib",
             "gdi32.lib",
             "user32.lib",
