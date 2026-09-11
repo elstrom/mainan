@@ -41,6 +41,9 @@ struct GpuTreeEntity {
   float formula_resonance; // Keselarasan rumus kognisi agen
   float age_years;         // Usia pohon
   float health;            // Vitalitas pohon (0.0 - 100.0%)
+  int tree_type;           // 0: TREE_TYPE_FRUIT, 1: TREE_TYPE_OXYGEN, 2: TREE_TYPE_PIONEER
+  float soil_fertility;    // Kesuburan tanah lokasi pohon (0.0 - 2.0)
+  float moisture;          // Kadar air/kelembaban pohon (0.0 - 100.0%)
 };
 
 struct GpuMineralDeposit {
@@ -78,6 +81,8 @@ struct GpuEcosystemAgent {
   float vx;
   float vy;
   float energy;            // Homeostasis Metabolisme (0.0 - 100.0%)
+  float lung_oxygen;       // Tabung Oksigen Paru-paru (0.0 - 100.0%)
+  float hydration;         // Tingkat Hidrasi / Kadar Air Tubuh (0.0 - 100.0%)
   float age_years;         // Usia dalam Tahun (0 - 100 Tahun)
   float hunger_rate_mult;  // Pengali rasa lapar (Meningkat seiring penuaan)
   float mating_cooldown;   // Waktu tunggu sebelum bisa reproduksi kembali
@@ -121,6 +126,8 @@ struct GpuPredatorAgent {
   float vx;
   float vy;
   float energy;
+  float lung_oxygen;       // Tabung Oksigen Paru-paru Predator (0.0 - 100.0%)
+  float hydration;         // Tingkat Hidrasi Predator (0.0 - 100.0%)
   float age_years;
   float mating_cooldown;
   float formula_shield;
@@ -843,6 +850,8 @@ void reset_ecosystem_state() {
     g_h_predators[p].vx = 0.0f;
     g_h_predators[p].vy = 0.0f;
     g_h_predators[p].energy = (p < DuniaFisika::INITIAL_PREDATORS) ? (float)DuniaFisika::PREDATOR_INITIAL_ENERGY : 0.0f;
+    g_h_predators[p].lung_oxygen = (p < DuniaFisika::INITIAL_PREDATORS) ? (float)DuniaFisika::AGENT_LUNG_CAPACITY : 0.0f;
+    g_h_predators[p].hydration = (p < DuniaFisika::INITIAL_PREDATORS) ? (float)DuniaFisika::AGENT_HYDRATION_INITIAL : 0.0f;
     g_h_predators[p].age_years = (p < DuniaFisika::INITIAL_PREDATORS) ? (float)(rand() % 30) : 0.0f;
     g_h_predators[p].mating_cooldown = (float)(rand() % 5);
     g_h_predators[p].formula_shield = (float)((p * 37) % 100) / 100.0f;
@@ -887,16 +896,35 @@ void reset_ecosystem_state() {
   }
 
   for (int t = 0; t < ParameterAgent::MAX_TREES; ++t) {
-    float gx = 100.0f + (float)(t % 6) * 160.0f + (float)((rand() % 40) - 20);
-    float gy =
-        100.0f + ((float)t / 6.0f) * 160.0f + (float)((rand() % 40) - 20);
-    g_h_trees[t].x = gx;
-    g_h_trees[t].y = gy;
-    g_h_trees[t].growth_stage = 50.0f + (float)(rand() % 50);
-    g_h_trees[t].fruits_count = 3.0f + (float)(rand() % 4);
-    g_h_trees[t].formula_resonance = 0.0f;
-    g_h_trees[t].age_years = (float)(rand() % 5);
-    g_h_trees[t].health = 80.0f + (float)(rand() % 20);
+    if (t < 32) {
+      float gx = 100.0f + (float)(t % 6) * 160.0f + (float)((rand() % 40) - 20);
+      float gy = 100.0f + ((float)t / 6.0f) * 160.0f + (float)((rand() % 40) - 20);
+      // Evaluasi kesuburan geologi tanah di koordinat gx, gy
+      float soil = (float)DuniaFisika::SOIL_FERTILITY_BASE + 
+                   (float)DuniaFisika::SOIL_FERTILITY_VARIATION * sinf(gx * (float)DuniaFisika::SOIL_NOISE_SCALE_X) * cosf(gy * (float)DuniaFisika::SOIL_NOISE_SCALE_Y);
+      
+      g_h_trees[t].x = gx;
+      g_h_trees[t].y = gy;
+      g_h_trees[t].tree_type = t % DuniaFisika::TREE_SPECIES_COUNT;
+      g_h_trees[t].soil_fertility = fmaxf(0.2f, soil);
+      g_h_trees[t].moisture = 80.0f + (float)(rand() % 20);
+      g_h_trees[t].growth_stage = 50.0f + (float)(rand() % 50);
+      g_h_trees[t].fruits_count = (g_h_trees[t].tree_type == DuniaFisika::TREE_TYPE_FRUIT) ? (3.0f + (float)(rand() % 4)) : 0.0f;
+      g_h_trees[t].formula_resonance = 0.0f;
+      g_h_trees[t].age_years = (float)(rand() % 5);
+      g_h_trees[t].health = 80.0f + (float)(rand() % 20);
+    } else {
+      g_h_trees[t].x = 0.0f;
+      g_h_trees[t].y = 0.0f;
+      g_h_trees[t].tree_type = 0;
+      g_h_trees[t].soil_fertility = 0.0f;
+      g_h_trees[t].moisture = 0.0f;
+      g_h_trees[t].growth_stage = 0.0f;
+      g_h_trees[t].fruits_count = 0.0f;
+      g_h_trees[t].formula_resonance = 0.0f;
+      g_h_trees[t].age_years = 0.0f;
+      g_h_trees[t].health = 0.0f;
+    }
   }
 
   GpuEcosystemAgent saved_ancestor = {};
@@ -912,6 +940,8 @@ void reset_ecosystem_state() {
     g_h_agents[i].vx = 0.0f;
     g_h_agents[i].vy = 0.0f;
     g_h_agents[i].energy = (i < ParameterAgent::INITIAL_POPULATION) ? (float)ParameterAgent::INITIAL_ENERGY : 0.0f;
+    g_h_agents[i].lung_oxygen = (i < ParameterAgent::INITIAL_POPULATION) ? (float)DuniaFisika::AGENT_LUNG_CAPACITY : 0.0f;
+    g_h_agents[i].hydration = (i < ParameterAgent::INITIAL_POPULATION) ? (float)DuniaFisika::AGENT_HYDRATION_INITIAL : 0.0f;
     g_h_agents[i].age_years = (i < ParameterAgent::INITIAL_POPULATION) ? (float)(rand() % 30) : 0.0f;
     g_h_agents[i].hunger_rate_mult = 1.0f;
     g_h_agents[i].mating_cooldown = (float)(rand() % 5);
@@ -1045,54 +1075,115 @@ void step_ecosystem(double dt) {
   g_climate.wind_y = cosf(time_f * 0.08f) * 2.5f;
   g_climate.magnetic_angle = fmodf(time_f * 0.05f, 6.28318f);
 
-  // Loop Pembaruan Vitalitas & Buah Pohon
+  // Loop Pembaruan Vitalitas & Buah Pohon (Geologi Kesuburan Tanah, Spesies, Jarak & Realisme)
   for (int t = 0; t < ParameterAgent::MAX_TREES; ++t) {
+    if (g_h_trees[t].health <= 0.0f) continue; // Slot pohon kosong/mati menunggu ditanam atau bertunas
+
     g_h_trees[t].age_years += (float)(dt / ParameterAgent::SECONDS_PER_YEAR);
 
-    // Pohon mati karena usia tua alami
+    // Pohon mati karena usia tua alami atau kehabisan vitalitas
     if (g_h_trees[t].age_years >= (float)DuniaFisika::TREE_MAX_AGE_YEARS || g_h_trees[t].health <= 0.0f) {
       g_total_tree_deaths++;
-      g_total_tree_sprouts++;
-      g_h_trees[t].x = 100.0f + (float)(t % 6) * 160.0f + (float)((rand() % 40) - 20);
-      g_h_trees[t].y = 100.0f + ((float)t / 6.0f) * 160.0f + (float)((rand() % 40) - 20);
+      g_h_trees[t].health = 0.0f;
       g_h_trees[t].growth_stage = 0.0f;
       g_h_trees[t].fruits_count = 0.0f;
-      g_h_trees[t].formula_resonance = 0.0f;
-      g_h_trees[t].age_years = 0.0f;
-      g_h_trees[t].health = 60.0f;
+      continue;
     }
 
-    // Pertumbuhan Fotosintesis Pohon Murni Berbasis Sinar Matahari Alami (Ditekan saat suhu ekstrem > 40°C)
+    // Geologi Kesuburan Tanah & Jarak ke Sungai
+    float soil = g_h_trees[t].soil_fertility;
+    if (soil <= 0.1f) {
+      soil = (float)DuniaFisika::SOIL_FERTILITY_BASE + 
+             (float)DuniaFisika::SOIL_FERTILITY_VARIATION * sinf(g_h_trees[t].x * (float)DuniaFisika::SOIL_NOISE_SCALE_X) * cosf(g_h_trees[t].y * (float)DuniaFisika::SOIL_NOISE_SCALE_Y);
+      g_h_trees[t].soil_fertility = fmaxf(0.2f, soil);
+    }
+
+    // Penyerapan Air oleh Pohon (Dari Bantaran Sungai & Kelembaban Atmosfer H2O)
+    float river_x = (float)DuniaFisika::RIVER_CENTER_X + (float)DuniaFisika::RIVER_MEANDER_AMP * sinf(g_h_trees[t].y * (float)DuniaFisika::RIVER_MEANDER_FREQ);
+    float dist_river = fabsf(g_h_trees[t].x - river_x);
+    float river_water_gain = 0.0f;
+    if (dist_river <= (float)DuniaFisika::RIVER_MOISTURE_RADIUS) {
+      float proximity = 1.0f - (dist_river / (float)DuniaFisika::RIVER_MOISTURE_RADIUS);
+      river_water_gain = (float)DuniaFisika::TREE_WATER_ABSORB_RIVER_RATE * proximity * (float)dt;
+    }
+    float rain_water_gain = (float)DuniaFisika::TREE_WATER_ABSORB_RAIN_RATE * (g_climate.h2o_level / 100.0f) * (float)dt;
+    g_h_trees[t].moisture = fminf((float)DuniaFisika::TREE_MOISTURE_MAX, g_h_trees[t].moisture + river_water_gain + rain_water_gain);
+
+    // Pohon Mengonsumsi Air untuk Fotosintesis & Hidup
+    float water_consumption = (float)DuniaFisika::TREE_WATER_CONSUMPTION_RATE * (0.5f + 0.5f * g_climate.daylight_factor) * (float)dt;
+    g_h_trees[t].moisture = fmaxf(0.0f, g_h_trees[t].moisture - water_consumption);
+
+    // Kekeringan: Jika moisture habis (0%), kesehatan pohon membusuk/mengering drastis
+    if (g_h_trees[t].moisture <= 0.0f) {
+      float drought_dmg = (float)DuniaFisika::TREE_DROUGHT_DECAY_RATE * (float)dt;
+      g_h_trees[t].health = fmaxf(0.0f, g_h_trees[t].health - drought_dmg);
+    }
+
+    // Musim mempengaruhi laju pertumbuhan (Semi: 1.3x, Panas: 1.0x, Gugur: 0.6x, Dingin: 0.2x)
+    float season_growth_mult = 1.0f;
+    if (g_climate.current_season == 0) season_growth_mult = 1.3f; // Semi
+    else if (g_climate.current_season == 1) season_growth_mult = 1.0f; // Panas
+    else if (g_climate.current_season == 2) season_growth_mult = 0.6f; // Gugur
+    else if (g_climate.current_season == 3) season_growth_mult = 0.2f; // Dingin
+
+    // Efisiensi Air terhadap Pertumbuhan Pohon
+    float moisture_eff = fmaxf(0.1f, g_h_trees[t].moisture / 50.0f);
+
+    // Pertumbuhan Fotosintesis Pohon Murni Berbasis Realita (Sinar Matahari + Kesuburan Geologi + Air + Musim)
     float heat_inhibition = (g_climate.temperature > 40.0f) ? fminf(0.85f, (g_climate.temperature - 40.0f) * 0.04f) : 0.0f;
-    float sunlight_boost = fmaxf(0.1f, (0.5f + (float)DuniaFisika::DAY_PHOTOSYNTHESIS_MULT * g_climate.daylight_factor) * (1.0f - heat_inhibition));
-    g_h_trees[t].growth_stage = fminf(100.0f, g_h_trees[t].growth_stage + 0.5f * sunlight_boost * (float)dt);
-    g_h_trees[t].health = fminf(100.0f, g_h_trees[t].health + (5.0f - heat_inhibition * 6.0f) * (float)dt);
+    float sunlight_boost = fmaxf(0.05f, (0.4f + (float)DuniaFisika::DAY_PHOTOSYNTHESIS_MULT * g_climate.daylight_factor) * (1.0f - heat_inhibition));
     
-    if (g_h_trees[t].growth_stage >= 40.0f && g_h_trees[t].fruits_count < (float)DuniaFisika::MAX_FRUIT_PER_TREE) {
-      g_h_trees[t].fruits_count = fminf((float)DuniaFisika::MAX_FRUIT_PER_TREE, 
-                                        g_h_trees[t].fruits_count + (float)DuniaFisika::FRUIT_SPAWN_RATE * sunlight_boost * (float)dt);
+    // Spesies Pioneer tumbuh lebih tahan iklim ekstrem
+    float species_hardiness = (g_h_trees[t].tree_type == DuniaFisika::TREE_TYPE_PIONEER) ? 1.4f : 1.0f;
+    float growth_rate = (float)DuniaFisika::TREE_REALISTIC_GROWTH_BASE * sunlight_boost * soil * season_growth_mult * species_hardiness * moisture_eff;
+
+    g_h_trees[t].growth_stage = fminf(100.0f, g_h_trees[t].growth_stage + growth_rate * (float)dt);
+    if (g_h_trees[t].moisture > 0.0f) {
+      g_h_trees[t].health = fminf(100.0f, g_h_trees[t].health + (3.0f * soil - heat_inhibition * 6.0f) * (float)dt);
+    }
+    
+    // Pembuahan khusus Pohon Buah (TREE_TYPE_FRUIT) saat matang & memiliki air cukup
+    if (g_h_trees[t].tree_type == DuniaFisika::TREE_TYPE_FRUIT) {
+      if (g_h_trees[t].growth_stage >= 40.0f && g_h_trees[t].moisture >= 20.0f && g_h_trees[t].fruits_count < (float)DuniaFisika::MAX_FRUIT_PER_TREE) {
+        g_h_trees[t].fruits_count = fminf((float)DuniaFisika::MAX_FRUIT_PER_TREE, 
+                                          g_h_trees[t].fruits_count + (float)DuniaFisika::FRUIT_SPAWN_RATE * sunlight_boost * season_growth_mult * (float)dt);
+      }
+    } else {
+      g_h_trees[t].fruits_count = 0.0f; // Pohon Oksigen & Pioneer tidak berbuah
     }
   }
 
   // Dinamika Atmosfer: Fotosintesis Pohon menghasilkan O2, Respirasi Pohon & Agen menghasilkan CO2
+  float total_tree_o2_prod = 0.0f;
+  float total_tree_co2_resp = 0.0f;
   int living_trees_count = 0;
+
   for (int t = 0; t < ParameterAgent::MAX_TREES; ++t) {
-    if (g_h_trees[t].growth_stage >= 20.0f && g_h_trees[t].health > 0.0f) {
+    if (g_h_trees[t].growth_stage >= 15.0f && g_h_trees[t].health > 0.0f) {
       living_trees_count++;
+      float maturity = g_h_trees[t].growth_stage / 100.0f;
+      float o2_mult = 1.0f;
+      float co2_mult = 1.0f;
+      if (g_h_trees[t].tree_type == DuniaFisika::TREE_TYPE_OXYGEN) {
+        o2_mult = (float)DuniaFisika::TREE_OXYGEN_SPECIES_O2_MULT;
+        co2_mult = (float)DuniaFisika::TREE_OXYGEN_SPECIES_CO2_MULT;
+      }
+
+      // Siang: Fotosintesis aktif menyerap CO2 & menghasilkan O2
+      total_tree_o2_prod += (float)DuniaFisika::PHOTOSYNTHESIS_O2_RATE * o2_mult * maturity * g_climate.daylight_factor * (float)dt;
+      // Malam: Respirasi pohon melepaskan CO2
+      total_tree_co2_resp += (float)DuniaFisika::TREE_RESPIRATION_CO2_RATE * co2_mult * maturity * (1.0f - g_climate.daylight_factor) * (float)dt;
     }
   }
   int living_pop_total = (int)(g_living_leaderboard.size() + g_predator_leaderboard.size());
-  
-  // Fotosintesis di siang hari memproduksi O2, respirasi malam pohon memproduksi CO2
-  float o2_produced = (float)DuniaFisika::PHOTOSYNTHESIS_O2_RATE * (float)living_trees_count * g_climate.daylight_factor * (float)dt;
-  float tree_co2_emission = (float)DuniaFisika::TREE_RESPIRATION_CO2_RATE * (float)living_trees_count * (1.0f - g_climate.daylight_factor) * (float)dt;
   
   // Respirasi seluruh populasi hidup
   float o2_consumed = (float)DuniaFisika::RESPIRATION_O2_CONSUMPTION * (float)living_pop_total * (float)dt;
   float agent_co2_emission = (float)DuniaFisika::RESPIRATION_CO2_EMISSION * (float)living_pop_total * (float)dt;
 
-  g_climate.oxygen_level = fminf(30.0f, fmaxf(10.0f, g_climate.oxygen_level + (o2_produced - o2_consumed)));
-  g_climate.co2_level = fminf(3.0f, fmaxf(0.01f, g_climate.co2_level + (tree_co2_emission + agent_co2_emission - o2_produced * 0.5f)));
+  // Hukum Keseimbangan Alam Atmosfer O2 & CO2
+  g_climate.oxygen_level = fminf(30.0f, fmaxf(5.0f, g_climate.oxygen_level + (total_tree_o2_prod - o2_consumed)));
+  g_climate.co2_level = fminf(5.0f, fmaxf(0.01f, g_climate.co2_level + (total_tree_co2_resp + agent_co2_emission - total_tree_o2_prod * 0.6f)));
 
   // Kelembaban Uap Air (H2O) bertranspirasi dari pohon dan suhu
   float transpiration = (float)living_trees_count * 0.02f * g_climate.daylight_factor * (float)dt;
@@ -1678,17 +1769,24 @@ std::string build_telemetry_json_internal() {
     }
   }
 
-  // Trees Coordinate & Fruits Stream
+  // Trees Coordinate & Fruits Stream (Hanya pohon aktif)
   ss << "  \"livingTreesCount\": " << living_trees_count << ",\n";
   ss << "  \"totalTreeDeaths\": " << g_total_tree_deaths << ",\n";
   ss << "  \"totalTreeSprouts\": " << g_total_tree_sprouts << ",\n";
   ss << "  \"trees\": [";
+  bool first_tree = true;
   for (int t = 0; t < ParameterAgent::MAX_TREES; ++t) {
-    ss << "{\"x\":" << g_h_trees[t].x << ",\"y\":" << g_h_trees[t].y
-       << ",\"g\":" << g_h_trees[t].growth_stage
-       << ",\"h\":" << g_h_trees[t].health
-       << ",\"f\":" << g_h_trees[t].fruits_count << "}"
-       << (t < ParameterAgent::MAX_TREES - 1 ? "," : "");
+    if (g_h_trees[t].health > 0.0f) {
+      if (!first_tree) ss << ",";
+      ss << "{\"x\":" << g_h_trees[t].x << ",\"y\":" << g_h_trees[t].y
+         << ",\"g\":" << g_h_trees[t].growth_stage
+         << ",\"h\":" << g_h_trees[t].health
+         << ",\"type\":" << g_h_trees[t].tree_type
+         << ",\"soil\":" << g_h_trees[t].soil_fertility
+         << ",\"m\":" << g_h_trees[t].moisture
+         << ",\"f\":" << g_h_trees[t].fruits_count << "}";
+      first_tree = false;
+    }
   }
   ss << "],\n";
 

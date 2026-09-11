@@ -21,8 +21,62 @@ namespace DuniaFisika {
     constexpr int DAYS_PER_SEASON = 15;              // 15 hari = 1 musim
     constexpr int SEASONS_COUNT = 4;                 // 0: Semi, 1: Panas, 2: Gugur, 3: Dingin
 
+    // Parameter Geologi & Pola Kesuburan Tanah (Multi-Frekuensi Kontur Tanah)
+    constexpr double SOIL_FERTILITY_BASE = 1.0;       // Kesuburan tanah dasar
+    constexpr double SOIL_FERTILITY_VARIATION = 0.6;  // Variasi sinusoidal geologi (zona subur vs gersang)
+    constexpr double SOIL_NOISE_SCALE_X = 0.008;      // Skala spasial kontur tanah X
+    constexpr double SOIL_NOISE_SCALE_Y = 0.008;      // Skala spasial kontur tanah Y
+
+    // Parameter Hidrologi & Geografi Sungai Dinamis (Meandering River System)
+    constexpr double RIVER_CENTER_X = 500.0;          // Pusat jalur sungai X
+    constexpr double RIVER_MEANDER_AMP = 140.0;       // Amplitudo kelokan meander sungai
+    constexpr double RIVER_MEANDER_FREQ = 0.007;      // Frekuensi kelokan sungai
+    constexpr double RIVER_WIDTH = 45.0;              // Lebar aliran sungai utama (m)
+    constexpr double RIVER_DRINK_RADIUS = 30.0;       // Radius interaksi tepi sungai untuk minum air
+    constexpr double RIVER_MOISTURE_RADIUS = 120.0;   // Radius kelembaban tanah di sekitar bantaran sungai
+
+    // Parameter Dehidrasi, Hidrasi & Metabolisme Air Agen (Kubu A & Kubu B)
+    constexpr double AGENT_HYDRATION_MAX = 100.0;     // Kapasitas hidrasi tubuh maksimum (100%)
+    constexpr double AGENT_HYDRATION_INITIAL = 100.0; // Tingkat hidrasi awal saat lahir
+    constexpr double AGENT_DEHYDRATION_BASE_RATE = 0.25; // Pengurangan hidrasi dasar per detik
+    constexpr double AGENT_DEHYDRATION_HEAT_MULT = 0.04; // Percepatan dehidrasi saat suhu panas > 25°C
+    constexpr double AGENT_DRINK_WATER_RATE = 35.0;   // Laju minum/mengisi air di tepi sungai (% per detik)
+    constexpr double DEHYDRATION_THIRST_THRESHOLD = 25.0; // Ambang rasa haus memicu stres
+    constexpr double DEHYDRATION_DAMAGE_RATE = 20.0;  // Kerusakan energi fatal saat dehidrasi mencapai 0%
+
+    // Parameter Realisme Pohon: Kebutuhan Air, Tahap Tanam & Penyerapan
+    constexpr double TREE_MOISTURE_MAX = 100.0;       // Cadangan air pohon (100%)
+    constexpr double TREE_MOISTURE_INITIAL = 70.0;    // Cadangan air bibit awal
+    constexpr double TREE_WATER_CONSUMPTION_RATE = 0.30; // Konsumsi air per detik untuk fotosintesis
+    constexpr double TREE_WATER_ABSORB_RIVER_RATE = 1.2; // Penyerapan air dari bantaran sungai per detik
+    constexpr double TREE_WATER_ABSORB_RAIN_RATE = 0.8;  // Penyerapan air dari kelembaban atmosfer/hujan
+    constexpr double TREE_DROUGHT_DECAY_RATE = 4.0;   // Kerusakan kesehatan pohon saat mengalami kekeringan (Moisture <= 0)
+    constexpr double SEED_GERMINATION_ENERGY_COST = 20.0; // Biaya energi agen saat menanam benih (15% energi + 10% hidrasi)
+    constexpr double SEED_GERMINATION_WATER_COST = 12.0;  // Air yang disiramkan agen saat menanam benih
+
+    // Parameter Variasi Spesies Pohon & Hukum Jarak Ekologis
+    enum TreeSpeciesType {
+        TREE_TYPE_FRUIT = 0,    // Pohon Buah (Fruiting Tree): Menghasilkan buah bernutrisi, fotosintesis sedang
+        TREE_TYPE_OXYGEN = 1,   // Pohon Paru-paru Hijau (Oxygen Dense): Tidak berbuah, produksi O2 masif & serap CO2 besar
+        TREE_TYPE_PIONEER = 2   // Pohon Perintis / Kayu Keras: Tumbuh di tanah gersang, tahan kekeringan & cuaca ekstrem
+    };
+    constexpr int TREE_SPECIES_COUNT = 3;
+    constexpr double MIN_TREE_SPACING = 30.0;         // Jarak spasial minimum antar-pohon (mencegah tumpang-tindih)
+    constexpr double TREE_OXYGEN_SPECIES_O2_MULT = 2.5; // Pengali produksi O2 untuk pohon Oxygen Dense
+    constexpr double TREE_OXYGEN_SPECIES_CO2_MULT = 2.2; // Pengali serapan CO2 untuk pohon Oxygen Dense
+    constexpr double TREE_REALISTIC_GROWTH_BASE = 0.35; // Kecepatan pertumbuhan dasar bertahap
+    constexpr double TREE_SPROUT_SOIL_MIN_FERTILITY = 0.4; // Ambang kesuburan minimum agar benih bisa berkecambah
+
+    // Parameter Paru-Paru, Tabung Oksigen & Hipoksia Kubu Agen
+    constexpr double AGENT_LUNG_CAPACITY = 100.0;     // Kapasitas maksimum cadangan O2 di paru-paru (100%)
+    constexpr double AGENT_O2_BREATHE_IN_RATE = 15.0; // Laju penyerapan O2 atmosfer ke paru-paru saat O2 atmosfer cukup
+    constexpr double AGENT_O2_CONSUMPTION_RATE = 8.0; // Laju konsumsi O2 paru-paru per detik saat metabolisme aktif
+    constexpr double HYPOXIA_THRESHOLD = 20.0;        // Ambang batas hipoksia (sesak nafas jika cadangan paru-paru < 20%)
+    constexpr double HYPOXIA_SUFFOCATION_DAMAGE = 18.0; // Kerusakan energi per detik saat paru-paru kehabisan oksigen
+    constexpr double O2_ATMOSPHERE_SAFE_MIN = 14.0;   // Batas minimum O2 atmosfer (% volume) agar paru-paru bisa menghirup normal
+
     // Parameter Pohon & Buah (Sistem Siklus Hidup & Ketergantungan Rumus Kognisi)
-    constexpr int MAX_TREES = 32;                    // Jumlah pohon dalam ekosistem
+    constexpr int MAX_TREES = 1000;                  // Kapasitas buffer pohon dinamis (bisa tumbuh tak terbatas)
     constexpr double TREE_INTERACTION_RADIUS = 50.0; // Radius interaksi kognisi agen ke pohon (m)
     constexpr double MAX_FRUIT_PER_TREE = 6.0;       // Kapasitas buah maksimal per pohon
     constexpr double FRUIT_NUTRITION_ENERGY = 15.0;  // Energi per buah saat dikonsumsi (%)

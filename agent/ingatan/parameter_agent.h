@@ -5,7 +5,7 @@ namespace ParameterAgent {
     // Parameter Ekosistem Populasi Dinamis (Tanpa Cap 100)
     constexpr int INITIAL_POPULATION = 200;         // Populasi awal saat dunia dimulai
     constexpr int MAX_POPULATION_BUFFER = 5000;     // Kapasitas buffer memori GPU untuk ekspansi populasi alami (optimal & cepat)
-    constexpr int MAX_TREES = 32;                   // Kapasitas Pohon di Dunia
+    constexpr int MAX_TREES = 1000;                 // Kapasitas buffer pohon dinamis (bisa diperbanyak tak terbatas)
     
     // Parameter Kognisi Dinamis & Virtual Machine
     constexpr int MAX_DNA_CAPACITY = 64;            // Kapasitas Maksimum Instruksi Otak

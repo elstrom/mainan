@@ -6,11 +6,6 @@
         "xmake run",
         "xmake run",
         "xmake run",
-        "xmake run",
-        "xmake run",
-        "xmake run",
-        "xmake run",
-        "xmake run",
         "xmake -b",
         "xmake run",
         "xmake -b",
@@ -63,6 +58,11 @@
         "xmake build",
         "xmake build",
         "xmake run",
+        "xmake build",
+        "xmake run",
+        "xmake build",
+        "xmake build",
+        "xmake build",
         "xmake build",
         "xmake run"
     }
