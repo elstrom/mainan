@@ -23,7 +23,7 @@
 
 #define DNA_PROGRAM_SIZE ParameterAgent::MAX_DNA_CAPACITY
 #define REGISTERS_COUNT ParameterAgent::MAX_REGISTERS
-#define ECO_MAX_TREES ParameterAgent::MAX_TREES
+#define ECO_MAX_TREES DuniaFisika::MAX_TREES
 
 struct DnaInstruction {
   unsigned char op;
@@ -294,10 +294,10 @@ static void log_evolution_milestone(int loop_num, int gen_a, int art_lvl_a, int 
 int g_day_count = 1;
 int g_total_fruits_harvested = 0;
 int g_total_formulas_synthesized = 0;
-int g_total_births = ParameterAgent::INITIAL_POPULATION;
+int g_total_births = DuniaFisika::INITIAL_POPULATION;
 int g_total_deaths = 0;
 int g_total_tree_deaths = 0;
-int g_total_tree_sprouts = ParameterAgent::MAX_TREES;
+int g_total_tree_sprouts = DuniaFisika::MAX_TREES;
 double g_sim_time = 0.0;
 int g_alpha_agent_idx = 0;
 int g_alpha_predator_idx = 0;
@@ -481,13 +481,13 @@ bool save_ecosystem_checkpoint(const std::string &filepath) {
 
   // Sinkronisasi data mutakhir dari GPU VRAM ke Host RAM
   cudaMemcpy(g_h_agents, g_d_agents,
-             sizeof(GpuEcosystemAgent) * ParameterAgent::MAX_POPULATION_BUFFER,
+             sizeof(GpuEcosystemAgent) * DuniaFisika::MAX_POPULATION_BUFFER,
              cudaMemcpyDeviceToHost);
   cudaMemcpy(g_h_predators, g_d_predators,
              sizeof(GpuPredatorAgent) * DuniaFisika::MAX_PREDATORS_BUFFER,
              cudaMemcpyDeviceToHost);
   cudaMemcpy(g_h_trees, g_d_trees,
-             sizeof(GpuTreeEntity) * ParameterAgent::MAX_TREES,
+             sizeof(GpuTreeEntity) * DuniaFisika::MAX_TREES,
              cudaMemcpyDeviceToHost);
   cudaMemcpy(g_h_minerals, g_d_minerals,
              sizeof(GpuMineralDeposit) * DuniaFisika::MAX_PERIODIC_DEPOSITS,
@@ -525,18 +525,18 @@ bool save_ecosystem_checkpoint(const std::string &filepath) {
   header.dna_diversity_index = g_dna_diversity_index;
   header.social_learning_index = g_social_learning_index;
   header.eroi_score = g_eroi_score;
-  header.max_population_buffer = ParameterAgent::MAX_POPULATION_BUFFER;
+  header.max_population_buffer = DuniaFisika::MAX_POPULATION_BUFFER;
   header.max_predators_buffer = DuniaFisika::MAX_PREDATORS_BUFFER;
-  header.max_trees = ParameterAgent::MAX_TREES;
+  header.max_trees = DuniaFisika::MAX_TREES;
   header.max_minerals = DuniaFisika::MAX_PERIODIC_DEPOSITS;
 
   out.write(reinterpret_cast<const char *>(&header), sizeof(header));
   out.write(reinterpret_cast<const char *>(g_h_agents),
-            sizeof(GpuEcosystemAgent) * ParameterAgent::MAX_POPULATION_BUFFER);
+            sizeof(GpuEcosystemAgent) * DuniaFisika::MAX_POPULATION_BUFFER);
   out.write(reinterpret_cast<const char *>(g_h_predators),
             sizeof(GpuPredatorAgent) * DuniaFisika::MAX_PREDATORS_BUFFER);
   out.write(reinterpret_cast<const char *>(g_h_trees),
-            sizeof(GpuTreeEntity) * ParameterAgent::MAX_TREES);
+            sizeof(GpuTreeEntity) * DuniaFisika::MAX_TREES);
   out.write(reinterpret_cast<const char *>(g_h_minerals),
             sizeof(GpuMineralDeposit) * DuniaFisika::MAX_PERIODIC_DEPOSITS);
   out.write(reinterpret_cast<const char *>(&g_climate), sizeof(GpuClimateState));
@@ -556,9 +556,9 @@ bool load_ecosystem_checkpoint(const std::string &filepath) {
     in.close();
     return false;
   }
-  if (header.max_population_buffer != ParameterAgent::MAX_POPULATION_BUFFER ||
+  if (header.max_population_buffer != DuniaFisika::MAX_POPULATION_BUFFER ||
       header.max_predators_buffer != DuniaFisika::MAX_PREDATORS_BUFFER ||
-      header.max_trees != ParameterAgent::MAX_TREES ||
+      header.max_trees != DuniaFisika::MAX_TREES ||
       header.max_minerals != DuniaFisika::MAX_PERIODIC_DEPOSITS) {
     in.close();
     return false;
@@ -587,11 +587,11 @@ bool load_ecosystem_checkpoint(const std::string &filepath) {
   g_eroi_score = header.eroi_score;
 
   in.read(reinterpret_cast<char *>(g_h_agents),
-          sizeof(GpuEcosystemAgent) * ParameterAgent::MAX_POPULATION_BUFFER);
+          sizeof(GpuEcosystemAgent) * DuniaFisika::MAX_POPULATION_BUFFER);
   in.read(reinterpret_cast<char *>(g_h_predators),
           sizeof(GpuPredatorAgent) * DuniaFisika::MAX_PREDATORS_BUFFER);
   in.read(reinterpret_cast<char *>(g_h_trees),
-          sizeof(GpuTreeEntity) * ParameterAgent::MAX_TREES);
+          sizeof(GpuTreeEntity) * DuniaFisika::MAX_TREES);
   in.read(reinterpret_cast<char *>(g_h_minerals),
           sizeof(GpuMineralDeposit) * DuniaFisika::MAX_PERIODIC_DEPOSITS);
   in.read(reinterpret_cast<char *>(&g_climate), sizeof(GpuClimateState));
@@ -600,13 +600,13 @@ bool load_ecosystem_checkpoint(const std::string &filepath) {
 
   // Sinkronisasi data yang dipulihkan ke GPU VRAM
   cudaMemcpy(g_d_agents, g_h_agents,
-             sizeof(GpuEcosystemAgent) * ParameterAgent::MAX_POPULATION_BUFFER,
+             sizeof(GpuEcosystemAgent) * DuniaFisika::MAX_POPULATION_BUFFER,
              cudaMemcpyHostToDevice);
   cudaMemcpy(g_d_predators, g_h_predators,
              sizeof(GpuPredatorAgent) * DuniaFisika::MAX_PREDATORS_BUFFER,
              cudaMemcpyHostToDevice);
   cudaMemcpy(g_d_trees, g_h_trees,
-             sizeof(GpuTreeEntity) * ParameterAgent::MAX_TREES,
+             sizeof(GpuTreeEntity) * DuniaFisika::MAX_TREES,
              cudaMemcpyHostToDevice);
   cudaMemcpy(g_d_minerals, g_h_minerals,
              sizeof(GpuMineralDeposit) * DuniaFisika::MAX_PERIODIC_DEPOSITS,
@@ -622,17 +622,17 @@ int inject_spawn_agents(int count, int faction) {
   EnterCriticalSection(&g_cs);
   int spawned = 0;
   if (faction == 0) { // Herbivora
-    for (int i = 0; i < ParameterAgent::MAX_POPULATION_BUFFER && spawned < count; ++i) {
+    for (int i = 0; i < DuniaFisika::MAX_POPULATION_BUFFER && spawned < count; ++i) {
       if (!g_h_agents[i].is_alive) {
         g_h_agents[i].id = static_cast<int>(g_total_births) + 1;
         g_h_agents[i].generation = 1;
         g_h_agents[i].gender = rand() % 2;
-        g_h_agents[i].sin_type = rand() % DuniaFisika::SINS_COUNT;
+        g_h_agents[i].sin_type = 0;
         g_h_agents[i].x = 100.0f + static_cast<float>(rand() % 800);
         g_h_agents[i].y = 100.0f + static_cast<float>(rand() % 800);
         g_h_agents[i].vx = (static_cast<float>(rand() % 200) - 100.0f) * 0.05f;
         g_h_agents[i].vy = (static_cast<float>(rand() % 200) - 100.0f) * 0.05f;
-        g_h_agents[i].energy = static_cast<float>(ParameterAgent::INITIAL_ENERGY);
+        g_h_agents[i].energy = static_cast<float>(DuniaFisika::INITIAL_ENERGY);
         g_h_agents[i].age_years = 0.0f;
         g_h_agents[i].hunger_rate_mult = 1.0f;
         g_h_agents[i].mating_cooldown = 2.0f;
@@ -671,7 +671,7 @@ int inject_spawn_agents(int count, int faction) {
     }
     if (spawned > 0) {
       cudaMemcpy(g_d_agents, g_h_agents,
-                 sizeof(GpuEcosystemAgent) * ParameterAgent::MAX_POPULATION_BUFFER,
+                 sizeof(GpuEcosystemAgent) * DuniaFisika::MAX_POPULATION_BUFFER,
                  cudaMemcpyHostToDevice);
     }
   } else { // Predator
@@ -680,7 +680,7 @@ int inject_spawn_agents(int count, int faction) {
         g_h_predators[p].id = static_cast<int>(g_predator_births) + 1;
         g_h_predators[p].generation = 1;
         g_h_predators[p].gender = rand() % 2;
-        g_h_predators[p].sin_type = rand() % DuniaFisika::SINS_COUNT;
+        g_h_predators[p].sin_type = 0;
         g_h_predators[p].x = 100.0f + static_cast<float>(rand() % 800);
         g_h_predators[p].y = 100.0f + static_cast<float>(rand() % 800);
         g_h_predators[p].vx = (static_cast<float>(rand() % 200) - 100.0f) * 0.05f;
@@ -731,7 +731,7 @@ int inject_spawn_agents(int count, int faction) {
 int inject_spawn_trees(int count) {
   EnterCriticalSection(&g_cs);
   int replenished = 0;
-  for (int t = 0; t < ParameterAgent::MAX_TREES && replenished < count; ++t) {
+  for (int t = 0; t < DuniaFisika::MAX_TREES && replenished < count; ++t) {
     if (g_h_trees[t].health < 60.0f || g_h_trees[t].fruits_count < 2.0f) {
       g_h_trees[t].health = 100.0f;
       g_h_trees[t].fruits_count = static_cast<float>(DuniaFisika::MAX_FRUIT_PER_TREE);
@@ -741,7 +741,7 @@ int inject_spawn_trees(int count) {
   }
   if (replenished > 0) {
     cudaMemcpy(g_d_trees, g_h_trees,
-               sizeof(GpuTreeEntity) * ParameterAgent::MAX_TREES,
+               sizeof(GpuTreeEntity) * DuniaFisika::MAX_TREES,
                cudaMemcpyHostToDevice);
   }
   LeaveCriticalSection(&g_cs);
@@ -798,8 +798,8 @@ void inject_set_physics(const std::string &param, double val1, double val2 = 0.0
 }
 
 void reset_ecosystem_state() {
-  memset(g_h_agents, 0, sizeof(GpuEcosystemAgent) * ParameterAgent::MAX_POPULATION_BUFFER);
-  memset(g_h_trees, 0, sizeof(GpuTreeEntity) * ParameterAgent::MAX_TREES);
+  memset(g_h_agents, 0, sizeof(GpuEcosystemAgent) * DuniaFisika::MAX_POPULATION_BUFFER);
+  memset(g_h_trees, 0, sizeof(GpuTreeEntity) * DuniaFisika::MAX_TREES);
   memset(g_h_predators, 0, sizeof(GpuPredatorAgent) * DuniaFisika::MAX_PREDATORS_BUFFER);
   memset(g_h_minerals, 0, sizeof(GpuMineralDeposit) * DuniaFisika::MAX_PERIODIC_DEPOSITS);
 
@@ -820,10 +820,10 @@ void reset_ecosystem_state() {
   g_day_count = 1;
   g_total_fruits_harvested = 0;
   g_total_formulas_synthesized = 0;
-  g_total_births = ParameterAgent::INITIAL_POPULATION;
+  g_total_births = DuniaFisika::INITIAL_POPULATION;
   g_total_deaths = 0;
   g_total_tree_deaths = 0;
-  g_total_tree_sprouts = ParameterAgent::MAX_TREES;
+  g_total_tree_sprouts = DuniaFisika::MAX_TREES;
   g_sim_time = 0.0;
   g_living_leaderboard.clear();
   g_predator_leaderboard.clear();
@@ -895,7 +895,7 @@ void reset_ecosystem_state() {
     }
   }
 
-  for (int t = 0; t < ParameterAgent::MAX_TREES; ++t) {
+  for (int t = 0; t < DuniaFisika::MAX_TREES; ++t) {
     if (t < 32) {
       float gx = 100.0f + (float)(t % 6) * 160.0f + (float)((rand() % 40) - 20);
       float gy = 100.0f + ((float)t / 6.0f) * 160.0f + (float)((rand() % 40) - 20);
@@ -930,7 +930,7 @@ void reset_ecosystem_state() {
   GpuEcosystemAgent saved_ancestor = {};
   bool has_saved_dna = load_best_dna_from_file(saved_ancestor);
 
-  for (int i = 0; i < ParameterAgent::MAX_POPULATION_BUFFER; ++i) {
+  for (int i = 0; i < DuniaFisika::MAX_POPULATION_BUFFER; ++i) {
     g_h_agents[i].id = i + 1;
     g_h_agents[i].generation = 1;
     g_h_agents[i].gender = rand() % 2; // Kelamin Acak (0: Jantan, 1: Betina)
@@ -939,10 +939,10 @@ void reset_ecosystem_state() {
     g_h_agents[i].y = 100.0f + (float)(rand() % 800);
     g_h_agents[i].vx = 0.0f;
     g_h_agents[i].vy = 0.0f;
-    g_h_agents[i].energy = (i < ParameterAgent::INITIAL_POPULATION) ? (float)ParameterAgent::INITIAL_ENERGY : 0.0f;
-    g_h_agents[i].lung_oxygen = (i < ParameterAgent::INITIAL_POPULATION) ? (float)DuniaFisika::AGENT_LUNG_CAPACITY : 0.0f;
-    g_h_agents[i].hydration = (i < ParameterAgent::INITIAL_POPULATION) ? (float)DuniaFisika::AGENT_HYDRATION_INITIAL : 0.0f;
-    g_h_agents[i].age_years = (i < ParameterAgent::INITIAL_POPULATION) ? (float)(rand() % 30) : 0.0f;
+    g_h_agents[i].energy = (i < DuniaFisika::INITIAL_POPULATION) ? (float)DuniaFisika::INITIAL_ENERGY : 0.0f;
+    g_h_agents[i].lung_oxygen = (i < DuniaFisika::INITIAL_POPULATION) ? (float)DuniaFisika::AGENT_LUNG_CAPACITY : 0.0f;
+    g_h_agents[i].hydration = (i < DuniaFisika::INITIAL_POPULATION) ? (float)DuniaFisika::AGENT_HYDRATION_INITIAL : 0.0f;
+    g_h_agents[i].age_years = (i < DuniaFisika::INITIAL_POPULATION) ? (float)(rand() % 30) : 0.0f;
     g_h_agents[i].hunger_rate_mult = 1.0f;
     g_h_agents[i].mating_cooldown = (float)(rand() % 5);
     g_h_agents[i].fruits_eaten = 0;
@@ -953,7 +953,7 @@ void reset_ecosystem_state() {
     g_h_agents[i].mined_material = 0.0f;
     g_h_agents[i].growth_signal = 0.0f;
     g_h_agents[i].fear_level = 0.0f;
-    g_h_agents[i].is_alive = (i < ParameterAgent::INITIAL_POPULATION);
+    g_h_agents[i].is_alive = (i < DuniaFisika::INITIAL_POPULATION);
     g_h_agents[i].just_died = false;
     g_h_agents[i].just_born = false;
 
@@ -966,7 +966,7 @@ void reset_ecosystem_state() {
     }
     for (int s = 0; s < 4; ++s) g_h_agents[i].pred_sensor_prev[s] = 0.0f;
 
-    if (has_saved_dna && (i < ParameterAgent::INITIAL_POPULATION)) {
+    if (has_saved_dna && (i < DuniaFisika::INITIAL_POPULATION)) {
       g_h_agents[i].active_program_size = saved_ancestor.active_program_size;
       g_h_agents[i].active_registers_count = saved_ancestor.active_registers_count;
       for (int ip = 0; ip < DNA_PROGRAM_SIZE; ++ip) {
@@ -1007,10 +1007,10 @@ void reset_ecosystem_state() {
   g_climate.atmospheric_pressure = 1.0f;
 
   cudaMemcpy(g_d_agents, g_h_agents,
-             sizeof(GpuEcosystemAgent) * ParameterAgent::MAX_POPULATION_BUFFER,
+             sizeof(GpuEcosystemAgent) * DuniaFisika::MAX_POPULATION_BUFFER,
              cudaMemcpyHostToDevice);
   cudaMemcpy(g_d_trees, g_h_trees,
-             sizeof(GpuTreeEntity) * ParameterAgent::MAX_TREES,
+             sizeof(GpuTreeEntity) * DuniaFisika::MAX_TREES,
              cudaMemcpyHostToDevice);
   cudaMemcpy(g_d_predators, g_h_predators,
              sizeof(GpuPredatorAgent) * DuniaFisika::MAX_PREDATORS_BUFFER,
@@ -1034,17 +1034,17 @@ void reset_ecosystem_state() {
 
 void init_ecosystem_pipeline() {
   g_h_agents = (GpuEcosystemAgent *)malloc(sizeof(GpuEcosystemAgent) *
-                                           ParameterAgent::MAX_POPULATION_BUFFER);
+                                           DuniaFisika::MAX_POPULATION_BUFFER);
   g_h_trees = (GpuTreeEntity *)malloc(sizeof(GpuTreeEntity) *
-                                      ParameterAgent::MAX_TREES);
+                                      DuniaFisika::MAX_TREES);
   g_h_predators = (GpuPredatorAgent *)malloc(sizeof(GpuPredatorAgent) *
                                              DuniaFisika::MAX_PREDATORS_BUFFER);
   g_h_minerals = (GpuMineralDeposit *)malloc(sizeof(GpuMineralDeposit) *
                                              DuniaFisika::MAX_PERIODIC_DEPOSITS);
 
   cudaMalloc(&g_d_agents,
-             sizeof(GpuEcosystemAgent) * ParameterAgent::MAX_POPULATION_BUFFER);
-  cudaMalloc(&g_d_trees, sizeof(GpuTreeEntity) * ParameterAgent::MAX_TREES);
+             sizeof(GpuEcosystemAgent) * DuniaFisika::MAX_POPULATION_BUFFER);
+  cudaMalloc(&g_d_trees, sizeof(GpuTreeEntity) * DuniaFisika::MAX_TREES);
   cudaMalloc(&g_d_predators, sizeof(GpuPredatorAgent) * DuniaFisika::MAX_PREDATORS_BUFFER);
   cudaMalloc(&g_d_minerals, sizeof(GpuMineralDeposit) * DuniaFisika::MAX_PERIODIC_DEPOSITS);
   cudaMalloc(&g_d_climate, sizeof(GpuClimateState));
@@ -1076,10 +1076,10 @@ void step_ecosystem(double dt) {
   g_climate.magnetic_angle = fmodf(time_f * 0.05f, 6.28318f);
 
   // Loop Pembaruan Vitalitas & Buah Pohon (Geologi Kesuburan Tanah, Spesies, Jarak & Realisme)
-  for (int t = 0; t < ParameterAgent::MAX_TREES; ++t) {
+  for (int t = 0; t < DuniaFisika::MAX_TREES; ++t) {
     if (g_h_trees[t].health <= 0.0f) continue; // Slot pohon kosong/mati menunggu ditanam atau bertunas
 
-    g_h_trees[t].age_years += (float)(dt / ParameterAgent::SECONDS_PER_YEAR);
+    g_h_trees[t].age_years += (float)(dt / DuniaFisika::SECONDS_PER_YEAR);
 
     // Pohon mati karena usia tua alami atau kehabisan vitalitas
     if (g_h_trees[t].age_years >= (float)DuniaFisika::TREE_MAX_AGE_YEARS || g_h_trees[t].health <= 0.0f) {
@@ -1158,7 +1158,7 @@ void step_ecosystem(double dt) {
   float total_tree_co2_resp = 0.0f;
   int living_trees_count = 0;
 
-  for (int t = 0; t < ParameterAgent::MAX_TREES; ++t) {
+  for (int t = 0; t < DuniaFisika::MAX_TREES; ++t) {
     if (g_h_trees[t].growth_stage >= 15.0f && g_h_trees[t].health > 0.0f) {
       living_trees_count++;
       float maturity = g_h_trees[t].growth_stage / 100.0f;
@@ -1209,11 +1209,11 @@ void step_ecosystem(double dt) {
   }
 
   // Clamp ke rentang adversarial [MIN, MAX]
-  float target_nature_pressure = fmaxf((float)ParameterAgent::NATURE_AGGRESSION_MIN,
-                                        fminf((float)ParameterAgent::NATURE_AGGRESSION_MAX, base_target));
+  float target_nature_pressure = fmaxf((float)DuniaFisika::NATURE_AGGRESSION_MIN,
+                                        fminf((float)DuniaFisika::NATURE_AGGRESSION_MAX, base_target));
 
   // Smooth adjustment dengan rebound speed lebih cepat (agresif)
-  float rebound = (float)ParameterAgent::NATURE_REBOUND_SPEED;
+  float rebound = (float)DuniaFisika::NATURE_REBOUND_SPEED;
   g_climate.nature_adversarial_pressure = g_climate.nature_adversarial_pressure * (1.0f - rebound) + target_nature_pressure * rebound;
 
   // Evaluasi Tekanan Lingkungan Bencana Alam Dinamis (Solar Storm / Blizzard / EMP Chaos)
@@ -1249,7 +1249,7 @@ void step_ecosystem(double dt) {
   }
 
   cudaMemcpy(g_d_trees, g_h_trees,
-             sizeof(GpuTreeEntity) * ParameterAgent::MAX_TREES,
+             sizeof(GpuTreeEntity) * DuniaFisika::MAX_TREES,
              cudaMemcpyHostToDevice);
   cudaMemcpy(g_d_minerals, g_h_minerals,
              sizeof(GpuMineralDeposit) * DuniaFisika::MAX_PERIODIC_DEPOSITS,
@@ -1257,17 +1257,17 @@ void step_ecosystem(double dt) {
   cudaMemcpy(g_d_climate, &g_climate, sizeof(GpuClimateState),
              cudaMemcpyHostToDevice);
 
-  launch_ecosystem_simulation(g_d_agents, ParameterAgent::MAX_POPULATION_BUFFER,
-                              g_d_trees, ParameterAgent::MAX_TREES,
+  launch_ecosystem_simulation(g_d_agents, DuniaFisika::MAX_POPULATION_BUFFER,
+                              g_d_trees, DuniaFisika::MAX_TREES,
                               g_d_predators, DuniaFisika::MAX_PREDATORS_BUFFER,
                               g_d_minerals, DuniaFisika::MAX_PERIODIC_DEPOSITS,
                               g_d_climate, dt);
 
   cudaMemcpy(g_h_agents, g_d_agents,
-             sizeof(GpuEcosystemAgent) * ParameterAgent::MAX_POPULATION_BUFFER,
+             sizeof(GpuEcosystemAgent) * DuniaFisika::MAX_POPULATION_BUFFER,
              cudaMemcpyDeviceToHost);
   cudaMemcpy(g_h_trees, g_d_trees,
-             sizeof(GpuTreeEntity) * ParameterAgent::MAX_TREES,
+             sizeof(GpuTreeEntity) * DuniaFisika::MAX_TREES,
              cudaMemcpyDeviceToHost);
   cudaMemcpy(g_h_predators, g_d_predators,
              sizeof(GpuPredatorAgent) * DuniaFisika::MAX_PREDATORS_BUFFER,
@@ -1282,7 +1282,7 @@ void step_ecosystem(double dt) {
   {
     // Hitung populasi hidup per kubu untuk balancer
     int pop_a = 0, pop_b = 0;
-    for (int i = 0; i < ParameterAgent::MAX_POPULATION_BUFFER; ++i)
+    for (int i = 0; i < DuniaFisika::MAX_POPULATION_BUFFER; ++i)
       if (g_h_agents[i].is_alive && g_h_agents[i].energy > 0.0f) pop_a++;
     for (int p = 0; p < DuniaFisika::MAX_PREDATORS_BUFFER; ++p)
       if (g_h_predators[p].is_alive && g_h_predators[p].energy > 0.0f) pop_b++;
@@ -1292,7 +1292,7 @@ void step_ecosystem(double dt) {
     // === Artifact Kubu A (Herbivora) ===
     ArtifactEntity &art_a = g_artifacts[0];
     bool has_immortal_a = false;
-    for (int i = 0; i < ParameterAgent::MAX_POPULATION_BUFFER; ++i) {
+    for (int i = 0; i < DuniaFisika::MAX_POPULATION_BUFFER; ++i) {
       if (g_h_agents[i].is_alive && g_h_agents[i].immortality_timer > 0.0f) {
         has_immortal_a = true;
         break;
@@ -1302,7 +1302,7 @@ void step_ecosystem(double dt) {
       bool near_a = false;
       bool claimed_a = false;
       float claim_r2 = (float)(DuniaFisika::ARTIFACT_CLAIM_RADIUS * DuniaFisika::ARTIFACT_CLAIM_RADIUS);
-      for (int i = 0; i < ParameterAgent::MAX_POPULATION_BUFFER; ++i) {
+      for (int i = 0; i < DuniaFisika::MAX_POPULATION_BUFFER; ++i) {
         if (!g_h_agents[i].is_alive || g_h_agents[i].energy <= 0.0f) continue;
         float dx = g_h_agents[i].x - art_a.x;
         float dy = g_h_agents[i].y - art_a.y;
@@ -1322,7 +1322,7 @@ void step_ecosystem(double dt) {
           // Population balancer: jika Kubu A hampir punah saat Kubu B klaim
           if (pop_total > 0 && (float)pop_b / (float)pop_total > (1.0f - thresh)) {
             int spawned = 0;
-            for (int s = 0; s < ParameterAgent::MAX_POPULATION_BUFFER && spawned < DuniaFisika::ARTIFACT_BALANCER_SPAWN_COUNT; ++s) {
+            for (int s = 0; s < DuniaFisika::MAX_POPULATION_BUFFER && spawned < DuniaFisika::ARTIFACT_BALANCER_SPAWN_COUNT; ++s) {
               if (!g_h_agents[s].is_alive) {
                 g_h_agents[s] = g_h_agents[i]; // Klon dari pemenang
                 g_h_agents[s].x = art_a.x + (float)((spawned % 3) - 1) * 20.0f;
@@ -1344,7 +1344,7 @@ void step_ecosystem(double dt) {
           art_a.is_active = true;
           // Sync perubahan immortality kembali ke GPU
           cudaMemcpy(g_d_agents, g_h_agents,
-                     sizeof(GpuEcosystemAgent) * ParameterAgent::MAX_POPULATION_BUFFER,
+                     sizeof(GpuEcosystemAgent) * DuniaFisika::MAX_POPULATION_BUFFER,
                      cudaMemcpyHostToDevice);
           break;
         }
@@ -1476,7 +1476,7 @@ void step_ecosystem(double dt) {
   int total_craft_a = 0;
   std::vector<TopAgentRecord> current_living;
 
-  for (int i = 0; i < ParameterAgent::MAX_POPULATION_BUFFER; ++i) {
+  for (int i = 0; i < DuniaFisika::MAX_POPULATION_BUFFER; ++i) {
     if (g_h_agents[i].just_died) {
       g_total_deaths++;
       g_cum_tools_crafted_a += g_h_agents[i].tools_crafted;
@@ -1554,7 +1554,7 @@ void step_ecosystem(double dt) {
 
   for (size_t i = 0; i < g_living_leaderboard.size(); ++i) {
     int ag_id = g_living_leaderboard[i].id;
-    for (int idx = 0; idx < ParameterAgent::MAX_POPULATION_BUFFER; ++idx) {
+    for (int idx = 0; idx < DuniaFisika::MAX_POPULATION_BUFFER; ++idx) {
       if (g_h_agents[idx].id == ag_id) {
         if (fabsf(g_h_agents[idx].comm_received) > 0.05f || fabsf(g_h_agents[idx].comm_signal) > 0.05f) {
           communicating_count++;
@@ -1603,7 +1603,7 @@ void step_ecosystem(double dt) {
 
   // Energy Return on Investment (EROI)
   float total_nutrisi_gained = (float)(g_total_fruits_harvested * DuniaFisika::FRUIT_NUTRITION_ENERGY + g_total_predator_kills * DuniaFisika::PREDATOR_ENERGY_GAIN);
-  float total_metabolism_cost = fmaxf(1.0f, (float)(g_sim_time * std::max(1, living_total) * ParameterAgent::METABOLISM_BASE_RATE * 0.5f));
+  float total_metabolism_cost = fmaxf(1.0f, (float)(g_sim_time * std::max(1, living_total) * DuniaFisika::METABOLISM_BASE_RATE * 0.5f));
   g_eroi_score = fminf(20.0f, fmaxf(0.1f, total_nutrisi_gained / total_metabolism_cost));
 
   // Ketinggian Hierarki Strategi
@@ -1620,7 +1620,7 @@ void step_ecosystem(double dt) {
   if (!g_living_leaderboard.empty()) {
     g_best_ecosystem_formula = g_living_leaderboard[0].formula;
     int top_id = g_living_leaderboard[0].id;
-    for (int i = 0; i < ParameterAgent::MAX_POPULATION_BUFFER; ++i) {
+    for (int i = 0; i < DuniaFisika::MAX_POPULATION_BUFFER; ++i) {
       if (g_h_agents[i].id == top_id) {
         g_alpha_agent_idx = i;
         static int save_counter = 0;
@@ -1654,7 +1654,7 @@ CRITICAL_SECTION g_json_cs;
 std::string build_telemetry_json_internal() {
   EnterCriticalSection(&g_cs);
   float total_available_fruits = 0.0f;
-  for (int t = 0; t < ParameterAgent::MAX_TREES; ++t) {
+  for (int t = 0; t < DuniaFisika::MAX_TREES; ++t) {
     total_available_fruits += g_h_trees[t].fruits_count;
   }
 
@@ -1744,7 +1744,7 @@ std::string build_telemetry_json_internal() {
   // Dynamic Living Agents Coordinate Stream
   ss << "  \"agents\": [";
   bool first_agent = true;
-  for (int i = 0; i < ParameterAgent::MAX_POPULATION_BUFFER; ++i) {
+  for (int i = 0; i < DuniaFisika::MAX_POPULATION_BUFFER; ++i) {
     if (g_h_agents[i].is_alive && g_h_agents[i].energy > 0.0f) {
       if (!first_agent) ss << ",";
       ss << "{\"id\":" << g_h_agents[i].id << ",\"x\":" << g_h_agents[i].x
@@ -1763,7 +1763,7 @@ std::string build_telemetry_json_internal() {
   ss << "],\n";
 
   int living_trees_count = 0;
-  for (int t = 0; t < ParameterAgent::MAX_TREES; ++t) {
+  for (int t = 0; t < DuniaFisika::MAX_TREES; ++t) {
     if (g_h_trees[t].growth_stage >= 20.0f && g_h_trees[t].health > 0.0f) {
       living_trees_count++;
     }
@@ -1775,7 +1775,7 @@ std::string build_telemetry_json_internal() {
   ss << "  \"totalTreeSprouts\": " << g_total_tree_sprouts << ",\n";
   ss << "  \"trees\": [";
   bool first_tree = true;
-  for (int t = 0; t < ParameterAgent::MAX_TREES; ++t) {
+  for (int t = 0; t < DuniaFisika::MAX_TREES; ++t) {
     if (g_h_trees[t].health > 0.0f) {
       if (!first_tree) ss << ",";
       ss << "{\"x\":" << g_h_trees[t].x << ",\"y\":" << g_h_trees[t].y
@@ -1835,7 +1835,7 @@ std::string build_telemetry_json_internal() {
   // Stream Bangkai / Mayat (Corpses) yang tersedia untuk dimakan Karnivora
   ss << "  \"corpses\": [";
   bool first_corpse = true;
-  for (int i = 0; i < ParameterAgent::MAX_POPULATION_BUFFER; ++i) {
+  for (int i = 0; i < DuniaFisika::MAX_POPULATION_BUFFER; ++i) {
     if (!g_h_agents[i].is_alive && g_h_agents[i].corpse_energy > 0.5f) {
       if (!first_corpse) ss << ",";
       ss << "{\"x\":" << g_h_agents[i].x << ",\"y\":" << g_h_agents[i].y
@@ -2147,7 +2147,7 @@ void http_server_thread() {
                            "Content-Length: 15\r\n\r\n{\"status\":\"ok\"}";
         send(client_fd, resp.c_str(), static_cast<int>(resp.length()), 0);
       } else if (req.find("GET /save_checkpoint") != std::string::npos) {
-        bool ok = save_ecosystem_checkpoint(ParameterAgent::ECOSYSTEM_CHECKPOINT_FILE);
+        bool ok = save_ecosystem_checkpoint(DuniaFisika::ECOSYSTEM_CHECKPOINT_FILE);
         std::string json = "{\"status\":\"" + std::string(ok ? "ok" : "error") + "\",\"message\":\"" + (ok ? "Checkpoint saved" : "Save failed") + "\"}";
         std::string resp = "HTTP/1.1 200 OK\r\n"
                            "Content-Type: application/json\r\n"
@@ -2157,7 +2157,7 @@ void http_server_thread() {
                            std::to_string(json.length()) + "\r\n\r\n" + json;
         send(client_fd, resp.c_str(), static_cast<int>(resp.length()), 0);
       } else if (req.find("GET /load_checkpoint") != std::string::npos) {
-        bool ok = load_ecosystem_checkpoint(ParameterAgent::ECOSYSTEM_CHECKPOINT_FILE);
+        bool ok = load_ecosystem_checkpoint(DuniaFisika::ECOSYSTEM_CHECKPOINT_FILE);
         std::string json = "{\"status\":\"" + std::string(ok ? "ok" : "error") + "\",\"message\":\"" + (ok ? "Checkpoint loaded" : "Load failed") + "\"}";
         std::string resp = "HTTP/1.1 200 OK\r\n"
                            "Content-Type: application/json\r\n"
@@ -2168,7 +2168,7 @@ void http_server_thread() {
         send(client_fd, resp.c_str(), static_cast<int>(resp.length()), 0);
       } else if (req.find("GET / ") != std::string::npos ||
                  req.find("GET /index.html") != std::string::npos) {
-        std::ifstream html_file(ParameterAgent::WEB_DASHBOARD_FILE, std::ios::binary);
+        std::ifstream html_file(DuniaFisika::WEB_DASHBOARD_FILE, std::ios::binary);
         if (!html_file.is_open()) {
           html_file.open("web/index.html", std::ios::binary);
         }
@@ -2198,7 +2198,7 @@ void http_server_thread() {
 }
 
 int main(int argc, char *argv[]) {
-  srand(ParameterAgent::FIXED_SIMULATION_SEED);
+  srand(DuniaFisika::FIXED_SIMULATION_SEED);
   InitializeCriticalSection(&g_cs);
   InitializeCriticalSection(&g_json_cs);
   InitializeCriticalSection(&g_ws_cs);
@@ -2206,7 +2206,7 @@ int main(int argc, char *argv[]) {
   init_ecosystem_pipeline();
 
   bool resume_requested = false;
-  std::string checkpoint_path = ParameterAgent::ECOSYSTEM_CHECKPOINT_FILE;
+  std::string checkpoint_path = DuniaFisika::ECOSYSTEM_CHECKPOINT_FILE;
   for (int a = 1; a < argc; ++a) {
     std::string arg = argv[a];
     if (arg == "--resume" || arg == "-r") {
@@ -2263,14 +2263,14 @@ int main(int argc, char *argv[]) {
 
   while (g_server_running) {
     // Deterministic Fixed Timestep Execution
-    double substep_dt = ParameterAgent::FIXED_SUBSTEP_DT;
+    double substep_dt = DuniaFisika::FIXED_SUBSTEP_DT;
     step_ecosystem(substep_dt);
 
     // Auto-Save Checkpoint Periodik
-    if (g_day_count % ParameterAgent::CHECKPOINT_INTERVAL_DAYS == 0 && g_day_count != last_saved_day) {
+    if (g_day_count % DuniaFisika::CHECKPOINT_INTERVAL_DAYS == 0 && g_day_count != last_saved_day) {
       last_saved_day = g_day_count;
-      save_ecosystem_checkpoint(ParameterAgent::ECOSYSTEM_CHECKPOINT_FILE);
-      std::cout << "[CHECKPOINT AUTO-SAVE] State Day " << g_day_count << " tersimpan ke " << ParameterAgent::ECOSYSTEM_CHECKPOINT_FILE << std::endl;
+      save_ecosystem_checkpoint(DuniaFisika::ECOSYSTEM_CHECKPOINT_FILE);
+      std::cout << "[CHECKPOINT AUTO-SAVE] State Day " << g_day_count << " tersimpan ke " << DuniaFisika::ECOSYSTEM_CHECKPOINT_FILE << std::endl;
     }
 
     // Evaluasi Kepunahan Otomatis (Stop & Report)
@@ -2278,7 +2278,7 @@ int main(int argc, char *argv[]) {
       int living_a = (int)g_living_leaderboard.size();
       int living_b = (int)g_predator_leaderboard.size();
       if (living_a == 0 || living_b == 0) {
-        save_ecosystem_checkpoint(ParameterAgent::ECOSYSTEM_CHECKPOINT_FILE);
+        save_ecosystem_checkpoint(DuniaFisika::ECOSYSTEM_CHECKPOINT_FILE);
         std::cout << "\n================================================================" << std::endl;
         std::cout << " [SIMULASI BERHENTI: SALAH SATU FAKSI PUNAH]" << std::endl;
         std::cout << "================================================================" << std::endl;
@@ -2363,7 +2363,7 @@ int main(int argc, char *argv[]) {
       int max_gen_b = 1;
       int max_dna_b = ParameterAgent::MIN_DYNAMIC_PROGRAM_SIZE;
 
-      for (int i = 0; i < ParameterAgent::MAX_POPULATION_BUFFER; ++i) {
+      for (int i = 0; i < DuniaFisika::MAX_POPULATION_BUFFER; ++i) {
         if (g_h_agents[i].is_alive && g_h_agents[i].energy > 0.0f) {
           if (g_h_agents[i].generation > max_gen_a) max_gen_a = g_h_agents[i].generation;
           if (g_h_agents[i].active_program_size > max_dna_a) max_dna_a = g_h_agents[i].active_program_size;

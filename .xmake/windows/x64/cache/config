@@ -1,10 +1,9 @@
 {
-    recheck = false,
     mtimes = {
-        ["xmake.lua"] = 1789131171
+        ["xmake.lua"] = 1789500192
     },
     options = {
-        clean = true,
-        cuda = [[C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v13.1]]
-    }
+        clean = true
+    },
+    recheck = false
 }

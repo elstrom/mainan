@@ -3,180 +3,10 @@
 #include <math.h>
 #include "agent/dunia/parameter_dunia.h"
 #include "agent/ingatan/parameter_agent.h"
+#include "agent/02_kognisi_vm_bytecode.h"
+#include "lingkungan_ekosistem.h"
 
-#define DNA_PROGRAM_SIZE ParameterAgent::MAX_DNA_CAPACITY
-#define REGISTERS_COUNT ParameterAgent::MAX_REGISTERS
-#define ECO_MAX_TREES ParameterAgent::MAX_TREES
-
-// Virtual Machine Bytecode Operasi Aljabar & Kognisi Ekologis
-enum DnaOpcode {
-    OP_NOP = 0,
-    OP_LOAD_SENSOR,      // reg[A] = sensor[B]
-    OP_ADD,              // reg[A] = reg[B] + reg[C]
-    OP_SUB,              // reg[A] = reg[B] - reg[C]
-    OP_MUL,              // reg[A] = reg[B] * reg[C]
-    OP_DIV,              // reg[A] = reg[B] / (reg[C] + eps)
-    OP_TANH,             // reg[A] = tanh(reg[B])
-    OP_SIGMOID,          // reg[A] = sigmoid(reg[B])
-    OP_INTEGRAL,         // reg[A] += reg[B] * dt
-    OP_DERIVATIVE,       // reg[A] = (reg[B] - prev[A]) / dt
-    OP_ACTION_MOVE,      // Set Velocity (vx = reg[B], vy = reg[C])
-    OP_ACTION_FORMULA,   // Emit Resonant Frequency / Growth Formula = reg[B]
-    OP_RESONATE_CLIMATE, // Harmonize internal state with climate/temperature
-    OP_FORK_NEURON,      // Neurogenesis: Tumbuhkan sirkuit baru jika energi cukup
-    OP_PRUNE_NEURON,     // Synaptic Pruning: Ringkaskan sirkuit jika tenang & stabil
-    OP_WRITE_CODE,       // Self-Modifying Code: dna[reg[A]].op = reg[B], dest/src = reg[C]
-    OP_MUTATE_SELF,      // Self-Metaprogramming: Acak/edit instruksi target berdasarkan sinyal internal
-    OP_ALLOC_REG,        // Dynamic Working Memory Allocation: Tambah kapasitas register aktif (+1)
-    OP_FREE_REG          // Dynamic Memory Free: Kurangi kapasitas register aktif (-1)
-};
-
-struct DnaInstruction {
-    unsigned char op;
-    unsigned char r_dest;
-    unsigned char r_src1;
-    unsigned char r_src2;
-    float immediate_val;
-};
-
-struct GpuTreeEntity {
-    float x;
-    float y;
-    float growth_stage;      // 0.0 - 100.0%
-    float fruits_count;      // 0 - 6 buah (khusus TREE_TYPE_FRUIT)
-    float formula_resonance; // Keselarasan rumus kognisi agen
-    float age_years;         // Usia pohon
-    float health;            // Vitalitas pohon (0.0 - 100.0%)
-    int tree_type;           // 0: TREE_TYPE_FRUIT, 1: TREE_TYPE_OXYGEN, 2: TREE_TYPE_PIONEER
-    float soil_fertility;    // Kesuburan tanah lokasi pohon (0.0 - 2.0)
-    float moisture;          // Kadar air / kelembaban pohon (0.0 - 100.0%)
-};
-
-struct GpuMineralDeposit {
-    float x;
-    float y;
-    int element_type;    // 0: Silikon/Batu, 1: Logam Konduktif, 2: Kristal Energi Resonance
-    float mass;          // Kerapatan massa/jumlah material (0 - 100%)
-    float hardness;      // Ketahanan material terhadap degradasi (0 - 100%)
-    float conductivity;  // Medan konduksi listrik/akustik
-};
-
-struct GpuClimateState {
-    float wind_x;
-    float wind_y;
-    float temperature;   // -10.0°C hingga +40.0°C
-    float magnetic_angle;// 0 - 2*PI
-    float daylight_factor; // 0.0 (Malam Gelap) hingga 1.0 (Siang Terik)
-    float season_phase;  // 0.0 - 4.0
-    int current_season;  // 0: Semi, 1: Panas, 2: Gugur, 3: Dingin
-    float season_timer;
-    float oxygen_level;   // Atmosfer Oksigen (%)
-    float co2_level;      // Karbon Dioksida (%)
-    float h2o_level;      // Kelembaban Uap Air H2O (%)
-    float nitrogen_level; // Gas Nitrogen N2 (%)
-    float atmospheric_pressure; // Tekanan Atmosfer (Atm)
-    float nature_adversarial_pressure; // Tekanan Adaptif Kubu Alam AI (0.0 - 5.0)
-};
-
-struct GpuEcosystemAgent {
-    int id;                  // Unique Agent ID
-    int generation;          // Generasi Keturunan
-    int gender;              // 0: Jantan (Male), 1: Betina (Female)
-    float x;
-    float y;
-    float vx;
-    float vy;
-    float energy;            // Homeostasis Metabolisme (0.0 - 100.0%)
-    float lung_oxygen;       // Tabung Oksigen Paru-paru (0.0 - 100.0%)
-    float hydration;         // Tingkat Hidrasi / Kadar Air Tubuh (0.0 - 100.0%)
-    float age_years;         // Usia dalam Tahun (0 - 100 Tahun)
-    float hunger_rate_mult;  // Pengali rasa lapar (Meningkat seiring penuaan)
-    float mating_cooldown;   // Waktu tunggu sebelum bisa reproduksi kembali
-    int fruits_eaten;        // Jumlah buah yang berhasil dikonsumsi
-    int formulas_discovered; // Jumlah rumus pertumbuhan yang berhasil dicetuskan
-    int predators_slain;     // Jumlah predator yang berhasil dikalahkan agen dengan rumus
-    int material_interactions;// Frekuensi berinteraksi/menambang material megalitikum
-    int tools_crafted;       // Jumlah alat/senjata/struktur megalitikum yang berhasil dibuat
-    float mined_material;    // Stok material mentah yang dikumpulkan
-    float growth_signal;     // Output rumus kognisi yang dipancarkan
-    float comm_signal;       // Pesan siaran komunikasi / feromon yang dipancarkan ke tetangga
-    float comm_received;     // Pesan siaran komunikasi yang didengar dari koloni sekitar
-    float fear_level;        // Respon bahaya kelaparan / cuaca ekstrem
-    float corpse_energy;     // Biomassa mayat yang bisa dimakan karnivora
-    bool is_alive;           // Status Kehidupan (True: Hidup, False: Baru Mati/Mayat)
-    bool just_died;          // Flag event kematian pada tick ini
-    bool just_born;          // Flag event kelahiran pada tick ini
-    
-    int active_program_size;
-    int active_registers_count;
-    int sin_type;            // Sifat Dosa Pokok (0: Pride, 1: Greed, 2: Lust, 3: Envy, 4: Gluttony, 5: Wrath, 6: Sloth)
-    
-    double registers[REGISTERS_COUNT];
-    double prev_registers[REGISTERS_COUNT];
-    double integrated_registers[REGISTERS_COUNT];
-    float reservoir_weights_in[REGISTERS_COUNT];   // Bobot input sensorik ke reservoir hidden state
-    float reservoir_weights_rec[REGISTERS_COUNT];  // Bobot recurrent self-loop reservoir
-    float pred_sensor_prev[4];                     // Sensor t-1 untuk Predictive Loss [tree_dx, tree_dy, energy, pred_dist]
-    float immortality_timer;                       // Sisa waktu keabadian (detik simulasi); 0 = normal
-    
-    DnaInstruction dna_program[DNA_PROGRAM_SIZE];
-    float epigenetic_methylation[DNA_PROGRAM_SIZE];
-};
-
-struct GpuPredatorAgent {
-    int id;
-    int generation;
-    int gender;              // 0: Jantan (♂), 1: Betina (♀)
-    float x;
-    float y;
-    float vx;
-    float vy;
-    float energy;
-    float lung_oxygen;       // Tabung Oksigen Paru-paru Predator (0.0 - 100.0%)
-    float hydration;         // Tingkat Hidrasi Predator (0.0 - 100.0%)
-    float age_years;
-    float mating_cooldown;
-    float formula_shield;    // Perisai kognitif musuh (0.0 - 1.0)
-    float comm_signal;       // Pesan siaran koordinasi kawanan serigala predator
-    float comm_received;     // Pesan koordinasi yang didengar dari predator kawan
-    int prey_devoured;
-    int material_interactions;// Frekuensi berinteraksi/menambang material megalitikum
-    int tools_crafted;       // Jumlah alat/senjata/struktur megalitikum yang berhasil dibuat
-    float mined_material;    // Stok material mentah yang dikumpulkan
-    float corpse_energy;     // Biomassa mayat karnivora (bisa dikanibal)
-    bool is_alive;
-    bool just_killed;
-    bool just_died;
-    bool just_born;
-    
-    int active_program_size;
-    int active_registers_count;
-    int sin_type;            // Sifat Dosa Pokok (0: Pride, 1: Greed, 2: Lust, 3: Envy, 4: Gluttony, 5: Wrath, 6: Sloth)
-    double registers[REGISTERS_COUNT];
-    double prev_registers[REGISTERS_COUNT];
-    double integrated_registers[REGISTERS_COUNT];
-    float reservoir_weights_in[REGISTERS_COUNT];   // Bobot input sensorik ke reservoir
-    float reservoir_weights_rec[REGISTERS_COUNT];  // Bobot recurrent self-loop reservoir
-    float pred_sensor_prev[4];                     // Sensor t-1 untuk Predictive Loss [prey_dx, prey_dy, energy, prey_dist]
-    float immortality_timer;                       // Sisa waktu keabadian (detik simulasi); 0 = normal
-    DnaInstruction dna_program[DNA_PROGRAM_SIZE];
-};
-
-__device__ inline double gpu_clamp(double v, double min_val, double max_val) {
-    if (v < min_val) return min_val;
-    if (v > max_val) return max_val;
-    return v;
-}
-
-// Determinisme Presisi: Integer Hash PRNG untuk CUDA
-__device__ inline unsigned int gpu_hash(unsigned int seed) {
-    seed = (seed ^ 61) ^ (seed >> 16);
-    seed *= 9;
-    seed = seed ^ (seed >> 4);
-    seed *= 0x27d4eb2d;
-    seed = seed ^ (seed >> 15);
-    return seed;
-}
+#define ECO_MAX_TREES DuniaFisika::MAX_TREES
 
 __global__ void simulate_ecosystem_step_cuda_kernel(
     GpuEcosystemAgent* agents,
@@ -187,6 +17,10 @@ __global__ void simulate_ecosystem_step_cuda_kernel(
     int predators_count,
     GpuMineralDeposit* minerals,
     int minerals_count,
+    GpuFloraPlant* flora,
+    int flora_count,
+    GpuWildFauna* fauna,
+    int fauna_count,
     GpuClimateState* climate,
     double dt
 ) {
@@ -206,8 +40,8 @@ __global__ void simulate_ecosystem_step_cuda_kernel(
         return; // Agen mati tidak memproses komputasi atau bergerak
     }
 
-    // Cek Ambang Kematian (Mati karena Kelaparan, Serangan Predator, atau Usia 100 Tahun)
-    if (ag.energy <= (float)ParameterAgent::STARVATION_THRESHOLD || ag.age_years >= (float)ParameterAgent::MAX_AGE_YEARS) {
+    // Cek Ambang Kematian Awal (Mati jika Energi Habis / Kelaparan)
+    if (ag.energy <= (float)DuniaFisika::STARVATION_THRESHOLD) {
         ag.is_alive = false;
         ag.just_died = true;
         ag.energy = 0.0f;
@@ -316,10 +150,33 @@ __global__ void simulate_ecosystem_step_cuda_kernel(
     float river_x = (float)DuniaFisika::RIVER_CENTER_X + (float)DuniaFisika::RIVER_MEANDER_AMP * sinf(ag.y * (float)DuniaFisika::RIVER_MEANDER_FREQ);
     float dist_to_river = fabsf(ag.x - river_x);
     float river_dx = river_x - ag.x;
+    float river_dy = 0.0f;
 
-    // Minum Air di Tepi Sungai (Hidrasi Tubuh)
-    if (dist_to_river <= (float)DuniaFisika::RIVER_DRINK_RADIUS) {
+    // Hitung Jarak ke Danau Terdekat (Lake Ecosystem)
+    float lake_dx = (float)DuniaFisika::LAKE_CENTER_X - ag.x;
+    float lake_dy = (float)DuniaFisika::LAKE_CENTER_Y - ag.y;
+    float dist_lake_center = sqrtf(lake_dx * lake_dx + lake_dy * lake_dy);
+    float dist_to_lake = fmaxf(0.0f, dist_lake_center - (float)DuniaFisika::LAKE_RADIUS);
+
+    // Tentukan sumber air terdekat (Sungai vs Danau)
+    float nearest_water_dist = dist_to_river;
+    float nearest_water_dx = river_dx;
+    float nearest_water_dy = river_dy;
+    if (dist_to_lake < nearest_water_dist) {
+        nearest_water_dist = dist_to_lake;
+        nearest_water_dx = (dist_lake_center > 1e-3f) ? (lake_dx / dist_lake_center) * dist_to_lake : 0.0f;
+        nearest_water_dy = (dist_lake_center > 1e-3f) ? (lake_dy / dist_lake_center) * dist_to_lake : 0.0f;
+    }
+
+    // Minum Air di Tepi Sungai atau Tepi Danau
+    if (dist_to_river <= (float)DuniaFisika::RIVER_DRINK_RADIUS || dist_to_lake <= (float)DuniaFisika::LAKE_DRINK_RADIUS) {
         ag.hydration = fminf((float)DuniaFisika::AGENT_HYDRATION_MAX, ag.hydration + (float)DuniaFisika::AGENT_DRINK_WATER_RATE * (float)dt);
+    }
+
+    // Penyerapan Hidrasi Langsung dari Curah Hujan (Rainfall Hydration)
+    if (climate->rain_intensity > 0.0f) {
+        float rain_hydrate = (float)DuniaFisika::RAIN_HYDRATION_GAIN_RATE * (climate->rain_intensity / (float)DuniaFisika::RAIN_INTENSITY_MAX) * (float)dt;
+        ag.hydration = fminf((float)DuniaFisika::AGENT_HYDRATION_MAX, ag.hydration + rain_hydrate);
     }
 
     // =========================================================================
@@ -333,8 +190,8 @@ __global__ void simulate_ecosystem_step_cuda_kernel(
     float s3_threat_dx = (nearest_pred_dist < 10000.0f) ? ((nearest_pred_x - ag.x) / (nearest_pred_dist + 1e-3f)) * vis_factor : 0.0f;
     float s4_threat_dy = (nearest_pred_dist < 10000.0f) ? ((nearest_pred_y - ag.y) / (nearest_pred_dist + 1e-3f)) * vis_factor : 0.0f;
     float s5_threat_dist = (nearest_pred_dist < 10000.0f) ? (1.0f - (float)gpu_clamp(nearest_pred_dist / 300.0f, 0.0, 1.0)) : 0.0f;
-    float s6_river_dx = (river_dx / (dist_to_river + 1e-3f)) * vis_factor; // Sensor arah sungai
-    float s7_river_dist = 1.0f - (float)gpu_clamp(dist_to_river / 300.0f, 0.0, 1.0); // Sensor jarak ke air
+    float s6_river_dx = (nearest_water_dx / (nearest_water_dist + 1e-3f)) * vis_factor; // Sensor arah sumber air (sungai/danau)
+    float s7_river_dist = 1.0f - (float)gpu_clamp(nearest_water_dist / 300.0f, 0.0, 1.0); // Sensor jarak ke air
     float s8_comm_recv = (float)tanh(ag.comm_received);
     float s9_climate_ambient = (float)tanh((climate->temperature - 20.0f) * 0.05f) * climate->daylight_factor;
 
@@ -343,7 +200,7 @@ __global__ void simulate_ecosystem_step_cuda_kernel(
     float s11_hydration = (float)gpu_clamp(ag.hydration / 100.0f, 0.0, 1.0);
     // 1. Formula Sigmoid/Eksponensial Non-Linier: Lonjakan Panik saat Krisis Energi/Haus/Predator
     float raw_stress = (1.0f - s10_energy) * 0.35f + (1.0f - s11_hydration) * 0.35f + s5_threat_dist * 0.30f;
-    float fear_sig = 1.0f / (1.0f + expf(-(float)DuniaFisika::FEAR_SIGMOID_STEEPNESS * (raw_stress - (float)DuniaFisika::FEAR_SIGMOID_MIDPOINT)));
+    float fear_sig = 1.0f / (1.0f + expf(-(float)ParameterAgent::FEAR_SIGMOID_STEEPNESS * (raw_stress - (float)ParameterAgent::FEAR_SIGMOID_MIDPOINT)));
     ag.fear_level = (float)gpu_clamp(fear_sig, 0.0, 1.0);
     float s12_fear_pain = ag.fear_level;
 
@@ -365,138 +222,13 @@ __global__ void simulate_ecosystem_step_cuda_kernel(
     // =========================================================================
     int max_r = (ag.active_registers_count > 0 && ag.active_registers_count <= REGISTERS_COUNT) ? 
                 ag.active_registers_count : ParameterAgent::MIN_DYNAMIC_REGISTERS;
-    int active_prog = (ag.active_program_size > 0 && ag.active_program_size <= DNA_PROGRAM_SIZE) ? 
-                      ag.active_program_size : ParameterAgent::MIN_DYNAMIC_PROGRAM_SIZE;
-
-    // Reservoir state update dengan dual-channel input projection + recurrent loop
-    for (int r = 0; r < max_r; ++r) {
-        float in_signal = ag.reservoir_weights_in[r] * agent_sensor_inputs[r % ParameterAgent::SENSORS_COUNT] +
-                          ag.reservoir_weights_in[(r + 8) % REGISTERS_COUNT] * agent_sensor_inputs[(r + 8) % ParameterAgent::SENSORS_COUNT];
-        float rec_signal = ag.reservoir_weights_rec[r] * (float)ag.prev_registers[r];
-        double u_val = in_signal + rec_signal;
-        ag.registers[r] = (1.0 - ParameterAgent::RESERVOIR_SPECTRAL_RADIUS) * ag.registers[r] + 
-                          ParameterAgent::RESERVOIR_SPECTRAL_RADIUS * tanh(u_val);
-    }
-
-    // Predictive Loss: Koreksi register berdasarkan error prediksi sensor t-1 → t
-    float pred_sensors_now[ParameterAgent::PRED_SENSORS_COUNT] = { s0_tree_dx, s1_tree_dy, s10_energy, s5_threat_dist };
-    for (int r = 0; r < max_r; ++r) {
-        float pred_error = pred_sensors_now[r % ParameterAgent::PRED_SENSORS_COUNT] - ag.pred_sensor_prev[r % ParameterAgent::PRED_SENSORS_COUNT];
-        ag.registers[r] = gpu_clamp(ag.registers[r] + ParameterAgent::PREDICTIVE_LOSS_SCALE * pred_error, -5.0, 5.0);
-    }
-    ag.pred_sensor_prev[0] = s0_tree_dx;
-    ag.pred_sensor_prev[1] = s1_tree_dy;
-    ag.pred_sensor_prev[2] = s10_energy;
-    ag.pred_sensor_prev[3] = s5_threat_dist;
-
     float move_cmd_x = 0.0f;
     float move_cmd_y = 0.0f;
     float broadcast_out = 0.0f;
 
-    // Eksekusi Virtual Machine DNA (Kedalaman 64 Step Spatial Ops)
-    for (int ip = 0; ip < active_prog; ++ip) {
-        const auto& inst = ag.dna_program[ip];
-        int rd = inst.r_dest % max_r;
-        int rs1 = inst.r_src1 % max_r;
-        int rs2 = inst.r_src2 % max_r;
-
-        switch (inst.op % 15) {
-            case OP_NOP: break;
-            case OP_LOAD_SENSOR: {
-                int s = inst.r_src1 % ParameterAgent::SENSORS_COUNT;
-                ag.registers[rd] = agent_sensor_inputs[s];
-                break;
-            }
-            case OP_ADD: ag.registers[rd] = gpu_clamp(ag.registers[rs1] + ag.registers[rs2], -5.0, 5.0); break;
-            case OP_SUB: ag.registers[rd] = gpu_clamp(ag.registers[rs1] - ag.registers[rs2], -5.0, 5.0); break;
-            case OP_MUL: ag.registers[rd] = gpu_clamp(ag.registers[rs1] * ag.registers[rs2], -5.0, 5.0); break;
-            case OP_DIV: ag.registers[rd] = gpu_clamp(ag.registers[rs1] / (fabs(ag.registers[rs2]) + 1e-3), -5.0, 5.0); break;
-            case OP_TANH: ag.registers[rd] = tanh(ag.registers[rs1]); break;
-            case OP_SIGMOID: ag.registers[rd] = 1.0 / (1.0 + exp(-gpu_clamp(ag.registers[rs1], -5.0, 5.0))); break;
-            case OP_INTEGRAL: {
-                ag.integrated_registers[rd] += ag.registers[rs1] * dt;
-                ag.registers[rd] = tanh(ag.integrated_registers[rd]);
-                break;
-            }
-            case OP_DERIVATIVE: {
-                ag.registers[rd] = gpu_clamp((ag.registers[rs1] - ag.prev_registers[rd]) / (dt + 1e-4), -5.0, 5.0);
-                ag.prev_registers[rd] = ag.registers[rs1];
-                break;
-            }
-            case OP_ACTION_MOVE: {
-                move_cmd_x = (float)tanh(ag.registers[rs1]);
-                move_cmd_y = (float)tanh(ag.registers[rs2]);
-                break;
-            }
-            case OP_ACTION_FORMULA: {
-                broadcast_out = (float)tanh(ag.registers[rs1]); // Memancarkan frekuensi komunikasi / sinyal feromon
-                ag.growth_signal = broadcast_out;
-                ag.comm_signal = broadcast_out;
-                break;
-            }
-            case OP_RESONATE_CLIMATE: {
-                ag.registers[rd] = (float)tanh(ag.registers[rs1] * s9_climate_ambient);
-                break;
-            }
-            case OP_FORK_NEURON: {
-                if (ag.active_program_size < DNA_PROGRAM_SIZE && ag.energy > 80.0f) {
-                    ag.active_program_size++;
-                }
-                break;
-            }
-            case OP_PRUNE_NEURON: {
-                if (ag.active_program_size > ParameterAgent::MIN_DYNAMIC_PROGRAM_SIZE && ag.energy < 25.0f) {
-                    ag.active_program_size--;
-                }
-                break;
-            }
-            case OP_WRITE_CODE: {
-                // Self-Modifying Code: Agen menulis ulang instruksi DNA di slot target
-                int target_ip = (int)fabs(ag.registers[rs1]) % DNA_PROGRAM_SIZE;
-                unsigned char new_op = (unsigned char)((int)fabs(ag.registers[rs2]) % 19);
-                ag.dna_program[target_ip].op = new_op;
-                ag.dna_program[target_ip].r_dest = (unsigned char)((int)fabs(ag.registers[rd]) % max_r);
-                break;
-            }
-            case OP_MUTATE_SELF: {
-                // Self-Metaprogramming: Mutasi adaptif runtime terhadap instruksi sendiri
-                if (ag.energy > 40.0f) {
-                    int target_ip = (int)fabs(ag.registers[rs1]) % active_prog;
-                    float mod_val = (float)ag.registers[rs2] * 0.1f;
-                    ag.dna_program[target_ip].immediate_val += mod_val;
-                    ag.energy -= 0.05f; // Biaya kognisi metaprogramming
-                }
-                break;
-            }
-            case OP_ALLOC_REG: {
-                // Dynamic Working Memory Allocation: Tambah kapasitas register aktif
-                if (ag.active_registers_count < REGISTERS_COUNT && ag.energy > 60.0f) {
-                    ag.active_registers_count++;
-                    ag.energy -= 0.1f; // Biaya memori
-                }
-                break;
-            }
-            case OP_FREE_REG: {
-                // Dynamic Memory Deallocation: Pangkas register aktif saat minim sumber daya
-                if (ag.active_registers_count > ParameterAgent::MIN_DYNAMIC_REGISTERS) {
-                    ag.active_registers_count--;
-                }
-                break;
-            }
-        }
-
-    }
-
-    // 3. Neuromodulation (Lonjakan Adrenalin & Plastisitas Saat Panik)
-    // Sinyal rasa takut meningkatkan learning rate Hebbian hingga (1 + 4*fear) = 5x lipat
-    float plasticity_neuromod = 1.0f + ag.fear_level * (float)DuniaFisika::FEAR_NEUROMODULATION_PLASTICITY;
-    for (int r = 0; r < max_r; ++r) {
-        float hebb_delta = (float)(ParameterAgent::HEBBIAN_LEARNING_RATE * plasticity_neuromod * agent_sensor_inputs[r % ParameterAgent::SENSORS_COUNT] * ag.registers[r]);
-        ag.reservoir_weights_in[r] += hebb_delta - (float)(ParameterAgent::HEBBIAN_DECAY * ag.reservoir_weights_in[r]);
-        if (ag.reservoir_weights_in[r] > 1.0f) ag.reservoir_weights_in[r] = 1.0f;
-        if (ag.reservoir_weights_in[r] < -1.0f) ag.reservoir_weights_in[r] = -1.0f;
-        ag.prev_registers[r] = ag.registers[r]; // Simpan state temporal memory loop
-    }
+    // Eksekusi Virtual Machine Kognisi Otak Agen (Modular)
+    execute_agent_brain_vm(ag, agent_sensor_inputs, s9_climate_ambient, dt, move_cmd_x, move_cmd_y, broadcast_out);
+    ag.growth_signal = broadcast_out;
 
     // 2d. Swarm Signal Quantization: Kuantisasi comm_signal ke simbol diskrit {-1.0, 0.0, +1.0}
     float quant_thresh = (float)ParameterAgent::SWARM_QUANT_THRESHOLD;
@@ -504,12 +236,26 @@ __global__ void simulate_ecosystem_step_cuda_kernel(
     else if (ag.comm_signal < -quant_thresh) ag.comm_signal = -1.0f;
     else                                      ag.comm_signal = 0.0f;
 
-    // 3. DINAMIKA GERAK FISIK (Inersia, Medan Angin, dan Perintah Aksi Otak)
+    // 3. DINAMIKA GERAK FISIK (Inersia, Medan Angin, Perintah Aksi Otak & Dorongan Kinetik Bencana)
     float wind_influence_x = climate->wind_x * (float)DuniaFisika::WIND_FORCE_MULT;
     float wind_influence_y = climate->wind_y * (float)DuniaFisika::WIND_FORCE_MULT;
 
-    float target_vx = move_cmd_x * max_spd + wind_influence_x;
-    float target_vy = move_cmd_y * max_spd + wind_influence_y;
+    // Dampak Kinetik Badai EMP / Hurikan Badai
+    if (climate->active_disaster_type == 2 && !in_safe_haven) {
+        float knockback_x = sinf(ag.x * 0.01f + climate->magnetic_angle) * (float)DuniaFisika::EMP_SHOCK_KNOCKBACK * climate->disaster_severity;
+        float knockback_y = cosf(ag.y * 0.01f + climate->magnetic_angle) * (float)DuniaFisika::EMP_SHOCK_KNOCKBACK * climate->disaster_severity;
+        wind_influence_x += knockback_x;
+        wind_influence_y += knockback_y;
+    }
+
+    float speed_mult = 1.0f;
+    // Perlambatan Fisik Badai Salju Beku
+    if (climate->active_disaster_type == 1 && !in_safe_haven) {
+        speed_mult = fmaxf(0.2f, 1.0f - (1.0f - (float)DuniaFisika::BLIZZARD_SLOWDOWN) * climate->disaster_severity);
+    }
+
+    float target_vx = (move_cmd_x * max_spd + wind_influence_x) * speed_mult;
+    float target_vy = (move_cmd_y * max_spd + wind_influence_y) * speed_mult;
 
     ag.vx = ag.vx * (float)DuniaFisika::FRICTION_COEFF + target_vx * 0.15f;
     ag.vy = ag.vy * (float)DuniaFisika::FRICTION_COEFF + target_vy * 0.15f;
@@ -524,7 +270,7 @@ __global__ void simulate_ecosystem_step_cuda_kernel(
     if (ag.y > (float)DuniaFisika::WORLD_HEIGHT - 10.0f) { ag.y = (float)DuniaFisika::WORLD_HEIGHT - 10.0f; ag.vy = -ag.vy * 0.5f; }
 
     // 4. Penuaan & Eskalasi Rasa Lapar Terhadap Iklim / Suhu Musim
-    ag.age_years += (float)(dt / ParameterAgent::SECONDS_PER_YEAR);
+    ag.age_years += (float)(dt / DuniaFisika::SECONDS_PER_YEAR);
 
     // Hitung Kepadatan Populasi Tetangga (Overcrowding Stress)
     int nearby_agents_count = 0;
@@ -550,13 +296,46 @@ __global__ void simulate_ecosystem_step_cuda_kernel(
     float heat_stress = (climate->temperature > 35.0f) ? (climate->temperature - 35.0f) * 0.08f : 0.0f;
     float co2_stress = fmaxf(0.0f, (climate->co2_level - (float)DuniaFisika::CO2_BASE_LEVEL) * 2.0f);
     float nature_stress = climate->nature_adversarial_pressure; // Kurva Tekanan Adaptif Kubu Alam AI
-    float climate_stress = (1.0f + temp_diff * (float)ParameterAgent::CLIMATE_HUNGER_IMPACT_MULT + heat_stress + co2_stress) * nature_stress;
-    ag.hunger_rate_mult = (1.0f + (ag.age_years / (float)ParameterAgent::MAX_AGE_YEARS) * 2.5f) * climate_stress * overcrowding_stress;
+    float climate_stress = (1.0f + temp_diff * (float)DuniaFisika::CLIMATE_HUNGER_IMPACT_MULT + heat_stress + co2_stress) * nature_stress;
+    
+    // Penuaan Eksponensial Biologis Manusia (Makin Menua Makin Renta di Atas 40 Tahun)
+    float age_senescence_mult = 1.0f;
+    if (ag.age_years > (float)DuniaFisika::AGING_SENESCENCE_START_AGE) {
+        float aging_delta = ag.age_years - (float)DuniaFisika::AGING_SENESCENCE_START_AGE;
+        age_senescence_mult = expf((float)DuniaFisika::AGING_EXPONENTIAL_FACTOR * aging_delta);
+    }
+    ag.hunger_rate_mult = age_senescence_mult * climate_stress * overcrowding_stress;
     if (ag.mating_cooldown > 0.0f) ag.mating_cooldown = fmaxf(0.0f, ag.mating_cooldown - (float)dt);
 
     // Ability Alam: 5. Degradasi & Karat Alat/Struktur Megalitikum (Tool Rust)
     if (ag.tools_crafted > 0) {
         ag.mined_material = fmaxf(0.0f, ag.mined_material - (float)DuniaFisika::TOOL_RUST_DECAY_RATE * (float)dt);
+    }
+
+    // Dampak Bencana Alam Fisik Langsung (Direct Disaster Physical Damage) jika di luar Safe Haven:
+    if (!in_safe_haven && climate->active_disaster_type >= 0 && ag.immortality_timer <= 0.0f) {
+        if (climate->active_disaster_type == 0) {
+            // Badai Matahari: Panas Radiasi Termal Membakar
+            float scorch_dmg = (float)DuniaFisika::SOLAR_STORM_SCORCH_DAMAGE * climate->disaster_severity * (float)dt;
+            ag.energy = fmaxf(0.0f, ag.energy - scorch_dmg);
+            ag.fear_level = fminf(1.0f, ag.fear_level + 0.5f * (float)dt);
+        } else if (climate->active_disaster_type == 1) {
+            // Badai Salju Ekstrem: Hipotermia Pembekuan Tubuh
+            float frost_dmg = (float)DuniaFisika::BLIZZARD_FROST_DAMAGE * climate->disaster_severity * (float)dt;
+            ag.energy = fmaxf(0.0f, ag.energy - frost_dmg);
+            ag.fear_level = fminf(1.0f, ag.fear_level + 0.4f * (float)dt);
+        }
+    }
+
+    // Bahaya Banjir Luapan Air Danau / Sungai saat Hujan Sangat Lebat
+    if (climate->rain_intensity > 75.0f && !in_safe_haven && ag.immortality_timer <= 0.0f) {
+        float flood_river_r = (float)DuniaFisika::RIVER_DRINK_RADIUS * (float)DuniaFisika::FLOOD_EXPANSION_MULT;
+        float flood_lake_r = (float)DuniaFisika::LAKE_DRINK_RADIUS * (float)DuniaFisika::FLOOD_EXPANSION_MULT;
+        if (dist_to_river < flood_river_r || dist_to_lake < flood_lake_r) {
+            float sweep_dmg = (float)DuniaFisika::FLOOD_SWEEP_DAMAGE * (climate->rain_intensity / 100.0f) * (float)dt;
+            ag.energy = fmaxf(0.0f, ag.energy - sweep_dmg);
+            ag.fear_level = fminf(1.0f, ag.fear_level + 0.6f * (float)dt);
+        }
     }
 
     // Keabadian Artifact: kurangi timer, skip metabolisme & kematian lapar
@@ -566,8 +345,6 @@ __global__ void simulate_ecosystem_step_cuda_kernel(
         ag.lung_oxygen = 100.0f;
     } else {
         // Sistem Tabung Oksigen & Paru-Paru (Respirasi Nyata):
-        // Jika O2 atmosfer cukup (>= SAFE_MIN), paru-paru menghirup dan terisi penuh.
-        // Jika O2 atmosfer tipis (< SAFE_MIN), paru-paru terkuras habis dan terjadi Hipoksia (Suffocation).
         if (climate->oxygen_level >= (float)DuniaFisika::O2_ATMOSPHERE_SAFE_MIN) {
             float o2_gain = (float)DuniaFisika::AGENT_O2_BREATHE_IN_RATE * (climate->oxygen_level / 21.0f) * (float)dt;
             ag.lung_oxygen = fminf((float)DuniaFisika::AGENT_LUNG_CAPACITY, ag.lung_oxygen + o2_gain);
@@ -585,17 +362,24 @@ __global__ void simulate_ecosystem_step_cuda_kernel(
         // Pengaruh Oksigen Paru-Paru & Hidrasi terhadap Metabolisme Energi
         float lung_eff = fmaxf(0.2f, ag.lung_oxygen / 100.0f);
         float hyd_eff = fmaxf(0.2f, ag.hydration / 100.0f);
-        float energy_cost = ((float)ParameterAgent::METABOLISM_BASE_RATE + speed * (float)ParameterAgent::METABOLISM_MOVE_COST) * ag.hunger_rate_mult * (float)dt / (lung_eff * hyd_eff);
+        float energy_cost = ((float)DuniaFisika::METABOLISM_BASE_RATE + speed * (float)DuniaFisika::METABOLISM_MOVE_COST) * ag.hunger_rate_mult * (float)dt / (lung_eff * hyd_eff);
         ag.energy = fmaxf(0.0f, ag.energy - energy_cost);
 
-        // Hipoksia: Jika tabung O2 paru-paru < HYPOXIA_THRESHOLD, agen mengalami sesak nafas mematikan
+        // Hipoksia
         if (ag.lung_oxygen < (float)DuniaFisika::HYPOXIA_THRESHOLD) {
             float suffocation_dmg = (float)DuniaFisika::HYPOXIA_SUFFOCATION_DAMAGE * (1.0f - ag.lung_oxygen / (float)DuniaFisika::HYPOXIA_THRESHOLD) * (float)dt;
             ag.energy = fmaxf(0.0f, ag.energy - suffocation_dmg);
-            ag.fear_level = fminf(1.0f, ag.fear_level + 0.3f * (float)dt); // Lonjakan panik akibat sesak nafas
+            ag.fear_level = fminf(1.0f, ag.fear_level + 0.3f * (float)dt);
         }
 
-        // Dehidrasi Ekstrem: Jika hidrasi tubuh habis (<= 0), agen sekarat karena kehausan
+        // Kerentaan Biologis Alami Penuaan Organ:
+        if (ag.age_years > (float)DuniaFisika::AGING_SENESCENCE_START_AGE) {
+            float aging_span = ag.age_years - (float)DuniaFisika::AGING_SENESCENCE_START_AGE;
+            float frailty_dmg = (float)DuniaFisika::AGING_FRAILTY_DAMAGE_BASE * expf((float)DuniaFisika::AGING_EXPONENTIAL_FACTOR * aging_span) * (float)dt;
+            ag.energy = fmaxf(0.0f, ag.energy - frailty_dmg);
+        }
+
+        // Dehidrasi Ekstrem
         if (ag.hydration <= 0.0f) {
             float thirst_dmg = (float)DuniaFisika::DEHYDRATION_DAMAGE_RATE * (float)dt;
             ag.energy = fmaxf(0.0f, ag.energy - thirst_dmg);
@@ -603,8 +387,8 @@ __global__ void simulate_ecosystem_step_cuda_kernel(
         }
     }
 
-    // Strict Health Check: Mati langsung jika kehabisan energi atau usia melebihi batas (diabaikan saat immortal)
-    if ((ag.immortality_timer <= 0.0f) && (ag.energy <= (float)ParameterAgent::STARVATION_THRESHOLD || ag.age_years >= (float)ParameterAgent::MAX_AGE_YEARS)) {
+    // Health Check Biologis
+    if ((ag.immortality_timer <= 0.0f) && (ag.energy <= (float)DuniaFisika::STARVATION_THRESHOLD)) {
         ag.is_alive = false;
         ag.just_died = true;
         ag.energy = 0.0f;
@@ -630,6 +414,62 @@ __global__ void simulate_ecosystem_step_cuda_kernel(
                 ag.fruits_eaten++;
             } else {
                 atomicAdd(&trees[nearest_tree_idx].fruits_count, 1.0f);
+            }
+        }
+    }
+
+    // 5-Omni. Omnivora: Foraging Flora (Rumput/Semak/Gandum), Scavenging Daging Bangkai, & Domestikasi Ternak
+    // (a) Makan Rumput/Berry/Gandum di Sekitar
+    for (int fl = 0; fl < 8; ++fl) {
+        int f_idx = (idx + fl * 23) % flora_count;
+        if (flora[f_idx].health > 20.0f && flora[f_idx].growth_stage >= 40.0f && ag.energy < 95.0f) {
+            float fdx = flora[f_idx].x - ag.x;
+            float fdy = flora[f_idx].y - ag.y;
+            if ((fdx * fdx + fdy * fdy) < (float)(DuniaFisika::FAUNA_GRAZING_RADIUS * DuniaFisika::FAUNA_GRAZING_RADIUS)) {
+                ag.energy = fminf(100.0f, ag.energy + flora[f_idx].yield_amount * 0.4f);
+                flora[f_idx].growth_stage = fmaxf(10.0f, flora[f_idx].growth_stage - 25.0f);
+                break;
+            }
+        }
+    }
+
+    // (b) Omnivora / Manusia Makan Daging Mayat/Bangkai (Scavenging)
+    for (int c = 0; c < 8; ++c) {
+        int c_ag_idx = (idx + c * 17) % population_size;
+        if (!agents[c_ag_idx].is_alive && agents[c_ag_idx].corpse_energy > 0.5f && ag.energy < 95.0f) {
+            float cdx = agents[c_ag_idx].x - ag.x;
+            float cdy = agents[c_ag_idx].y - ag.y;
+            if ((cdx * cdx + cdy * cdy) < (float)(DuniaFisika::CORPSE_SCAVENGE_RADIUS * DuniaFisika::CORPSE_SCAVENGE_RADIUS)) {
+                float bite = fminf(agents[c_ag_idx].corpse_energy, (float)DuniaFisika::PREDATOR_CORPSE_EAT_RATE * (float)dt);
+                agents[c_ag_idx].corpse_energy -= bite;
+                ag.energy = fminf(100.0f, ag.energy + bite * (float)DuniaFisika::MANUSIA_CORPSE_MEAT_RECOVERY);
+                break;
+            }
+        }
+    }
+
+    // (c) Penangkapan, Penjinakan (Domestikasi) & Budidaya Ternak (Ternak Peliharaan)
+    for (int fn = 0; fn < 8; ++fn) {
+        int f_idx = (idx + fn * 19) % fauna_count;
+        if (fauna[f_idx].is_alive) {
+            float fdx = fauna[f_idx].x - ag.x;
+            float fdy = fauna[f_idx].y - ag.y;
+            float fdist2 = fdx * fdx + fdy * fdy;
+
+            // Jika hewan masih liar dan dekat, tangkap/jinakkan jika agen memiliki energi & rumus kognisi
+            if (fauna[f_idx].owner_agent_id == 0 && fdist2 < (float)(DuniaFisika::FAUNA_CAPTURE_RADIUS * DuniaFisika::FAUNA_CAPTURE_RADIUS)) {
+                if (ag.energy > 50.0f && ag.growth_signal > 0.2f) {
+                    fauna[f_idx].owner_agent_id = ag.id;
+                    fauna[f_idx].owner_faction = 0; // Faksi Omnivora
+                    ag.energy -= (float)DuniaFisika::FAUNA_CAPTURE_ENERGY_COST;
+                }
+            }
+
+            // Jika ternak milik agen ini (dipelihara), dapatkan hasil produksi susu/telur/biomassa
+            if (fauna[f_idx].owner_agent_id == ag.id && fdist2 < (float)(DuniaFisika::FAUNA_DOMESTIC_FOLLOW_RADIUS * DuniaFisika::FAUNA_DOMESTIC_FOLLOW_RADIUS)) {
+                if (fauna[f_idx].energy > 40.0f) {
+                    ag.energy = fminf(100.0f, ag.energy + (float)DuniaFisika::FAUNA_DOMESTIC_YIELD_RATE * (float)dt);
+                }
             }
         }
     }
@@ -676,7 +516,7 @@ __global__ void simulate_ecosystem_step_cuda_kernel(
         }
     }
 
-    // 5b. Interaksi Material Spasial Megalitikum (Penambangan Batu/Logam untuk Senjata & Benteng)
+    // 5b. Interaksi Material Spasial Megalitikum (Penambangan Batu/Logam & Rekayasa Sifat Fisik Materi)
     bool has_megalith_tool = (ag.tools_crafted > 0);
     if (has_megalith_tool) {
         // Biaya metabolisme tambahan saat memikul/menggunakan peralatan megalitikum
@@ -687,6 +527,17 @@ __global__ void simulate_ecosystem_step_cuda_kernel(
         atomicAdd(&minerals[nearest_min_idx].mass, - mined);
         ag.material_interactions++;
         ag.mined_material += mined;
+
+        // Efek Fisika Lingkungan Spasial (Affordance Murni):
+        // 1. Logam Alkali Tanah / Silikat (Ca, Mg, Si): Bertindak sebagai Shelter/Isolator Termal di sekitarnya
+        if (minerals[nearest_min_idx].hardness < 70.0f) {
+            float temp_diff = fabsf(climate->temperature - 20.0f);
+            if (temp_diff > 10.0f) {
+                // Reduksi stres suhu lingkungan karena perlindungan formasi batuan/gua
+                ag.energy = fminf(100.0f, ag.energy + temp_diff * (float)DuniaFisika::SHELTER_THERMAL_INSULATION * 0.01f * (float)dt);
+            }
+        }
+
         if (ag.mined_material >= (float)DuniaFisika::MEGALITH_CRAFT_THRESHOLD) {
             if (ag.energy >= (float)DuniaFisika::MEGALITH_CRAFT_ENERGY_COST) {
                 ag.mined_material -= (float)DuniaFisika::MEGALITH_CRAFT_THRESHOLD;
@@ -697,15 +548,19 @@ __global__ void simulate_ecosystem_step_cuda_kernel(
         }
     }
 
-    // 6. Transmisi Gelombang Komunikasi / Feromon Antar-Agen
+    // 6. Transmisi Gelombang Komunikasi / Feromon Antar-Agen (Diperkuat Konduktivitas Material)
     if (fabsf(ag.comm_signal) > 0.1f) {
         ag.energy = fmaxf(0.0f, ag.energy - (float)DuniaFisika::BROADCAST_ENERGY_COST * (float)dt);
+        float comm_rad = (float)DuniaFisika::BROADCAST_COMM_RADIUS;
+        if (nearest_min_idx >= 0 && nearest_min_dist < (float)DuniaFisika::MEGALITH_MINING_RADIUS && minerals[nearest_min_idx].conductivity > 0.7f) {
+            comm_rad *= (float)DuniaFisika::CONDUCTOR_COMM_AMPLIFY; // Penguatan gelombang feromon oleh deposit konduktif
+        }
         for (int k = 0; k < 64; ++k) {
             int peer_idx = (idx + k * 23) % population_size;
             if (peer_idx != idx && agents[peer_idx].is_alive) {
                 float cdx = agents[peer_idx].x - ag.x;
                 float cdy = agents[peer_idx].y - ag.y;
-                if ((cdx * cdx + cdy * cdy) < (float)(DuniaFisika::BROADCAST_COMM_RADIUS * DuniaFisika::BROADCAST_COMM_RADIUS)) {
+                if ((cdx * cdx + cdy * cdy) < (comm_rad * comm_rad)) {
                     agents[peer_idx].comm_received = ag.comm_signal;
                 }
             }
@@ -715,7 +570,7 @@ __global__ void simulate_ecosystem_step_cuda_kernel(
     // 6b. Reproduksi Alami Antar-Gender (Kubu A) - Ditekan Drastis Saat Suhu Ekstrem & CO2 Tinggi
     float heat_repro_penalty = (climate->temperature > 38.0f) ? (climate->temperature - 38.0f) * 1.5f : 0.0f;
     float co2_repro_penalty = (climate->co2_level > 0.5f) ? (climate->co2_level - 0.5f) * 20.0f : 0.0f;
-    float req_mating_energy = (float)ParameterAgent::MATING_MIN_ENERGY + heat_repro_penalty + co2_repro_penalty;
+    float req_mating_energy = (float)DuniaFisika::MATING_MIN_ENERGY + heat_repro_penalty + co2_repro_penalty;
     if (climate->temperature > 55.0f || climate->co2_level > 2.5f) {
         req_mating_energy = 999.0f; // Steril / Reproduksi lumpuh total di suhu ekstrem 58.8°C
     }
@@ -727,11 +582,11 @@ __global__ void simulate_ecosystem_step_cuda_kernel(
                 float pdx = agents[p].x - ag.x;
                 float pdy = agents[p].y - ag.y;
                 float pdist = sqrtf(pdx * pdx + pdy * pdy);
-                if (pdist < (float)ParameterAgent::MATING_RADIUS) {
+                if (pdist < (float)DuniaFisika::MATING_RADIUS) {
                     // Terjadi Perkawinan: Transfer & Crossover DNA ke anak
-                    ag.energy -= (float)ParameterAgent::MATING_ENERGY_COST;
-                    agents[p].energy -= (float)ParameterAgent::MATING_ENERGY_COST * 0.5f;
-                    float cd = (float)ParameterAgent::MATING_COOLDOWN;
+                    ag.energy -= (float)DuniaFisika::MATING_ENERGY_COST;
+                    agents[p].energy -= (float)DuniaFisika::MATING_ENERGY_COST * 0.5f;
+                    float cd = (float)DuniaFisika::MATING_COOLDOWN;
                     ag.mating_cooldown = cd;
                     agents[p].mating_cooldown = cd;
 
@@ -750,12 +605,12 @@ __global__ void simulate_ecosystem_step_cuda_kernel(
                             agents[slot].y = ag.y + (float)((slot % 3) - 1) * 4.0f;
                             agents[slot].vx = 0.0f;
                             agents[slot].vy = 0.0f;
-                            agents[slot].energy = (float)ParameterAgent::NEWBORN_INITIAL_ENERGY; // Energi awal bayi kecil, butuh langsung makan
+                            agents[slot].energy = (float)DuniaFisika::NEWBORN_INITIAL_ENERGY; // Energi awal bayi kecil, butuh langsung makan
                             agents[slot].lung_oxygen = (float)DuniaFisika::AGENT_LUNG_CAPACITY;
                             agents[slot].hydration = (float)DuniaFisika::AGENT_HYDRATION_INITIAL;
                             agents[slot].corpse_energy = 0.0f;
                             agents[slot].age_years = 0.0f;
-                            agents[slot].mating_cooldown = (float)ParameterAgent::MATING_COOLDOWN * 2.0f;
+                            agents[slot].mating_cooldown = (float)DuniaFisika::MATING_COOLDOWN * 2.0f;
                             agents[slot].hunger_rate_mult = 1.0f;
                             agents[slot].fruits_eaten = 0;
                             agents[slot].formulas_discovered = 0;
@@ -812,7 +667,7 @@ __global__ void simulate_ecosystem_step_cuda_kernel(
 
                             // 2. Epigenetic Trauma Inheritance: Trauma ketakutan induk ditransfer ke anak
                             float parent_trauma = 0.5f * (ag.fear_level + agents[p].fear_level);
-                            float trauma_bias = parent_trauma * (float)DuniaFisika::EPIGENETIC_TRAUMA_WEIGHT_BIAS;
+                            float trauma_bias = parent_trauma * (float)ParameterAgent::EPIGENETIC_TRAUMA_WEIGHT_BIAS;
 
                             // Inherit & mutate reservoir weights dengan Epigenetic Trauma Bias
                             for (int r = 0; r < REGISTERS_COUNT; ++r) {
@@ -855,21 +710,21 @@ __global__ void simulate_ecosystem_step_cuda_kernel(
         float pdist = sqrtf(pdx * pdx + pdy * pdy);
 
         if (pdist < (float)DuniaFisika::COMBAT_CLASH_RADIUS) {
-            // Evaluasi Bonus Peralatan/Benteng Megalitikum Faksi A (Herbivora)
-            float herbi_dmg_mult = 1.0f + (has_megalith_tool ? ((float)DuniaFisika::MEGALITH_WEAPON_ATTACK_BONUS / (float)DuniaFisika::HERBIVORE_BASE_ATTACK_DAMAGE) : 0.0f);
-            float herbi_defense = has_megalith_tool ? (float)DuniaFisika::MEGALITH_SHIELD_DEFENSE_BONUS : 0.0f;
+            // Evaluasi Bonus Peralatan/Benteng Megalitikum Faksi A (Manusia)
+            float manusia_dmg_mult = 1.0f + (has_megalith_tool ? ((float)DuniaFisika::MEGALITH_WEAPON_ATTACK_BONUS / (float)DuniaFisika::MANUSIA_BASE_ATTACK_DAMAGE) : 0.0f);
+            float manusia_defense = has_megalith_tool ? (float)DuniaFisika::MEGALITH_SHIELD_DEFENSE_BONUS : 0.0f;
 
             // Kerusakan yang diterima Faksi A (Diabaikan saat Keabadian Artifact aktif)
             float effective_pred_dmg = (ag.immortality_timer > 0.0f) ? 0.0f :
-                                       (float)DuniaFisika::PREDATOR_DAMAGE_RATE * (1.0f - herbi_defense) * (float)dt;
+                                       (float)DuniaFisika::PREDATOR_DAMAGE_RATE * (1.0f - manusia_defense) * (float)dt;
             ag.energy = fmaxf(0.0f, ag.energy - effective_pred_dmg);
 
             // Predator menyerap nutrisi dari serangan yang masuk
             pred.energy = fminf(100.0f, pred.energy + effective_pred_dmg * 0.5f);
 
-            // Serangan Fisik Balasan Herbivora (Duel Simetris)
-            float herbi_strike = (float)DuniaFisika::HERBIVORE_BASE_ATTACK_DAMAGE * herbi_dmg_mult * (float)dt;
-            pred.energy = fmaxf(0.0f, pred.energy - herbi_strike);
+            // Serangan Fisik Balasan Manusia (Duel Simetris)
+            float manusia_strike = (float)DuniaFisika::MANUSIA_BASE_ATTACK_DAMAGE * manusia_dmg_mult * (float)dt;
+            pred.energy = fmaxf(0.0f, pred.energy - manusia_strike);
 
             if (pred.energy <= 0.0f) {
                 pred.is_alive = false;
@@ -897,6 +752,8 @@ __global__ void simulate_predator_step_cuda_kernel(
     int population_size,
     GpuMineralDeposit* minerals,
     int minerals_count,
+    GpuWildFauna* fauna,
+    int fauna_count,
     GpuClimateState* climate,
     double dt
 ) {
@@ -938,18 +795,10 @@ __global__ void simulate_predator_step_cuda_kernel(
         }
     }
 
-    // Penuaan & Batas Usia Predator
-    pred.age_years += (float)(dt / ParameterAgent::SECONDS_PER_YEAR);
+    // Penuaan Alami Predator (Senescence)
+    pred.age_years += (float)(dt / DuniaFisika::SECONDS_PER_YEAR);
     if (pred.mating_cooldown > 0.0f) {
         pred.mating_cooldown = fmaxf(0.0f, pred.mating_cooldown - (float)dt);
-    }
-
-    if (pred.age_years >= (float)ParameterAgent::MAX_AGE_YEARS) {
-        pred.energy = 0.0f;
-        pred.is_alive = false;
-        pred.just_died = true;
-        pred.corpse_energy = (float)DuniaFisika::CORPSE_MAX_ENERGY_RESERVE;
-        return;
     }
 
     // 1. SENSORIK PREDATOR: Target Mangsa Hidup, Bangkai (Scavenging), & Formasi Megalitikum
@@ -1041,16 +890,37 @@ __global__ void simulate_predator_step_cuda_kernel(
         }
     }
 
-    // Pemangsaan Bangkai (Scavenging) Adil oleh Karnivora
+    // Pemangsaan Bangkai (Scavenging) Adil oleh Predator
     if (nearest_corpse_agent_idx >= 0 && nearest_corpse_dist < (float)DuniaFisika::CORPSE_SCAVENGE_RADIUS && pred.energy < 100.0f) {
         if (!is_pred_corpse) {
-            float bite = fminf(agents[nearest_corpse_agent_idx].corpse_energy, (float)DuniaFisika::CARNIVORE_CORPSE_EAT_RATE * (float)dt);
+            float bite = fminf(agents[nearest_corpse_agent_idx].corpse_energy, (float)DuniaFisika::PREDATOR_CORPSE_EAT_RATE * (float)dt);
             agents[nearest_corpse_agent_idx].corpse_energy -= bite;
-            pred.energy = fminf(100.0f, pred.energy + bite * (float)DuniaFisika::CORPSE_CARNIVORE_RECOVERY);
+            pred.energy = fminf(100.0f, pred.energy + bite * (float)DuniaFisika::CORPSE_PREDATOR_RECOVERY);
         } else {
-            float bite = fminf(predators[nearest_corpse_agent_idx].corpse_energy, (float)DuniaFisika::CARNIVORE_CORPSE_EAT_RATE * (float)dt);
+            float bite = fminf(predators[nearest_corpse_agent_idx].corpse_energy, (float)DuniaFisika::PREDATOR_CORPSE_EAT_RATE * (float)dt);
             predators[nearest_corpse_agent_idx].corpse_energy -= bite;
-            pred.energy = fminf(100.0f, pred.energy + bite * (float)DuniaFisika::CORPSE_CARNIVORE_RECOVERY);
+            pred.energy = fminf(100.0f, pred.energy + bite * (float)DuniaFisika::CORPSE_PREDATOR_RECOVERY);
+        }
+    }
+
+    // Pemangsaan Hewan Liar / Ternak oleh Karnivora (Nutrisi lebih kecil dari memangsa kubu agen)
+    for (int fn = 0; fn < 8; ++fn) {
+        int f_idx = (p_idx + fn * 29) % fauna_count;
+        if (fauna[f_idx].is_alive && pred.energy < 100.0f) {
+            float fdx = fauna[f_idx].x - pred.x;
+            float fdy = fauna[f_idx].y - pred.y;
+            float fdist2 = fdx * fdx + fdy * fdy;
+            if (fdist2 < (float)(DuniaFisika::PREDATOR_ATTACK_RADIUS * DuniaFisika::PREDATOR_ATTACK_RADIUS)) {
+                // Memangsa fauna liar
+                fauna[f_idx].energy -= (float)DuniaFisika::PREDATOR_DAMAGE_RATE * (float)dt;
+                pred.energy = fminf(100.0f, pred.energy + (float)DuniaFisika::PREDATOR_HUNT_FAUNA_GAIN * 0.2f * (float)dt);
+                if (fauna[f_idx].energy <= 0.0f) {
+                    fauna[f_idx].is_alive = false;
+                    fauna[f_idx].corpse_energy = (float)DuniaFisika::FAUNA_CORPSE_MEAT_VALUE;
+                    pred.energy = fminf(100.0f, pred.energy + (float)DuniaFisika::PREDATOR_HUNT_FAUNA_GAIN);
+                }
+                break;
+            }
         }
     }
 
@@ -1070,10 +940,33 @@ __global__ void simulate_predator_step_cuda_kernel(
     float p_river_x = (float)DuniaFisika::RIVER_CENTER_X + (float)DuniaFisika::RIVER_MEANDER_AMP * sinf(pred.y * (float)DuniaFisika::RIVER_MEANDER_FREQ);
     float p_dist_to_river = fabsf(pred.x - p_river_x);
     float p_river_dx = p_river_x - pred.x;
+    float p_river_dy = 0.0f;
 
-    // Minum Air di Tepi Sungai (Predator)
-    if (p_dist_to_river <= (float)DuniaFisika::RIVER_DRINK_RADIUS) {
+    // Hitung Jarak ke Danau Terdekat Predator (Lake Ecosystem)
+    float p_lake_dx = (float)DuniaFisika::LAKE_CENTER_X - pred.x;
+    float p_lake_dy = (float)DuniaFisika::LAKE_CENTER_Y - pred.y;
+    float p_dist_lake_center = sqrtf(p_lake_dx * p_lake_dx + p_lake_dy * p_lake_dy);
+    float p_dist_to_lake = fmaxf(0.0f, p_dist_lake_center - (float)DuniaFisika::LAKE_RADIUS);
+
+    // Tentukan sumber air terdekat bagi Predator
+    float p_nearest_water_dist = p_dist_to_river;
+    float p_nearest_water_dx = p_river_dx;
+    float p_nearest_water_dy = p_river_dy;
+    if (p_dist_to_lake < p_nearest_water_dist) {
+        p_nearest_water_dist = p_dist_to_lake;
+        p_nearest_water_dx = (p_dist_lake_center > 1e-3f) ? (p_lake_dx / p_dist_lake_center) * p_dist_to_lake : 0.0f;
+        p_nearest_water_dy = (p_dist_lake_center > 1e-3f) ? (p_lake_dy / p_dist_lake_center) * p_dist_to_lake : 0.0f;
+    }
+
+    // Minum Air di Tepi Sungai atau Tepi Danau (Predator)
+    if (p_dist_to_river <= (float)DuniaFisika::RIVER_DRINK_RADIUS || p_dist_to_lake <= (float)DuniaFisika::LAKE_DRINK_RADIUS) {
         pred.hydration = fminf((float)DuniaFisika::AGENT_HYDRATION_MAX, pred.hydration + (float)DuniaFisika::AGENT_DRINK_WATER_RATE * (float)dt);
+    }
+
+    // Penyerapan Hidrasi Langsung dari Curah Hujan bagi Predator
+    if (climate->rain_intensity > 0.0f) {
+        float p_rain_hydrate = (float)DuniaFisika::RAIN_HYDRATION_GAIN_RATE * (climate->rain_intensity / (float)DuniaFisika::RAIN_INTENSITY_MAX) * (float)dt;
+        pred.hydration = fminf((float)DuniaFisika::AGENT_HYDRATION_MAX, pred.hydration + p_rain_hydrate);
     }
 
     // =========================================================================
@@ -1087,8 +980,8 @@ __global__ void simulate_predator_step_cuda_kernel(
     float s3_corpse_dx = (nearest_corpse_dist < 10000.0f) ? (nearest_corpse_dx / (nearest_corpse_dist + 1e-3f)) * vis_factor : 0.0f;
     float s4_corpse_dy = (nearest_corpse_dist < 10000.0f) ? (nearest_corpse_dy / (nearest_corpse_dist + 1e-3f)) * vis_factor : 0.0f;
     float s5_corpse_dist = (nearest_corpse_dist < 10000.0f) ? (1.0f - (float)gpu_clamp(nearest_corpse_dist / 300.0f, 0.0, 1.0)) : 0.0f;
-    float s6_river_dx = (p_river_dx / (p_dist_to_river + 1e-3f)) * vis_factor; // Sensor arah sungai
-    float s7_river_dist = 1.0f - (float)gpu_clamp(p_dist_to_river / 300.0f, 0.0, 1.0); // Sensor jarak sungai
+    float s6_river_dx = (p_nearest_water_dx / (p_nearest_water_dist + 1e-3f)) * vis_factor; // Sensor arah sumber air (sungai/danau)
+    float s7_river_dist = 1.0f - (float)gpu_clamp(p_nearest_water_dist / 300.0f, 0.0, 1.0); // Sensor jarak sumber air
     float s8_comm_recv = (float)tanh(pred.comm_received);
     float s9_climate_ambient = (float)tanh((climate->temperature - 20.0f) * 0.05f) * climate->daylight_factor;
 
@@ -1096,7 +989,7 @@ __global__ void simulate_predator_step_cuda_kernel(
     float s10_energy = (float)gpu_clamp(pred.energy / 100.0f, 0.0, 1.0);
     float s11_hydration = (float)gpu_clamp(pred.hydration / 100.0f, 0.0, 1.0);
     float raw_pred_stress = (1.0f - s10_energy) * 0.4f + (1.0f - s11_hydration) * 0.3f + (pred.formula_shield) * 0.3f;
-    float pred_fear_sig = 1.0f / (1.0f + expf(-(float)DuniaFisika::FEAR_SIGMOID_STEEPNESS * (raw_pred_stress - (float)DuniaFisika::FEAR_SIGMOID_MIDPOINT)));
+    float pred_fear_sig = 1.0f / (1.0f + expf(-(float)ParameterAgent::FEAR_SIGMOID_STEEPNESS * (raw_pred_stress - (float)ParameterAgent::FEAR_SIGMOID_MIDPOINT)));
     float s12_frenzy_drive = (float)gpu_clamp(pred_fear_sig, 0.0, 1.0);
 
     // 3. PROPRIOCEPTION (Kesadaran Gerak & Senjata Predator: S13 - S15)
@@ -1121,133 +1014,13 @@ __global__ void simulate_predator_step_cuda_kernel(
                       pred.active_program_size : ParameterAgent::MIN_DYNAMIC_PROGRAM_SIZE;
 
     // Reservoir state update dengan dual-channel input projection + recurrent loop
-    for (int r = 0; r < max_r; ++r) {
-        float in_signal = pred.reservoir_weights_in[r] * pred_sensor_inputs[r % ParameterAgent::SENSORS_COUNT] +
-                          pred.reservoir_weights_in[(r + 8) % REGISTERS_COUNT] * pred_sensor_inputs[(r + 8) % ParameterAgent::SENSORS_COUNT];
-        float rec_signal = pred.reservoir_weights_rec[r] * (float)pred.prev_registers[r];
-        double u_val = in_signal + rec_signal;
-        pred.registers[r] = (1.0 - ParameterAgent::RESERVOIR_SPECTRAL_RADIUS) * pred.registers[r] + 
-                            ParameterAgent::RESERVOIR_SPECTRAL_RADIUS * tanh(u_val);
-    }
-
-    // Predictive Loss (Predator): Koreksi error prediksi sensor prey t-1 → t
-    float pred_sensors_now[ParameterAgent::PRED_SENSORS_COUNT] = { s0_prey_dx, s1_prey_dy, s10_energy, s2_prey_dist };
-    for (int r = 0; r < max_r; ++r) {
-        float pred_error = pred_sensors_now[r % ParameterAgent::PRED_SENSORS_COUNT] - pred.pred_sensor_prev[r % ParameterAgent::PRED_SENSORS_COUNT];
-        pred.registers[r] = gpu_clamp(pred.registers[r] + ParameterAgent::PREDICTIVE_LOSS_SCALE * pred_error, -5.0, 5.0);
-    }
-    pred.pred_sensor_prev[0] = s0_prey_dx;
-    pred.pred_sensor_prev[1] = s1_prey_dy;
-    pred.pred_sensor_prev[2] = s10_energy;
-    pred.pred_sensor_prev[3] = s2_prey_dist;
-
     float move_cmd_x = 0.0f;
     float move_cmd_y = 0.0f;
     float broadcast_out = 0.0f;
 
-    // Eksekusi Virtual Machine DNA (Kedalaman 64 Step Spatial Ops - Predator)
-    for (int ip = 0; ip < active_prog; ++ip) {
-        const auto& inst = pred.dna_program[ip];
-        int rd = inst.r_dest % max_r;
-        int rs1 = inst.r_src1 % max_r;
-        int rs2 = inst.r_src2 % max_r;
-
-        switch (inst.op % 15) {
-            case OP_NOP: break;
-            case OP_LOAD_SENSOR: {
-                int s = inst.r_src1 % ParameterAgent::SENSORS_COUNT;
-                pred.registers[rd] = pred_sensor_inputs[s];
-                break;
-            }
-            case OP_ADD: pred.registers[rd] = gpu_clamp(pred.registers[rs1] + pred.registers[rs2], -5.0, 5.0); break;
-            case OP_SUB: pred.registers[rd] = gpu_clamp(pred.registers[rs1] - pred.registers[rs2], -5.0, 5.0); break;
-            case OP_MUL: pred.registers[rd] = gpu_clamp(pred.registers[rs1] * pred.registers[rs2], -5.0, 5.0); break;
-            case OP_DIV: pred.registers[rd] = gpu_clamp(pred.registers[rs1] / (fabs(pred.registers[rs2]) + 1e-3), -5.0, 5.0); break;
-            case OP_TANH: pred.registers[rd] = tanh(pred.registers[rs1]); break;
-            case OP_SIGMOID: pred.registers[rd] = 1.0 / (1.0 + exp(-gpu_clamp(pred.registers[rs1], -5.0, 5.0))); break;
-            case OP_INTEGRAL: {
-                pred.integrated_registers[rd] += pred.registers[rs1] * dt;
-                pred.registers[rd] = tanh(pred.integrated_registers[rd]);
-                break;
-            }
-            case OP_DERIVATIVE: {
-                pred.registers[rd] = gpu_clamp((pred.registers[rs1] - pred.prev_registers[rd]) / (dt + 1e-4), -5.0, 5.0);
-                pred.prev_registers[rd] = pred.registers[rs1];
-                break;
-            }
-            case OP_ACTION_MOVE: {
-                move_cmd_x = (float)tanh(pred.registers[rs1]);
-                move_cmd_y = (float)tanh(pred.registers[rs2]);
-                break;
-            }
-            case OP_ACTION_FORMULA: {
-                broadcast_out = (float)tanh(pred.registers[rs1]);
-                pred.formula_shield = (float)fabs(broadcast_out); // Output adaptasi perisai musuh
-                pred.comm_signal = broadcast_out;
-                break;
-            }
-            case OP_RESONATE_CLIMATE: {
-                pred.registers[rd] = (float)tanh(pred.registers[rs1] * s9_climate_ambient);
-                break;
-            }
-            case OP_FORK_NEURON: {
-                if (pred.active_program_size < DNA_PROGRAM_SIZE && pred.energy > 70.0f) {
-                    pred.active_program_size++;
-                }
-                break;
-            }
-            case OP_PRUNE_NEURON: {
-                if (pred.active_program_size > ParameterAgent::MIN_DYNAMIC_PROGRAM_SIZE && pred.energy < 20.0f) {
-                    pred.active_program_size--;
-                }
-                break;
-            }
-            case OP_WRITE_CODE: {
-                // Self-Modifying Code Predator
-                int target_ip = (int)fabs(pred.registers[rs1]) % DNA_PROGRAM_SIZE;
-                unsigned char new_op = (unsigned char)((int)fabs(pred.registers[rs2]) % 19);
-                pred.dna_program[target_ip].op = new_op;
-                pred.dna_program[target_ip].r_dest = (unsigned char)((int)fabs(pred.registers[rd]) % max_r);
-                break;
-            }
-            case OP_MUTATE_SELF: {
-                // Self-Metaprogramming Predator
-                if (pred.energy > 35.0f) {
-                    int target_ip = (int)fabs(pred.registers[rs1]) % active_prog;
-                    float mod_val = (float)pred.registers[rs2] * 0.1f;
-                    pred.dna_program[target_ip].immediate_val += mod_val;
-                    pred.energy -= 0.05f;
-                }
-                break;
-            }
-            case OP_ALLOC_REG: {
-                // Dynamic Working Memory Allocation Predator
-                if (pred.active_registers_count < REGISTERS_COUNT && pred.energy > 50.0f) {
-                    pred.active_registers_count++;
-                    pred.energy -= 0.1f;
-                }
-                break;
-            }
-            case OP_FREE_REG: {
-                // Dynamic Memory Deallocation Predator
-                if (pred.active_registers_count > ParameterAgent::MIN_DYNAMIC_REGISTERS) {
-                    pred.active_registers_count--;
-                }
-                break;
-            }
-            default: break;
-        }
-    }
-
-    // Hebbian Plasticity Real-Time (Predator) + Neuromodulation Lonjakan Plastisitas saat Krisis
-    float pred_plasticity_neuromod = 1.0f + s12_frenzy_drive * (float)DuniaFisika::FEAR_NEUROMODULATION_PLASTICITY;
-    for (int r = 0; r < max_r; ++r) {
-        float hebb_delta = (float)(ParameterAgent::HEBBIAN_LEARNING_RATE * pred_plasticity_neuromod * pred_sensor_inputs[r % ParameterAgent::SENSORS_COUNT] * pred.registers[r]);
-        pred.reservoir_weights_in[r] += hebb_delta - (float)(ParameterAgent::HEBBIAN_DECAY * pred.reservoir_weights_in[r]);
-        if (pred.reservoir_weights_in[r] > 1.0f) pred.reservoir_weights_in[r] = 1.0f;
-        if (pred.reservoir_weights_in[r] < -1.0f) pred.reservoir_weights_in[r] = -1.0f;
-        pred.prev_registers[r] = pred.registers[r];
-    }
+    // Eksekusi Virtual Machine Kognisi Otak Predator (Modular)
+    execute_agent_brain_vm(pred, pred_sensor_inputs, s9_climate_ambient, dt, move_cmd_x, move_cmd_y, broadcast_out);
+    pred.formula_shield = (float)fabs(broadcast_out);
 
     // 2d. Swarm Signal Quantization (Predator): {-1.0, 0.0, +1.0}
     float p_quant_thresh = (float)ParameterAgent::SWARM_QUANT_THRESHOLD;
@@ -1255,11 +1028,27 @@ __global__ void simulate_predator_step_cuda_kernel(
     else if (pred.comm_signal < -p_quant_thresh) pred.comm_signal = -1.0f;
     else                                          pred.comm_signal = 0.0f;
 
-    // 3. DINAMIKA GERAK FISIK PREDATOR (Inersia & Hukum Gerak Fisika)
+    // 3. DINAMIKA GERAK FISIK PREDATOR (Inersia & Hukum Gerak Fisika & Bencana Alam)
     float p_speed_base = (float)DuniaFisika::PREDATOR_SPEED;
+    bool p_in_safe_haven = (pred.x > 100.0f && pred.x < 220.0f && pred.y > 100.0f && pred.y < 220.0f);
 
-    float target_vx = move_cmd_x * p_speed_base;
-    float target_vy = move_cmd_y * p_speed_base;
+    float p_wind_x = climate->wind_x * (float)DuniaFisika::WIND_FORCE_MULT;
+    float p_wind_y = climate->wind_y * (float)DuniaFisika::WIND_FORCE_MULT;
+
+    // Knockback Badai EMP
+    if (climate->active_disaster_type == 2 && !p_in_safe_haven) {
+        p_wind_x += sinf(pred.x * 0.01f + climate->magnetic_angle) * (float)DuniaFisika::EMP_SHOCK_KNOCKBACK * climate->disaster_severity;
+        p_wind_y += cosf(pred.y * 0.01f + climate->magnetic_angle) * (float)DuniaFisika::EMP_SHOCK_KNOCKBACK * climate->disaster_severity;
+    }
+
+    float p_speed_mult = 1.0f;
+    // Perlambatan Badai Salju
+    if (climate->active_disaster_type == 1 && !p_in_safe_haven) {
+        p_speed_mult = fmaxf(0.25f, 1.0f - (1.0f - (float)DuniaFisika::BLIZZARD_SLOWDOWN) * climate->disaster_severity);
+    }
+
+    float target_vx = (move_cmd_x * p_speed_base + p_wind_x) * p_speed_mult;
+    float target_vy = (move_cmd_y * p_speed_base + p_wind_y) * p_speed_mult;
 
     pred.vx = pred.vx * (float)DuniaFisika::FRICTION_COEFF + target_vx * 0.2f;
     pred.vy = pred.vy * (float)DuniaFisika::FRICTION_COEFF + target_vy * 0.2f;
@@ -1279,6 +1068,26 @@ __global__ void simulate_predator_step_cuda_kernel(
         pred.energy = fminf(100.0f, pred.energy + 0.5f * (float)dt); // Pulih saat kebal
         pred.lung_oxygen = 100.0f;
     } else {
+        // Kerusakan Fisik Bencana Alam Langsung pada Predator di luar Shelter:
+        if (!p_in_safe_haven && climate->active_disaster_type >= 0) {
+            if (climate->active_disaster_type == 0) {
+                // Badai Matahari: Terbakar radiasi
+                pred.energy = fmaxf(0.0f, pred.energy - (float)DuniaFisika::SOLAR_STORM_SCORCH_DAMAGE * 0.8f * climate->disaster_severity * (float)dt);
+            } else if (climate->active_disaster_type == 1) {
+                // Badai Salju: Hipotermia
+                pred.energy = fmaxf(0.0f, pred.energy - (float)DuniaFisika::BLIZZARD_FROST_DAMAGE * 0.8f * climate->disaster_severity * (float)dt);
+            }
+        }
+
+        // Bahaya Banjir Bandang bagi Predator
+        if (climate->rain_intensity > 75.0f && !p_in_safe_haven) {
+            float flood_river_r = (float)DuniaFisika::RIVER_DRINK_RADIUS * (float)DuniaFisika::FLOOD_EXPANSION_MULT;
+            float flood_lake_r = (float)DuniaFisika::LAKE_DRINK_RADIUS * (float)DuniaFisika::FLOOD_EXPANSION_MULT;
+            if (p_dist_to_river < flood_river_r || p_dist_to_lake < flood_lake_r) {
+                pred.energy = fmaxf(0.0f, pred.energy - (float)DuniaFisika::FLOOD_SWEEP_DAMAGE * (climate->rain_intensity / 100.0f) * (float)dt);
+            }
+        }
+
         // Tabung Oksigen Paru-Paru Predator:
         if (climate->oxygen_level >= (float)DuniaFisika::O2_ATMOSPHERE_SAFE_MIN) {
             float o2_gain = (float)DuniaFisika::AGENT_O2_BREATHE_IN_RATE * (climate->oxygen_level / 21.0f) * (float)dt;
@@ -1297,8 +1106,23 @@ __global__ void simulate_predator_step_cuda_kernel(
         float p_lung_eff = fmaxf(0.2f, pred.lung_oxygen / 100.0f);
         float p_hyd_eff = fmaxf(0.2f, pred.hydration / 100.0f);
         float p_nature_stress = climate->nature_adversarial_pressure;
-        float p_energy_cost = ((float)DuniaFisika::PREDATOR_METABOLISM + p_speed * (float)ParameterAgent::METABOLISM_MOVE_COST) * p_nature_stress * (float)dt / (p_lung_eff * p_hyd_eff);
+        
+        // Penuaan Eksponensial Biologis Predator (Makin Menua Makin Renta di Atas 40 Tahun)
+        float p_age_senescence_mult = 1.0f;
+        if (pred.age_years > (float)DuniaFisika::AGING_SENESCENCE_START_AGE) {
+            float p_aging_delta = pred.age_years - (float)DuniaFisika::AGING_SENESCENCE_START_AGE;
+            p_age_senescence_mult = expf((float)DuniaFisika::AGING_EXPONENTIAL_FACTOR * p_aging_delta);
+        }
+
+        float p_energy_cost = ((float)DuniaFisika::PREDATOR_METABOLISM + p_speed * (float)DuniaFisika::METABOLISM_MOVE_COST) * p_nature_stress * p_age_senescence_mult * (float)dt / (p_lung_eff * p_hyd_eff);
         pred.energy = fmaxf(0.0f, pred.energy - p_energy_cost);
+
+        // Kerentaan Biologis Alami Organ Predator (Senescence Frailty Damage):
+        if (pred.age_years > (float)DuniaFisika::AGING_SENESCENCE_START_AGE) {
+            float p_aging_span = pred.age_years - (float)DuniaFisika::AGING_SENESCENCE_START_AGE;
+            float p_frailty_dmg = (float)DuniaFisika::AGING_FRAILTY_DAMAGE_BASE * expf((float)DuniaFisika::AGING_EXPONENTIAL_FACTOR * p_aging_span) * (float)dt;
+            pred.energy = fmaxf(0.0f, pred.energy - p_frailty_dmg);
+        }
 
         // Hipoksia Predator
         if (pred.lung_oxygen < (float)DuniaFisika::HYPOXIA_THRESHOLD) {
@@ -1366,7 +1190,7 @@ __global__ void simulate_predator_step_cuda_kernel(
                         predators[slot].y = pred.y + ((float)((int)((rng_seed / 20) % 20) - 10));
                         predators[slot].vx = 0.0f;
                         predators[slot].vy = 0.0f;
-                        predators[slot].energy = (float)ParameterAgent::NEWBORN_INITIAL_ENERGY;
+                        predators[slot].energy = (float)DuniaFisika::NEWBORN_INITIAL_ENERGY;
                         predators[slot].lung_oxygen = (float)DuniaFisika::AGENT_LUNG_CAPACITY;
                         predators[slot].hydration = (float)DuniaFisika::AGENT_HYDRATION_INITIAL;
                         predators[slot].corpse_energy = 0.0f;
@@ -1379,7 +1203,7 @@ __global__ void simulate_predator_step_cuda_kernel(
                         bool is_defective_pred = ((rng_seed % 100) < (int)(DuniaFisika::DEFECTIVE_BIRTH_CHANCE * 100));
                         bool is_super_mutant_pred = ((rng_seed % 100) < (int)(DuniaFisika::SUPER_MUTATION_CHANCE * 100));
 
-                        predators[slot].energy = is_defective_pred ? 8.0f : (float)ParameterAgent::NEWBORN_INITIAL_ENERGY;
+                        predators[slot].energy = is_defective_pred ? 8.0f : (float)DuniaFisika::NEWBORN_INITIAL_ENERGY;
                         predators[slot].formula_shield = is_defective_pred ? 0.05f : (float)((rng_seed % 100)) / 100.0f;
 
                         predators[slot].active_program_size = is_super_mutant_pred ? min((int)DNA_PROGRAM_SIZE, pred.active_program_size + 1 + (int)(rng_seed % 3)) : pred.active_program_size;
@@ -1407,7 +1231,7 @@ __global__ void simulate_predator_step_cuda_kernel(
 
                         // 2. Epigenetic Trauma Inheritance Predator: Trauma stres/kelaparan induk ditransfer ke anak
                         float pred_parent_trauma = 0.5f * (s12_frenzy_drive + 0.5f);
-                        float pred_trauma_bias = pred_parent_trauma * (float)DuniaFisika::EPIGENETIC_TRAUMA_WEIGHT_BIAS;
+                        float pred_trauma_bias = pred_parent_trauma * (float)ParameterAgent::EPIGENETIC_TRAUMA_WEIGHT_BIAS;
 
                         // Inherit & mutate reservoir weights (Predator) dengan Trauma Bias
                         for (int r = 0; r < REGISTERS_COUNT; ++r) {
@@ -1440,6 +1264,281 @@ __global__ void simulate_predator_step_cuda_kernel(
     }
 }
 
+// =========================================================================
+// KERNEL SIMULASI FLORA: Padang Rumput, Semak Berry & Tanaman Gandum Pangan
+// =========================================================================
+__global__ void simulate_flora_step_cuda_kernel(
+    GpuFloraPlant* flora,
+    int flora_count,
+    GpuClimateState* climate,
+    double dt
+) {
+    int idx = blockIdx.x * blockDim.x + threadIdx.x;
+    if (idx >= flora_count) return;
+
+    GpuFloraPlant& plant = flora[idx];
+    if (plant.health <= 0.0f) {
+        // Peluang bertunas kembali secara alami dari tanah lembab / spora
+        unsigned int r_seed = gpu_hash((unsigned int)idx * 1337u ^ (unsigned int)(plant.x * 17.0f));
+        if ((r_seed % 1000) < 5) {
+            plant.health = 50.0f;
+            plant.growth_stage = 0.0f;
+            plant.moisture = 50.0f;
+            plant.yield_amount = 0.0f;
+        }
+        return;
+    }
+
+    // Penyerapan air dari sungai, danau & kelembaban udara H2O / curah hujan
+    float river_x = (float)DuniaFisika::RIVER_CENTER_X + (float)DuniaFisika::RIVER_MEANDER_AMP * sinf(plant.y * (float)DuniaFisika::RIVER_MEANDER_FREQ);
+    float dist_river = fabsf(plant.x - river_x);
+    float water_gain = (dist_river < (float)DuniaFisika::RIVER_MOISTURE_RADIUS) ? 1.5f * (float)dt : 0.0f;
+
+    // Danau
+    float flk_dx = plant.x - (float)DuniaFisika::LAKE_CENTER_X;
+    float flk_dy = plant.y - (float)DuniaFisika::LAKE_CENTER_Y;
+    float flk_dist_center = sqrtf(flk_dx * flk_dx + flk_dy * flk_dy);
+    float flk_dist = fmaxf(0.0f, flk_dist_center - (float)DuniaFisika::LAKE_RADIUS);
+    if (flk_dist < (float)DuniaFisika::LAKE_MOISTURE_RADIUS) {
+        float lk_prox = 1.0f - (flk_dist / (float)DuniaFisika::LAKE_MOISTURE_RADIUS);
+        water_gain += 2.0f * lk_prox * (float)dt;
+    }
+
+    // Curah hujan & Kelembaban
+    float rain_flora_mult = 1.0f + (climate->rain_intensity / (float)DuniaFisika::RAIN_INTENSITY_MAX) * (float)DuniaFisika::RAIN_SOIL_MOISTURE_MULT;
+    water_gain += (climate->h2o_level / 100.0f) * 0.8f * rain_flora_mult * (float)dt;
+    plant.moisture = fminf(100.0f, plant.moisture + water_gain - 0.2f * (float)dt);
+
+    // Pertumbuhan flora bertahap sesuai sinar matahari & air
+    float sunlight = fmaxf(0.1f, (0.4f + (float)DuniaFisika::DAY_PHOTOSYNTHESIS_MULT * climate->daylight_factor));
+    float moist_mult = fmaxf(0.1f, plant.moisture / 50.0f);
+    float growth_rate = (float)DuniaFisika::FLORA_GROWTH_RATE * sunlight * moist_mult;
+
+    plant.growth_stage = fminf(100.0f, plant.growth_stage + growth_rate * (float)dt);
+    if (plant.growth_stage >= 60.0f) {
+        plant.yield_amount = (plant.flora_type == DuniaFisika::FLORA_GRAIN_CROP) ? 
+                             (float)DuniaFisika::FLORA_HARVEST_YIELD : (float)DuniaFisika::FLORA_NUTRITION_VALUE;
+    }
+
+    // Kekeringan flora & Kerusakan Akibat Bencana Alam
+    if (plant.moisture <= 0.0f) {
+        plant.health = fmaxf(0.0f, plant.health - 5.0f * (float)dt);
+    } else {
+        plant.health = fminf(100.0f, plant.health + 2.0f * (float)dt);
+    }
+
+    // Dampak Bencana Ekstrem pada Flora:
+    if (climate->active_disaster_type == 0) {
+        // Badai Matahari: Membakar tanaman di ladang terbuka
+        plant.health = fmaxf(0.0f, plant.health - 6.0f * climate->disaster_severity * (float)dt);
+    } else if (climate->active_disaster_type == 1) {
+        // Badai Salju: Membekukan pucuk tanaman
+        plant.growth_stage = fmaxf(0.0f, plant.growth_stage - 3.0f * climate->disaster_severity * (float)dt);
+    }
+}
+
+// =========================================================================
+// KERNEL SIMULASI FAUNA LIAR: Hewan Ternak Liar & Burung (Realita Penuh)
+// =========================================================================
+__global__ void simulate_wild_fauna_step_cuda_kernel(
+    GpuWildFauna* fauna,
+    int fauna_count,
+    GpuFloraPlant* flora,
+    int flora_count,
+    GpuTreeEntity* trees,
+    int trees_count,
+    GpuPredatorAgent* predators,
+    int predators_count,
+    GpuEcosystemAgent* agents,
+    int population_size,
+    GpuClimateState* climate,
+    double dt
+) {
+    int idx = blockIdx.x * blockDim.x + threadIdx.x;
+    if (idx >= fauna_count) return;
+
+    GpuWildFauna& animal = fauna[idx];
+    if (!animal.is_alive) return;
+
+    // Penuaan & metabolisme
+    animal.age_years += (float)(dt / DuniaFisika::SECONDS_PER_YEAR);
+    if (animal.age_years >= 25.0f || animal.energy <= 0.0f || animal.hydration <= 0.0f) {
+        animal.is_alive = false;
+        animal.corpse_energy = (float)DuniaFisika::FAUNA_CORPSE_MEAT_VALUE;
+        return;
+    }
+
+    // Deteksi Predator Terdekat (Insting Bertahan & Kabur)
+    float nearest_pred_dist = 10000.0f;
+    float flee_dx = 0.0f;
+    float flee_dy = 0.0f;
+    for (int p = 0; p < predators_count; ++p) {
+        if (predators[p].is_alive && predators[p].energy > 0.0f) {
+            float pdx = animal.x - predators[p].x;
+            float pdy = animal.y - predators[p].y;
+            float pd = sqrtf(pdx * pdx + pdy * pdy);
+            if (pd < nearest_pred_dist) {
+                nearest_pred_dist = pd;
+                flee_dx = pdx;
+                flee_dy = pdy;
+            }
+        }
+    }
+
+    animal.is_fleeing = (nearest_pred_dist < (float)DuniaFisika::FAUNA_FLEE_RADIUS);
+
+    // Siklus Tidur & Istirahat: Malam hari (daylight < 0.25) & saat lelah jika tidak sedang terancam
+    bool is_night = (climate->daylight_factor < 0.25f);
+    animal.is_sleeping = (!animal.is_fleeing && (is_night || (animal.stamina < 15.0f && !animal.is_fleeing)));
+
+    if (animal.is_sleeping) {
+        animal.vx *= 0.5f;
+        animal.vy *= 0.5f;
+        animal.stamina = fminf(100.0f, animal.stamina + (float)DuniaFisika::FAUNA_SLEEP_RECOVERY_RATE * (float)dt);
+        animal.energy = fmaxf(0.0f, animal.energy - (float)DuniaFisika::FAUNA_METABOLISM_BASE * 0.4f * (float)dt);
+    } else if (animal.is_fleeing && animal.stamina > 5.0f) {
+        // SPRINT LARI CEPAT KABUR DARI PREDATOR
+        float spd = (animal.fauna_type == DuniaFisika::FAUNA_WILD_BIRD) ? 
+                    (float)DuniaFisika::FAUNA_BIRD_SPEED_FLY : (float)DuniaFisika::FAUNA_CATTLE_SPEED_FLEE;
+        float inv_d = 1.0f / (nearest_pred_dist + 1e-3f);
+        animal.vx = flee_dx * inv_d * spd;
+        animal.vy = flee_dy * inv_d * spd;
+        animal.stamina = fmaxf(0.0f, animal.stamina - 12.0f * (float)dt); // Stamina terkuras saat lari
+        animal.energy = fmaxf(0.0f, animal.energy - (float)DuniaFisika::FAUNA_METABOLISM_BASE * 2.5f * (float)dt);
+        animal.hydration = fmaxf(0.0f, animal.hydration - 0.5f * (float)dt);
+    } else {
+        // AKTIVITAS ALAMI ATAU JINAK / TERNAK
+        float walk_spd = (animal.fauna_type == DuniaFisika::FAUNA_WILD_BIRD) ? 8.0f : (float)DuniaFisika::FAUNA_CATTLE_SPEED_WALK;
+        
+        // Cek Majikan (Domestikasi): Jika jinak, ikuti agen pemilik
+        bool following_owner = false;
+        if (animal.owner_agent_id > 0 && animal.owner_faction == 0) {
+            int owner_idx = (animal.owner_agent_id - 1) % population_size;
+            if (agents[owner_idx].id == animal.owner_agent_id && agents[owner_idx].is_alive) {
+                float odx = agents[owner_idx].x - animal.x;
+                float ody = agents[owner_idx].y - animal.y;
+                float odist = sqrtf(odx * odx + ody * ody);
+                if (odist > 15.0f && odist < (float)DuniaFisika::FAUNA_DOMESTIC_FOLLOW_RADIUS) {
+                    animal.vx = (odx / (odist + 1e-3f)) * walk_spd;
+                    animal.vy = (ody / (odist + 1e-3f)) * walk_spd;
+                    following_owner = true;
+                }
+            } else {
+                animal.owner_agent_id = 0; // Pemilik mati -> Kembali liar
+                animal.owner_faction = -1;
+            }
+        }
+
+        if (!following_owner) {
+            // Cek Sumber Air Terdekat (Sungai vs Danau) untuk Minum saat Haus
+            float river_x = (float)DuniaFisika::RIVER_CENTER_X + (float)DuniaFisika::RIVER_MEANDER_AMP * sinf(animal.y * (float)DuniaFisika::RIVER_MEANDER_FREQ);
+            float dist_river = fabsf(animal.x - river_x);
+
+            float f_lk_dx = (float)DuniaFisika::LAKE_CENTER_X - animal.x;
+            float f_lk_dy = (float)DuniaFisika::LAKE_CENTER_Y - animal.y;
+            float f_lk_center = sqrtf(f_lk_dx * f_lk_dx + f_lk_dy * f_lk_dy);
+            float dist_lake = fmaxf(0.0f, f_lk_center - (float)DuniaFisika::LAKE_RADIUS);
+
+            if (dist_river < (float)DuniaFisika::RIVER_DRINK_RADIUS || dist_lake < (float)DuniaFisika::LAKE_DRINK_RADIUS) {
+                animal.hydration = fminf(100.0f, animal.hydration + (float)DuniaFisika::AGENT_DRINK_WATER_RATE * (float)dt);
+            } else if (animal.hydration < 40.0f) {
+                // Bergerak mendekat ke sumber air terdekat
+                if (dist_lake < dist_river) {
+                    animal.vx = (f_lk_center > 1e-3f) ? (f_lk_dx / f_lk_center) * walk_spd : 0.0f;
+                    animal.vy = (f_lk_center > 1e-3f) ? (f_lk_dy / f_lk_center) * walk_spd : 0.0f;
+                } else {
+                    animal.vx = (river_x > animal.x ? walk_spd : -walk_spd);
+                }
+            } else {
+                // Wander acak merumput
+                unsigned int h = gpu_hash((unsigned int)idx * 1973u ^ (unsigned int)(animal.age_years * 10.0f));
+                animal.vx = (float)((int)(h % 3) - 1) * walk_spd * 0.5f;
+                animal.vy = (float)((int)((h / 3) % 3) - 1) * walk_spd * 0.5f;
+            }
+
+            // Hidrasi langsung dari curah hujan
+            if (climate->rain_intensity > 0.0f) {
+                animal.hydration = fminf(100.0f, animal.hydration + (float)DuniaFisika::RAIN_HYDRATION_GAIN_RATE * 0.5f * (climate->rain_intensity / (float)DuniaFisika::RAIN_INTENSITY_MAX) * (float)dt);
+            }
+        }
+
+        // Makan Rumput / Flora di sekitar
+        for (int fl = 0; fl < 16; ++fl) {
+            int f_idx = (idx + fl * 31) % flora_count;
+            if (flora[f_idx].health > 20.0f && flora[f_idx].growth_stage >= 40.0f && animal.energy < 90.0f) {
+                float fdx = flora[f_idx].x - animal.x;
+                float fdy = flora[f_idx].y - animal.y;
+                if ((fdx * fdx + fdy * fdy) < (float)(DuniaFisika::FAUNA_GRAZING_RADIUS * DuniaFisika::FAUNA_GRAZING_RADIUS)) {
+                    animal.energy = fminf(100.0f, animal.energy + flora[f_idx].yield_amount * 0.5f);
+                    flora[f_idx].growth_stage = fmaxf(10.0f, flora[f_idx].growth_stage - 30.0f);
+                    break;
+                }
+            }
+        }
+
+        // Budidaya & Reproduksi Ternak Jinak (Perkembangbiakan saat kenyang)
+        if (animal.owner_agent_id > 0 && animal.energy > 75.0f && animal.age_years >= 2.0f) {
+            unsigned int b_hash = gpu_hash((unsigned int)idx * 997u ^ (unsigned int)(animal.age_years * 100.0f));
+            if ((b_hash % 1000) < (int)(DuniaFisika::FAUNA_DOMESTIC_BREED_CHANCE * 1000.0f * dt)) {
+                for (int slot = 0; slot < fauna_count; ++slot) {
+                    if (!fauna[slot].is_alive) {
+                        fauna[slot].is_alive = true;
+                        fauna[slot].fauna_type = animal.fauna_type;
+                        fauna[slot].x = animal.x + (float)((slot % 3) - 1) * 6.0f;
+                        fauna[slot].y = animal.y + (float)((slot / 3) - 1) * 6.0f;
+                        fauna[slot].vx = 0.0f;
+                        fauna[slot].vy = 0.0f;
+                        fauna[slot].energy = 80.0f;
+                        fauna[slot].hydration = 100.0f;
+                        fauna[slot].stamina = 100.0f;
+                        fauna[slot].age_years = 0.0f;
+                        fauna[slot].corpse_energy = 0.0f;
+                        fauna[slot].owner_agent_id = animal.owner_agent_id;
+                        fauna[slot].owner_faction = animal.owner_faction;
+                        fauna[slot].is_sleeping = false;
+                        fauna[slot].is_fleeing = false;
+                        animal.energy -= 20.0f;
+                        break;
+                    }
+                }
+            }
+        }
+
+        animal.stamina = fminf(100.0f, animal.stamina + 2.0f * (float)dt);
+        animal.energy = fmaxf(0.0f, animal.energy - (float)DuniaFisika::FAUNA_METABOLISM_BASE * (float)dt);
+        animal.hydration = fmaxf(0.0f, animal.hydration - 0.15f * (float)dt);
+    }
+
+    // Fisika Bencana Alam pada Fauna (Dorongan Angin Badai & Kerusakan Termal/Beku)
+    bool fa_in_safe_haven = (animal.x > 100.0f && animal.x < 220.0f && animal.y > 100.0f && animal.y < 220.0f);
+    if (!fa_in_safe_haven && climate->active_disaster_type >= 0) {
+        if (climate->active_disaster_type == 2) {
+            // Badai EMP / Hurikan: Terhempas angin kencang
+            animal.vx += sinf(animal.x * 0.01f + climate->magnetic_angle) * (float)DuniaFisika::EMP_SHOCK_KNOCKBACK * 0.8f * climate->disaster_severity;
+            animal.vy += cosf(animal.y * 0.01f + climate->magnetic_angle) * (float)DuniaFisika::EMP_SHOCK_KNOCKBACK * 0.8f * climate->disaster_severity;
+        } else if (climate->active_disaster_type == 0) {
+            // Badai Matahari: Dehidrasi kilat & kerusakan panas
+            animal.energy = fmaxf(0.0f, animal.energy - (float)DuniaFisika::SOLAR_STORM_SCORCH_DAMAGE * 0.6f * climate->disaster_severity * (float)dt);
+            animal.hydration = fmaxf(0.0f, animal.hydration - 1.0f * climate->disaster_severity * (float)dt);
+        } else if (climate->active_disaster_type == 1) {
+            // Badai Salju: Hipotermia & perlambatan
+            animal.energy = fmaxf(0.0f, animal.energy - (float)DuniaFisika::BLIZZARD_FROST_DAMAGE * 0.6f * climate->disaster_severity * (float)dt);
+            animal.vx *= (float)DuniaFisika::BLIZZARD_SLOWDOWN;
+            animal.vy *= (float)DuniaFisika::BLIZZARD_SLOWDOWN;
+        }
+    }
+
+    // Fisika Gerak
+    animal.x += animal.vx * (float)dt;
+    animal.y += animal.vy * (float)dt;
+
+    // Batas Tepi Dunia
+    if (animal.x < 15.0f) { animal.x = 15.0f; animal.vx = -animal.vx * 0.5f; }
+    if (animal.x > (float)DuniaFisika::WORLD_WIDTH - 15.0f) { animal.x = (float)DuniaFisika::WORLD_WIDTH - 15.0f; animal.vx = -animal.vx * 0.5f; }
+    if (animal.y < 15.0f) { animal.y = 15.0f; animal.vy = -animal.vy * 0.5f; }
+    if (animal.y > (float)DuniaFisika::WORLD_HEIGHT - 15.0f) { animal.y = (float)DuniaFisika::WORLD_HEIGHT - 15.0f; animal.vy = -animal.vy * 0.5f; }
+}
+
 extern "C" void launch_ecosystem_simulation(
     GpuEcosystemAgent* d_agents,
     int population_size,
@@ -1449,18 +1548,76 @@ extern "C" void launch_ecosystem_simulation(
     int predators_count,
     GpuMineralDeposit* d_minerals,
     int minerals_count,
+    GpuFloraPlant* d_flora,
+    int flora_count,
+    GpuWildFauna* d_fauna,
+    int fauna_count,
     GpuClimateState* d_climate,
     double dt
 ) {
     int blockSize = 128;
     int numBlocksAgents = (population_size + blockSize - 1) / blockSize;
     simulate_ecosystem_step_cuda_kernel<<<numBlocksAgents, blockSize>>>(
-        d_agents, population_size, d_trees, trees_count, d_predators, predators_count, d_minerals, minerals_count, d_climate, dt
+        d_agents, population_size, d_trees, trees_count, d_predators, predators_count, d_minerals, minerals_count, d_flora, flora_count, d_fauna, fauna_count, d_climate, dt
     );
 
     int numBlocksPred = (predators_count + blockSize - 1) / blockSize;
     simulate_predator_step_cuda_kernel<<<numBlocksPred, blockSize>>>(
-        d_predators, predators_count, d_agents, population_size, d_minerals, minerals_count, d_climate, dt
+        d_predators, predators_count, d_agents, population_size, d_minerals, minerals_count, d_fauna, fauna_count, d_climate, dt
     );
+
+    int numBlocksFlora = (flora_count + blockSize - 1) / blockSize;
+    simulate_flora_step_cuda_kernel<<<numBlocksFlora, blockSize>>>(
+        d_flora, flora_count, d_climate, dt
+    );
+
+    int numBlocksFauna = (fauna_count + blockSize - 1) / blockSize;
+    simulate_wild_fauna_step_cuda_kernel<<<numBlocksFauna, blockSize>>>(
+        d_fauna, fauna_count, d_flora, flora_count, d_trees, trees_count, d_predators, predators_count, d_agents, population_size, d_climate, dt
+    );
+
     cudaDeviceSynchronize();
+}
+
+extern "C" void launch_ecosystem_simulation_batched(
+    GpuEcosystemAgent* d_agents,
+    int population_size,
+    GpuTreeEntity* d_trees,
+    int trees_count,
+    GpuPredatorAgent* d_predators,
+    int predators_count,
+    GpuMineralDeposit* d_minerals,
+    int minerals_count,
+    GpuFloraPlant* d_flora,
+    int flora_count,
+    GpuWildFauna* d_fauna,
+    int fauna_count,
+    GpuClimateState* d_climate,
+    double dt,
+    int substeps_count
+) {
+    int blockSize = 128;
+    int numBlocksAgents = (population_size + blockSize - 1) / blockSize;
+    int numBlocksPred = (predators_count + blockSize - 1) / blockSize;
+    int numBlocksFlora = (flora_count + blockSize - 1) / blockSize;
+    int numBlocksFauna = (fauna_count + blockSize - 1) / blockSize;
+
+    for (int step = 0; step < substeps_count; ++step) {
+        simulate_ecosystem_step_cuda_kernel<<<numBlocksAgents, blockSize>>>(
+            d_agents, population_size, d_trees, trees_count, d_predators, predators_count, d_minerals, minerals_count, d_flora, flora_count, d_fauna, fauna_count, d_climate, dt
+        );
+
+        simulate_predator_step_cuda_kernel<<<numBlocksPred, blockSize>>>(
+            d_predators, predators_count, d_agents, population_size, d_minerals, minerals_count, d_fauna, fauna_count, d_climate, dt
+        );
+
+        simulate_flora_step_cuda_kernel<<<numBlocksFlora, blockSize>>>(
+            d_flora, flora_count, d_climate, dt
+        );
+
+        simulate_wild_fauna_step_cuda_kernel<<<numBlocksFauna, blockSize>>>(
+            d_fauna, fauna_count, d_flora, flora_count, d_trees, trees_count, d_predators, predators_count, d_agents, population_size, d_climate, dt
+        );
+    }
+    // Asynchronous queue — biarkan GPU stream terisi tanpa CPU blocking stall
 }

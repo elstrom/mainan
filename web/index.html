@@ -688,15 +688,15 @@
     <!-- 3. Main Workspace Grid -->
     <div class="main-workspace">
 
-        <!-- Left Panel: Kubu A (Herbivore Colony) -->
+        <!-- Left Panel: Kubu A (Manusia Colony) -->
         <div class="glass-panel">
             <div class="panel-header">
                 <div class="panel-title" style="color:var(--kubu-a);">
-                    <span>🌿</span> KUBU A: HERBIVORA
+                    <span>🌿</span> KUBU A: MANUSIA
                 </div>
                 <span class="tag-pill"
                     style="background:var(--kubu-a-bg); color:var(--kubu-a); border-color:rgba(34,197,94,0.3);">
-                    PANGAN BUAH
+                    PANGAN BUAH & TERNAK
                 </span>
             </div>
 
@@ -740,7 +740,7 @@
                 <div
                     style="font-size:0.68rem; font-weight:800; color:var(--text-dim); text-transform:uppercase; margin-top:6px; display:flex; justify-content:space-between; align-items:center;">
                     <span>🏆 Top 5 Individu Kubu A</span>
-                    <span style="font-size:0.65rem; color:var(--kubu-a);">Herbivora</span>
+                    <span style="font-size:0.65rem; color:var(--kubu-a);">Manusia</span>
                 </div>
                 <div id="leaderboardListA"
                     style="display:flex; flex-direction:column; gap:5px; flex:1; overflow-y:auto; max-height:280px;">
@@ -884,14 +884,14 @@
                             <tr
                                 style="text-align:left; color:var(--text-dim); border-bottom:1px solid var(--border-subtle);">
                                 <th style="padding:6px;">Aspek Kognitif & Fisika</th>
-                                <th style="padding:6px;">Kubu A (Herbivora)</th>
-                                <th style="padding:6px;">Kubu B (Karnivora/Predator)</th>
+                                <th style="padding:6px;">Kubu A (Manusia)</th>
+                                <th style="padding:6px;">Kubu B (Predator)</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr style="border-bottom:1px solid rgba(255,255,255,0.04);">
                                 <td style="padding:6px; color:var(--text-sub);">Sumber Daya Utama</td>
-                                <td style="padding:6px; color:var(--kubu-a);">Buah & Fotosintesis Pohon</td>
+                                <td style="padding:6px; color:var(--kubu-a);">Buah, Ternak & Foraging Hutan</td>
                                 <td style="padding:6px; color:var(--kubu-b);">Pemangsaan Mangsa & Scavenging Bangkai</td>
                             </tr>
                             <tr style="border-bottom:1px solid rgba(255,255,255,0.04);">
@@ -922,10 +922,10 @@
                         🧬 Injeksi Populasi & Sumber Daya Alam (Live Entity Spawner)
                     </div>
                     <div style="display:grid; grid-template-columns: repeat(4, 1fr); gap:8px;">
-                        <button onclick="spawnEntity('herbi', 10)" class="god-btn" style="border-color:rgba(34,197,94,0.4); background:rgba(34,197,94,0.1); color:var(--kubu-a);">+10 Herbivora</button>
-                        <button onclick="spawnEntity('herbi', 50)" class="god-btn" style="border-color:rgba(34,197,94,0.4); background:rgba(34,197,94,0.15); color:var(--kubu-a); font-weight:800;">+50 Herbivora</button>
-                        <button onclick="spawnEntity('karni', 10)" class="god-btn" style="border-color:rgba(239,68,68,0.4); background:rgba(239,68,68,0.1); color:var(--kubu-b);">+10 Predator</button>
-                        <button onclick="spawnEntity('karni', 50)" class="god-btn" style="border-color:rgba(239,68,68,0.4); background:rgba(239,68,68,0.15); color:var(--kubu-b); font-weight:800;">+50 Predator</button>
+                        <button onclick="spawnEntity('manusia', 10)" class="god-btn" style="border-color:rgba(34,197,94,0.4); background:rgba(34,197,94,0.1); color:var(--kubu-a);">+10 Manusia</button>
+                        <button onclick="spawnEntity('manusia', 50)" class="god-btn" style="border-color:rgba(34,197,94,0.4); background:rgba(34,197,94,0.15); color:var(--kubu-a); font-weight:800;">+50 Manusia</button>
+                        <button onclick="spawnEntity('predator', 10)" class="god-btn" style="border-color:rgba(239,68,68,0.4); background:rgba(239,68,68,0.1); color:var(--kubu-b);">+10 Predator</button>
+                        <button onclick="spawnEntity('predator', 50)" class="god-btn" style="border-color:rgba(239,68,68,0.4); background:rgba(239,68,68,0.15); color:var(--kubu-b); font-weight:800;">+50 Predator</button>
                         <button onclick="spawnEntity('tree', 5)" class="god-btn" style="border-color:rgba(234,179,8,0.4); background:rgba(234,179,8,0.1); color:var(--yellow);">+5 Pohon Subur</button>
                         <button onclick="spawnEntity('tree', 15)" class="god-btn" style="border-color:rgba(234,179,8,0.4); background:rgba(234,179,8,0.15); color:var(--yellow); font-weight:800;">+15 Pohon Subur</button>
                         <button onclick="spawnEntity('mineral', 4)" class="god-btn" style="border-color:rgba(6,182,212,0.4); background:rgba(6,182,212,0.1); color:var(--cyan);">+4 Deposit Mineral</button>
@@ -989,11 +989,11 @@
         <div class="glass-panel">
             <div class="panel-header">
                 <div class="panel-title" style="color:var(--kubu-b);">
-                    <span>🐺</span> KUBU B: KARNIVORA
+                    <span>🐺</span> KUBU B: PREDATOR
                 </div>
                 <span class="tag-pill"
                     style="background:var(--kubu-b-bg); color:var(--kubu-b); border-color:rgba(239,68,68,0.3);">
-                    MEMANGSA SEMUT
+                    MEMANGSA TERNAK & MANUSIA
                 </span>
             </div>
 
@@ -1037,7 +1037,7 @@
                 <div
                     style="font-size:0.68rem; font-weight:800; color:var(--text-dim); text-transform:uppercase; margin-top:6px; display:flex; justify-content:space-between; align-items:center;">
                     <span>🏆 Top 5 Individu Kubu B</span>
-                    <span style="font-size:0.65rem; color:var(--kubu-b);">Karnivora</span>
+                    <span style="font-size:0.65rem; color:var(--kubu-b);">Predator</span>
                 </div>
                 <div id="leaderboardListB"
                     style="display:flex; flex-direction:column; gap:5px; flex:1; overflow-y:auto; max-height:280px;">
@@ -1045,8 +1045,8 @@
 
                 <!-- Legend Bar -->
                 <div class="legend-bar" style="margin-top:auto;">
-                    <div>⭐ <strong>Kubu A (Herbi)</strong>: Bintang (♂ Biru / ♀ Pink)</div>
-                    <div>💀 <strong>Kubu B (Karni)</strong>: Tengkorak (♂ Biru / ♀ Pink)</div>
+                    <div>⭐ <strong>Kubu A (Manusia)</strong>: Bintang (♂ Biru / ♀ Pink)</div>
+                    <div>💀 <strong>Kubu B (Predator)</strong>: Tengkorak (♂ Biru / ♀ Pink)</div>
                     <div>👑 <strong>Alpha Leader</strong>: Kuning Emas</div>
                 </div>
             </div>
@@ -1188,8 +1188,10 @@
             resizeCanvas();
             const w = canvas.width;
             const h = canvas.height;
-            const scaleX = w / 1000.0;
-            const scaleY = h / 1000.0;
+            const worldW = (state.worldWidth && state.worldWidth > 0) ? state.worldWidth : 50000.0;
+            const worldH = (state.worldHeight && state.worldHeight > 0) ? state.worldHeight : 50000.0;
+            const scaleX = w / worldW;
+            const scaleY = h / worldH;
             const daylight = (typeof state.daylightFactor !== 'undefined') ? state.daylightFactor : 1.0;
 
             // 0. Dynamic Sky Background (Day / Night cycle)
@@ -1215,6 +1217,50 @@
                 ctx.moveTo(i, 0);
                 ctx.lineTo(i + Math.cos(magAngle) * 80, h);
                 ctx.stroke();
+            }
+
+            // 1.5 Render Meandering River (Aliran Sungai Utama)
+            ctx.save();
+            const rivCenterX = state.river ? state.river.centerX : 25000.0;
+            const rivAmp = state.river ? state.river.amp : 7000.0;
+            const rivFreq = state.river ? state.river.freq : 0.00014;
+            const rivWidth = Math.max(3.0, (state.river ? state.river.width : 250.0) * scaleX * 6.0);
+
+            ctx.beginPath();
+            const steps = 60;
+            for (let step = 0; step <= steps; step++) {
+                const worldY = (step / steps) * worldH;
+                const worldX = rivCenterX + rivAmp * Math.sin(worldY * rivFreq);
+                const rx = worldX * scaleX;
+                const ry = worldY * scaleY;
+                if (step === 0) ctx.moveTo(rx, ry);
+                else ctx.lineTo(rx, ry);
+            }
+            ctx.strokeStyle = "rgba(14, 165, 233, 0.45)";
+            ctx.lineWidth = rivWidth;
+            ctx.lineCap = "round";
+            ctx.lineJoin = "round";
+            ctx.stroke();
+            ctx.strokeStyle = "rgba(56, 189, 248, 0.85)";
+            ctx.lineWidth = Math.max(1.5, rivWidth * 0.4);
+            ctx.stroke();
+            ctx.restore();
+
+            // 1.8 Render Danau (Lake Ecosystem)
+            if (state.lake) {
+                ctx.save();
+                const lakeX = state.lake.x * scaleX;
+                const lakeY = state.lake.y * scaleY;
+                const lakeR = Math.max(6.0, state.lake.r * scaleX);
+                
+                ctx.beginPath();
+                ctx.arc(lakeX, lakeY, lakeR, 0, Math.PI * 2);
+                ctx.fillStyle = "rgba(6, 182, 212, 0.35)";
+                ctx.fill();
+                ctx.strokeStyle = "rgba(56, 189, 248, 0.8)";
+                ctx.lineWidth = 2;
+                ctx.stroke();
+                ctx.restore();
             }
 
             // 2. Wind Particles
